@@ -1,4 +1,4 @@
-{>"layout.dust"/}
+{>"core/layout.dust"/}
 {<title}
   Error! 404 - Not found!
 {/title}

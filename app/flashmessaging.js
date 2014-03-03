@@ -7,9 +7,13 @@ module.exports = function(app) {
         res.render = function(view, locals, cb) {
             if (typeof locals === 'object') {
                 locals.debug = config.debug;
+                locals.user = req.user;
             }
             if (locals === undefined) {
-                locals = { debug: config.debug };
+                locals = {
+                    debug: config.debug,
+                    user: req.user,
+                };
             }
             render.call(res, view, locals, cb);
         };

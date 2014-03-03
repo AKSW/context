@@ -1,3 +1,7 @@
 body {
   padding-top: 60px;
 }
+
+.logo-nav {
+    max-height: 90%;
+}

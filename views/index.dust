@@ -1,9 +1,10 @@
-{>"layout.dust"/}
+{>"core/layout.dust"/}
 {<menu}
-    <li class="active"><a href="#">Home</a></li>
+    {>"helpers/mainmenu.dust" user="user"/}
 {/menu}
 {<body}
     <div class="container">
         <h1>New context core</h1>
     </div>
+    {>"helpers/userecho.dust"/}
 {/body}

@@ -1,0 +1,7 @@
+{?user}
+    <li class="active"><a href="/">Home</a></li>
+{:else}
+    <li><a href="/">Home</a></li>
+    <li><a href="/account">User "{user}"</a></li>
+    <li><a href="/logout">Sign out</a></li>
+{/user}
