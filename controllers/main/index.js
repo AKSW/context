@@ -4,7 +4,6 @@ exports.index = {
     path: '/',
     method: 'get',
     returns: function(req, res, next) {
-        console.log(req.user);
         return res.render('index');
     }
 };

@@ -23,7 +23,7 @@
     "nlp"
   ],
   "scripts": {
-    "start": "node ./bin/leprabox",
+    "start": "node ./bin/context",
     "test": "./node_modules/.bin/grunt test",
     "postinstall": "./node_modules/.bin/grunt init"
   },
@@ -41,7 +41,9 @@
     "connect-mongo": "^0.4.0",
     "passport-local": "^0.1.6",
     "captchapng": "0.0.1",
-    "connect-flash": "^0.1.1"
+    "connect-flash": "^0.1.1",
+    "colors": "^0.6.2",
+    "optimist": "^0.6.1"
   },
   "engines": {
     "node": ">=0.10"
