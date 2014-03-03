@@ -18,3 +18,8 @@ body {
 #sponsors{
     text-align: center;
 }
+
+.sponsor {
+    margin-right: 10px;
+    margin-left: 10px;
+}
