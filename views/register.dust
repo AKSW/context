@@ -1,0 +1,57 @@
+{>"core/layout.dust"/}
+{<menu}
+    {>"helpers/mainmenu.dust" reg="true" user="user"/}
+{/menu}
+{<body}
+    <div class="container">
+        <div class="center-block row">
+            <h3>Register as new user:</h3>
+            <div>
+                <form class="form well" role="form" method="post" action="/api/register" id="registerform">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input id="username" class="form-control login_input" type="text" pattern="[a-zA-Z0-9]{2,64}" placeholder="Username" name="username" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input class="form-control" id="first_name" type="text"  name="first_name" placeholder="First Name" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input class="form-control" id="last_name" type="text"  name="last_name" placeholder="Last Name" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input class="login_input form-control" id="email" placeholder="User's email" type="email" name="email" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_new">Password (min. 6 characters)</label>
+                        <input type="password" class="login_input form-control" id="password_new" placeholder="Password (min. 6 characters)" name="password_new" pattern=".{6,}" required autocomplete="off" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_repeat">Confirm Password</label>
+                        <input type="password" class="form-control" id="password_repeat" placeholder="Password again" name="password_repeat" pattern=".{6,}" required autocomplete="off" />
+                    </div>
+
+                    <div class="form-group">
+                        <img src="api/captcha" alt="CAPTCHA code">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="captcha">Type the image code</label>
+                        <input type="text" class="form-control" id="captcha" placeholder="Copy text of image" name="captcha" required />
+                    </div>
+
+                    <input type="submit" name="register" value="Register" class="btn btn-primary"/>
+                </form>
+            </div>
+        </div>
+        {>"helpers/sponsors.dust"/}
+    </div>
+    {>"helpers/userecho.dust"/}
+{/body}

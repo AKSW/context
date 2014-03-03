@@ -1,5 +1,6 @@
 {?user}
-    <li class="active"><a href="/">Home</a></li>
+    <li {?home}class="active"{/home}><a href="/">Home</a></li>
+    <li {?reg}class="active"{/reg}><a href="/register">Register</a></li>
 {:else}
     <li><a href="/">Home</a></li>
     <li><a href="/account">User "{user}"</a></li>
