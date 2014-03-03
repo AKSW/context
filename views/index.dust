@@ -21,6 +21,7 @@
         </div>
 
         {>"helpers/auth.dust"/}
+        {>"helpers/sponsors.dust"/}
     </div>
     {>"helpers/userecho.dust"/}
 {/body}

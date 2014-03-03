@@ -1,0 +1,7 @@
+<footer>
+    <div class="row" id="sponsors">
+        <a href="http://www.iais.fraunhofer.de"><img src="img/sponsors/iais_logo.gif" alt="IAIS"/></a>
+        <a href="http://lod2.eu"><img src="img/sponsors/lod2_logo.png" alt="LOD2"/></a>
+        <a href="http://aksw.org"><img src="img/sponsors/aksw.png" alt="AKSW"/></a>
+    </div>
+</footer>

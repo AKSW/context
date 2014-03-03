@@ -22,16 +22,16 @@
     <div class="col-xs-6 col-sm-4 lead">
         Sign in using:<br/>
         <a href="/auth/facebook">
-            <img src="img/facebook.png" alt="Facebook Login" onmouseover="toggle_opac(this)" onmouseout="toggle_opac(this)"/>
+            <img src="img/social/facebook.png" alt="Facebook Login" onmouseover="toggle_opac(this)" onmouseout="toggle_opac(this)"/>
         </a>
         <a href="/auth/google">
-            <img src="img/google.png" alt="Google Login" onmouseover="toggle_opac(this)" onmouseout="toggle_opac(this)"/>
+            <img src="img/social/google.png" alt="Google Login" onmouseover="toggle_opac(this)" onmouseout="toggle_opac(this)"/>
         </a>
         <a href="/auth/twitter">
-            <img src="img/twitter.png" alt="Twitter Login" onmouseover="toggle_opac(this)" onmouseout="toggle_opac(this)"/>
+            <img src="img/social/twitter.png" alt="Twitter Login" onmouseover="toggle_opac(this)" onmouseout="toggle_opac(this)"/>
         </a>
         <a href="/auth/linkedin">
-            <img src="img/linkedin.png" alt="LinkedIn Login" onmouseover="toggle_opac(this)" onmouseout="toggle_opac(this)"/>
+            <img src="img/social/linkedin.png" alt="LinkedIn Login" onmouseover="toggle_opac(this)" onmouseout="toggle_opac(this)"/>
         </a>
     </div>
     <div class="col-xs-6 col-sm-4">
