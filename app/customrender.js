@@ -15,6 +15,7 @@ module.exports = function(app) {
                     user: req.user,
                 };
             }
+            console.log(locals.user);
             render.call(res, view, locals, cb);
         };
         next();

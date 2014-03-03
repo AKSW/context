@@ -1,6 +1,6 @@
 var captchapng = require('captchapng');
 
-// export index
+// export captcha image
 exports.captcha = {
     path: '/api/captcha',
     method: 'get',
@@ -18,14 +18,5 @@ exports.captcha = {
         var imgbase64 = new Buffer(img,'base64');
         res.writeHead(200, {'Content-Type': 'image/png'});
         return res.end(imgbase64);
-    }
-};
-
-// export index
-exports.checkCaptcha = {
-    path: '/api/captcha',
-    method: 'post',
-    returns: function(req, res, next) {
-        return res.send({'captcha': req.session.captcha === parseInt(req.body.captcha)});
     }
 };

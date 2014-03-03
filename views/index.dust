@@ -1,6 +1,6 @@
 {>"core/layout.dust"/}
 {<menu}
-    {>"helpers/mainmenu.dust" home="true" user="user"/}
+    {>"helpers/mainmenu.dust" home="true" user=user /}
 {/menu}
 {<body}
     <div class="container">
@@ -20,7 +20,12 @@
             <hr/>
         </div>
 
+        {#user}
+        {>"helpers/selectcorpus.dust"/}
+        {:else}
         {>"helpers/auth.dust"/}
+        {/user}
+
         {>"helpers/sponsors.dust"/}
     </div>
     {>"helpers/userecho.dust"/}

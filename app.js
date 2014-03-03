@@ -15,8 +15,8 @@ require('./app/main')(app);
 // load sessions config
 require('./app/session')(app);
 
-// load flash messages config
-require('./app/flashmessaging')(app);
+// load custom render function
+require('./app/customrender')(app);
 
 // load access control
 require('./app/accesscontrol')(app);

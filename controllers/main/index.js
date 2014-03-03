@@ -4,6 +4,7 @@ exports.index = {
     path: '/',
     method: 'get',
     returns: function(req, res, next) {
+        console.log(req.user);
         return res.render('index');
     }
 };
@@ -13,6 +14,6 @@ exports.register = {
     path: '/register',
     method: 'get',
     returns: function(req, res, next) {
-        return res.render('register');
+        return res.render('register', {error: req.flash('error'), oldData: req.flash('oldData')});
     }
 };

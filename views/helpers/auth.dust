@@ -2,7 +2,7 @@
     <!-- Local auth -->
     <div class="col-xs-6 col-md-4">
         <div>
-            <form class="well" role="form" method="post" action="/login" name="loginform">
+            <form class="well" role="form" method="post" action="/api/login" name="loginform">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" class="form-control" id="username" placeholder="Username" name="username" required>

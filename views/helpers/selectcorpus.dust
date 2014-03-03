@@ -1,0 +1,18 @@
+<div class="row" id="goto_corpus">
+    <div class="col-xs-12 col-sm-6 col-md-offset-4 col-md-8 corpus-select-box">
+        <form>
+        <div class="form-group">
+            <div class="input-group animated bounceInLeft lead well">
+                <span id="select_box" class="btn-padded">
+                    <select id="collection" class="selectpicker" data-live-search="true">
+                        <option value="0" selected>Select an existing corpus</option>
+                        <option value="1">Test corpus</option>';
+                    </select>
+                </span>
+                <strong class="btn-padded">OR</strong>
+                <a href="#" class="btn btn-primary btn-padded" onclick="$(\'#annotator_block\').removeClass(\'hide\');$(\'html, body\').animate({scrollTop: $(\'#annotator_block\').offset().top+10}, 1600);">Analyze a new corpus</a>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
