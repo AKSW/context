@@ -1,0 +1,6 @@
+node_modules/
+public/bower_components/
+config.js
+public/js/app.min.js
+public/css/main.min.css
+public/fonts/

@@ -1,0 +1,7 @@
+{>"layout.dust"/}
+{<title}
+  Error!
+{/title}
+{<body}
+  Oops! Something blew up!
+{/body}

@@ -1,0 +1,9 @@
+{>"layout.dust"/}
+{<menu}
+    <li class="active"><a href="#">Home</a></li>
+{/menu}
+{<body}
+    <div class="container">
+        <h1>New context core</h1>
+    </div>
+{/body}
