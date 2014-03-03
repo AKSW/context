@@ -5,3 +5,12 @@ body {
 .logo-nav {
     max-height: 90%;
 }
+
+.auth-panel {
+    padding-top: 20px;
+}
+
+.btn-padded {
+    margin-left: 5px;
+    margin-right: 5px;
+}
