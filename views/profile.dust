@@ -1,0 +1,46 @@
+{>"core/layout.dust"/}
+{<menu}
+    {>"helpers/mainmenu.dust" reg="true" user=user /}
+{/menu}
+{<body}
+    <div class="container">
+        {#error}
+        <div class="alert alert-danger">{error}</div>
+        {/error}
+
+        {#success}
+        <div class="alert alert-success">{success}</div>
+        {/success}
+
+        <div class="center-block row">
+            <h3>Your profile</h3>
+            <div>
+                <form class="form well" role="form" method="post" action="/api/user/{user._id}" id="registerform">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input id="username" class="form-control login_input" type="text" pattern="[a-zA-Z0-9]{2,64}" placeholder="Username" name="username" {#user}value="{username}"{/user} required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input class="form-control" id="first_name" type="text"  name="first_name" placeholder="First Name" {#user}value="{first_name}"{/user} required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input class="form-control" id="last_name" type="text"  name="last_name" placeholder="Last Name" {#user}value="{last_name}"{/user} required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input class="login_input form-control" id="email" placeholder="User's email" type="email" name="email" {#user}value="{email}"{/user} required />
+                    </div>
+
+                    <input type="submit" name="save" value="Save" class="btn btn-primary"/>
+                </form>
+            </div>
+        </div>
+        {>"helpers/sponsors.dust"/}
+    </div>
+    {>"helpers/userecho.dust"/}
+{/body}

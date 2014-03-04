@@ -9,10 +9,10 @@ module.exports = function(app) {
 
     // setup user serialisation and de-serialisation
     passport.serializeUser(function(user, done) {
-        done(null, user.username);
+        done(null, user._id);
     });
     passport.deserializeUser(function(id, done) {
-        User.findOne({username: id}, function(err, user) {
+        User.findOne({_id: id}, function(err, user) {
             done(err, user);
         });
     });

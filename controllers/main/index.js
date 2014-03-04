@@ -8,11 +8,13 @@ exports.index = {
     }
 };
 
-// export index
-exports.register = {
-    path: '/register',
+
+// export profile
+exports.profile = {
+    path: '/profile',
     method: 'get',
     returns: function(req, res, next) {
-        return res.render('register', {error: req.flash('error'), oldData: req.flash('oldData')});
+        return res.render('profile', {error: req.flash('error'), success: req.flash('success')});
     }
 };
+
