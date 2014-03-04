@@ -1,6 +1,6 @@
 {>"core/layout.dust"/}
 {<menu}
-    {>"helpers/mainmenu.dust" reg="true" user=user /}
+    {>"helpers/mainmenu.dust" profile="true" user=user /}
 {/menu}
 {<body}
     <div class="container">

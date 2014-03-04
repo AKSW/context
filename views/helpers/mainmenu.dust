@@ -1,6 +1,6 @@
 {#user}
-    <li><a href="/">Home</a></li>
-    <li><a href="/profile">Profile ({username})</a></li>
+    <li {?home}class="active"{/home}><a href="/">Home</a></li>
+    <li {?profile}class="active"{/profile}><a href="/profile">Profile ({username})</a></li>
     <li><a href="/logout">Sign out</a></li>
 {:else}
     <li {?home}class="active"{/home}><a href="/">Home</a></li>
