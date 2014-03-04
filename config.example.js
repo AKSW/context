@@ -17,9 +17,15 @@ exports.sessionDb = {
     url: exports.db
 };
 
-// facebook config
+// facebook app config
 exports.facebook = {
     clientID: 'FACEBOOK_APP_ID',
     clientSecret: 'FACEBOOK_APP_SECRET',
     callbackURL: 'http://localhost:8080/auth/facebook/callback',
+};
+
+// google app config
+exports.google = {
+    returnURL: 'http://localhost:8080/auth/google/return',
+    realm: 'http://localhost:8080/'
 };
