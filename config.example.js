@@ -30,9 +30,16 @@ exports.google = {
     realm: 'http://localhost:8080/'
 };
 
-// google app config
+// twitter app config
 exports.twitter = {
     consumerKey: 'TWITTER_CONSUMER_KEY',
     consumerSecret: 'TWITTER_CONSUMER_SECRET',
     callbackURL: 'http://localhost:8080/auth/twitter/callback'
+};
+
+// linkedin app config
+exports.linkedin = {
+    consumerKey: 'LINKEDIN_API_KEY',
+    consumerSecret: 'LINKEDIN_SECRET_KEY',
+    callbackURL: 'http://localhost:8080/auth/linkedin/callback'
 };
