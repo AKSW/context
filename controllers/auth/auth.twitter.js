@@ -5,18 +5,18 @@ var config = require('../../config');
 var User = require('../../db/user').User;
 // passport
 var passport = require('passport');
-var passportFacebook = require('passport-facebook');
+var passportTwitter = require('passport-twitter');
 
 // make passport policy
-var FacebookStrategy = passportFacebook.Strategy;
-passport.use(new FacebookStrategy(config.facebook,
-    function (accessToken, refreshToken, profile, done) {
+var TwitterStrategy = passportTwitter.Strategy;
+passport.use(new TwitterStrategy(config.twitter,
+    function (token, tokenSecret, profile, done) {
         var username = profile.username;
-        var fbId = profile.id;
+        var twId = profile.id;
         var query = {
             username: username,
-            'social_networks.network': 'facebook',
-            'social_networks.id': fbId
+            'social_networks.network': 'twitter',
+            'social_networks.id': twId
         };
         // try to find user
         User.findOne(query, function(err, user) {
@@ -36,10 +36,10 @@ passport.use(new FacebookStrategy(config.facebook,
 var registerNewUser = function(profile, done) {
     var user = {
         username: profile.username,
-        first_name: profile.name.givenName,
-        last_name: profile.name.familyName,
+        first_name: profile.displayName,
+        last_name: '',
         social_networks: [{
-            network: 'facebook',
+            network: 'twitter',
             id: profile.id
         }]
     };
@@ -67,23 +67,23 @@ var registerNewUser = function(profile, done) {
     });
 };
 
-// Redirect the user to Facebook for authentication.  When complete,
-// Facebook will redirect the user back to the application at
-//     /auth/facebook/callback
-exports.facebook = {
-    path: '/auth/facebook',
+// Redirect the user to Twitter for authentication.  When complete,
+// Twitter will redirect the user back to the application at
+//     /auth/twitter/callback
+exports.twitter = {
+    path: '/auth/twitter',
     method: 'get',
-    returns: passport.authenticate('facebook')
+    returns: passport.authenticate('twitter')
 };
 
-// Facebook will redirect the user to this URL after approval.  Finish the
+// Twitter will redirect the user to this URL after approval.  Finish the
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
-exports.facebook_callback = {
-    path: '/auth/facebook/callback',
+exports.twitter_callback = {
+    path: '/auth/twitter/callback',
     method: 'get',
-    returns: passport.authenticate('facebook', {
+    returns: passport.authenticate('twitter', {
         successRedirect: '/',
         failureRedirect: '/',
         failureFlash: true

@@ -81,7 +81,7 @@ exports.google = {
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
-exports.login = {
+exports.google_callback = {
     path: '/auth/google/callback',
     method: 'get',
     returns: passport.authenticate('google', {

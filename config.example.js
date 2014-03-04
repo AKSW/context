@@ -29,3 +29,10 @@ exports.google = {
     returnURL: 'http://localhost:8080/auth/google/return',
     realm: 'http://localhost:8080/'
 };
+
+// google app config
+exports.twitter = {
+    consumerKey: 'TWITTER_CONSUMER_KEY',
+    consumerSecret: 'TWITTER_CONSUMER_SECRET',
+    callbackURL: 'http://localhost:8080/auth/twitter/callback'
+};
