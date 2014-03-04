@@ -11,6 +11,10 @@ userSchema = new Schema({
     first_name: String,
     last_name: String,
     registration_date: {type: String, default: Date.now},
+    social_networks: [{
+        network: String,
+        id: String
+    }]
 });
 
 // Model

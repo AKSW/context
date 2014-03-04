@@ -25,18 +25,10 @@ passport.use(new LocalStrategy(
         });
     }
 ));
-passport.serializeUser(function(user, done) {
-    done(null, user.username);
-});
-passport.deserializeUser(function(id, done) {
-    User.findOne({username: id}, function(err, user) {
-        done(err, user);
-    });
-});
 
 // export index
 exports.register = {
-    path: '/api/register',
+    path: '/auth/register',
     method: 'post',
     returns: function(req, res, next){
         // check password for match
@@ -89,7 +81,7 @@ exports.register = {
 };
 
 exports.login = {
-    path: '/api/login',
+    path: '/auth/login',
     method: 'post',
     returns: function(req, res, next){
         passport.authenticate('local', function(err, user, info) {
@@ -111,4 +103,3 @@ exports.login = {
         })(req, res, next);
     }
 };
-

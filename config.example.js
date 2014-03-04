@@ -16,3 +16,10 @@ exports.db = 'mongodb://localhost/context';
 exports.sessionDb = {
     url: exports.db
 };
+
+// facebook config
+exports.facebook = {
+    clientID: 'FACEBOOK_APP_ID',
+    clientSecret: 'FACEBOOK_APP_SECRET',
+    callbackURL: 'http://localhost:8080/auth/facebook/callback',
+};
