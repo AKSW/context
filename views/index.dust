@@ -20,10 +20,14 @@
             <hr/>
         </div>
 
+        {?error}
+        <div class="alert alert-danger">{error}</div>
+        {/error}
+
         {#user}
         {>"helpers/selectcorpus.dust"/}
         {:else}
-        {>"helpers/auth.dust"/}
+        {>"helpers/auth.dust" username=oldusername /}
         {/user}
 
         {>"helpers/sponsors.dust"/}

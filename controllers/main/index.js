@@ -4,7 +4,7 @@ exports.index = {
     path: '/',
     method: 'get',
     returns: function(req, res, next) {
-        return res.render('index');
+        return res.render('index', {error: req.flash('error'), oldusername: req.flash('oldusername')});
     }
 };
 

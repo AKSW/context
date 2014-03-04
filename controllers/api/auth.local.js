@@ -97,8 +97,9 @@ exports.login = {
                 return next(err);
             }
             if (!user) {
-                req.flash('error', 'Неверный логин или пароль!');
-                return res.redirect('/login');
+                req.flash('error', 'Incorrect login or password!');
+                req.flash('oldusername', req.body.username);
+                return res.redirect('/');
             }
             req.login(user, function(err) {
                 if (err) {

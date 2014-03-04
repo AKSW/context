@@ -5,7 +5,8 @@
             <form class="well" role="form" method="post" action="/api/login" name="loginform">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Username" name="username" required>
+                    <input type="text" class="form-control" id="username" placeholder="Username" name="username" required 
+                    {?username}value="{username}"{/username} />
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
