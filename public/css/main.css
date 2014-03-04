@@ -28,3 +28,8 @@ body {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.corpus-select-input {
+    text-align: center;
+    width: 100%;
+}

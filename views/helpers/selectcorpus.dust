@@ -1,8 +1,8 @@
 <div class="row" id="goto_corpus">
-    <div class="col-xs-12 col-sm-6 col-md-offset-4 col-md-8 corpus-select-box">
+    <div class="col-xs-12 col-sm-12 col-md-offset-2 col-md-8 corpus-select-box">
         <form>
         <div class="form-group">
-            <div class="input-group animated bounceInLeft lead well">
+            <div class="input-group lead well corpus-select-input">
                 <span id="select_box" class="btn-padded">
                     <select id="collection" class="selectpicker" data-live-search="true">
                         <option value="0" selected>Select an existing corpus</option>
