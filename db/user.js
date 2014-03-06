@@ -10,7 +10,7 @@ userSchema = new Schema({
     email: String,
     first_name: String,
     last_name: String,
-    registration_date: {type: String, default: Date.now},
+    registration_date: {type: Date, default: Date.now},
     social_networks: [{
         network: String,
         id: String
