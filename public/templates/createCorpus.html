@@ -1,0 +1,43 @@
+<form id="bt_form" class="well">
+    <fieldset>
+        <legend>Insert new corpus data for analysis</legend>
+        <div class="form-group">
+            <div class="row">
+                <% _.each(types, function(type, i) { %>
+                <div class="col-xs-12 col-sm-4 check-input-comp">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <input type="radio" name="input_type" value="<%= type.get('name') %>" class="radio-btn" <% if(i === 0) { %>checked <% }; %>>
+                        </span>
+                        <input type="text" class="col-lg-3 form-control disabled-input btn-default btn" value="<%= type.get('description') %>" disabled>
+                    </div><!-- /input-group -->
+                </div>
+                <% }); %>
+            </div><!-- /.row -->
+        </div>
+        <div class="form-group" id="type_field">
+            <label class="control-label" for="input_item" id="input_label">URL</label>
+            <input type="text" class="form-control" placeholder="URL" id="input_item" />
+            <textarea id="input_item_area" class="form-control" style="display: none;"></textarea>
+            <input type="file" name="input_item_file" id="input_item_file" class="form-control" style="display: none;"/>
+        </div>
+        <div id="advanced_options">
+            <div class="form-group" id="slider_container">
+                <label class="control-label" for="input_count" id="label_input_count">Items to be analyzed</label>
+                <input id="input_count" class="form-control" data-slider-id="input_count" type="text" />
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="nlp_api">NLP API</label>
+                <select id="nlp_api" class="form-control">
+                    <option value="DBpedia-Spotlight">DBpedia Spotlight</option>
+                    <option value="FOX">FOX</option>
+                </select>
+            </div>
+            <div class="form-group" id="c_name_field">
+                <label class="control-label" for="corpus_name">Save as</label>
+                <input type="text" class="form-control" placeholder="Corpus name" id="corpus_name"/>
+            </div>
+            </div>
+        <a href="#analyze" class="btn btn-primary" onclick="submitCorpus();"> Start Analysis</a>
+    </fieldset>
+</form>

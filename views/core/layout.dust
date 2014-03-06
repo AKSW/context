@@ -20,11 +20,12 @@
 
     {?debug}
     <!-- scripts -->
-    <script data-main="js/app" src="bower_components/requirejs/require.js"></script>
+    <script data-main="js/main" src="bower_components/requirejs/require.js"></script>
     <script src="js/config.js"></script>
 
     <!-- styles -->
     <link rel="stylesheet"  href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"  href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css" />
     <link rel="stylesheet"  href="css/main.css" />
     {:else}
     <script src="js/app.min.js"></script>
@@ -47,6 +48,9 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     {+menu/}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {+menu_right/}
                 </ul>
             </div><!--/.nav-collapse -->
         </div>

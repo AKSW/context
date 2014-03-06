@@ -1,7 +1,6 @@
 {#user}
     <li {?home}class="active"{/home}><a href="/">Home</a></li>
-    <li {?profile}class="active"{/profile}><a href="/profile">Profile ({username})</a></li>
-    <li><a href="/logout">Sign out</a></li>
+    <li {?createCorpus}class="active"{/createCorpus}><a href="/createCorpus">Create corpus</a></li>
 {:else}
     <li {?home}class="active"{/home}><a href="/">Home</a></li>
     <li {?reg}class="active"{/reg}><a href="/register">Register</a></li>

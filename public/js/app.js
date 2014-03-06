@@ -1,7 +1,22 @@
 // load common libraries
-define(['jquery', 'bootstrap'], function(jQuery, _bs) {
+define([
+    'bootstrap',
+    'backbone',
+    'router',
+    'bootstrap-slider',
+], function(
+    Bootstrap,
+    Backbone,
+    Router,
+    _slider
+) {
     // define app
     var App = function(){
+        this.initialize = function () {
+            // initialize router
+            Router.initialize();
+        };
+
         return this;
     };
 

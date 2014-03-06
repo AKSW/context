@@ -33,3 +33,7 @@ body {
     text-align: center;
     width: 100%;
 }
+
+#input_count {
+    max-width: 100%;
+}

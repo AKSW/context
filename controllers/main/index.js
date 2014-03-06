@@ -18,3 +18,11 @@ exports.profile = {
     }
 };
 
+// export createCorpus
+exports.createCorpus = {
+    path: '/createCorpus',
+    method: 'get',
+    returns: function(req, res, next) {
+        return res.render('createCorpus');
+    }
+};

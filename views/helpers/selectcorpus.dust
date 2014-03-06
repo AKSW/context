@@ -10,7 +10,7 @@
                     </select>
                 </span>
                 <strong class="btn-padded">OR</strong>
-                <a href="#" class="btn btn-primary btn-padded" onclick="$(\'#annotator_block\').removeClass(\'hide\');$(\'html, body\').animate({scrollTop: $(\'#annotator_block\').offset().top+10}, 1600);">Analyze a new corpus</a>
+                <a href="/createCorpus" class="btn btn-primary btn-padded">Analyze a new corpus</a>
             </div>
         </div>
         </form>
