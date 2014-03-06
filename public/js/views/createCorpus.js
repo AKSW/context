@@ -1,7 +1,9 @@
 define([
+    'underscore',
+    'backbone',
     'data/corpusTypesCollection',
     'text!/templates/createCorpus.html',
-], function(corpusTypesCollection, createCorpusTemplate){
+], function(_, Backbone, corpusTypesCollection, createCorpusTemplate){
     var $inputCount, $inputItem, $inputLabel,
         $inputItemArea, $inputItemFile,
         $sliderContainer;
