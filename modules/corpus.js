@@ -3,6 +3,13 @@ var underscore = require('underscore');
 var Corpus = require('../db/corpus').Corpus;
 // include modules
 var feedProcessing = require('./inputProcessing/feed');
+var directProcessing = require('./inputProcessing/direct');
+
+// array of processers
+var processers = {
+    'feed': feedProcessing,
+    'directinput': directProcessing,
+};
 
 //
 // functions
@@ -29,10 +36,9 @@ var createCorpus = function(corpus, cb) {
 };
 
 var processCorpus = function(corpus) {
-    console.log('processing input from corpus ', corpus);
-    if(corpus.input_type === 'feed') {
-        feedProcessing.process(corpus);
-    }
+    console.log('processing input from corpus', corpus);
+    // process
+    processers[corpus.input_type].process(corpus);
 };
 
 // main module object
