@@ -5,12 +5,13 @@ var mongoose = require('mongoose'),
     corpusSchema, Corpus;
 
 corpusSchema = new Schema({
-    user: {type: Schema.Types.ObjectId, ref: 'users'},
     name: String,
     creation_date: {type: Date, default: Date.now},
-    input_type: String,
     nlp_api: {type: String, default: 'DBpedia-Spotlight'},
+    user: {type: Schema.Types.ObjectId, ref: 'users'},
     input: String,
+    input_type: String,
+    input_count: Number,
 });
 
 // Model

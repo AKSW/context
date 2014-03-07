@@ -1,3 +1,4 @@
+var _ = require('underscore');
 // includes
 var Corpus = require('../../modules/corpus');
 
@@ -7,12 +8,18 @@ exports.createCorpus = {
     method: 'post',
     returns: function(req, res, next){
         // get data
-        var corpus = req.body.corpus;
-        var inputCount = req.body.inputCount;
+        var corpus = req.body;
+
+        // append user to corpus
+        corpus = _.extend(corpus, {user: req.user._id});
 
         // trigger creation
-        Corpus.createCorpus(corpus, inputCount);
+        Corpus.createCorpus(corpus, function(err, id) {
+            if(err) {
+                return next(err);
+            }
 
-        res.send('OK');
+            return res.redirect('/corpus/'+id);
+        });
     }
 };

@@ -6,7 +6,8 @@ define([
 ], function(_, Backbone, corpusTypesCollection, createCorpusTemplate){
     // DOM references
     var $inputCount, $inputItem, $inputLabel, $inputItemArea, $inputItemFile,
-        $sliderContainer, $corpusNameInput, $nlpApiOptions;
+        $sliderContainer, $corpusNameInput, $nlpApiOptions, $newCorpusForm,
+        $inputCountField;
 
     // current type
     var currentType;
@@ -62,14 +63,11 @@ define([
 
     // handle start button
     var handleAnalysisStart = function (e) {
-        console.log('start');
-
         $corpusNameInput.parent().removeClass('has-warning');
         $inputItem.parent().removeClass('has-warning');
 
+        // validate input
         var name = $corpusNameInput.val().trim();
-        var api = $nlpApiOptions.val();
-        var itemCount = $inputCount.val();
         var input = null;
         var corpusType = currentType.get('name');
         var inputType = currentType.get('inputType');
@@ -95,23 +93,31 @@ define([
             return;
         }
 
-        // create new corpus
-        var newCorpus = {
-            nlp_api: api,
-            name: name,
-            input_type: corpusType,
-            input: input,
-        };
+        // assign count to input field
+        var itemCount = $inputCount.slider('getValue');
+        $inputCountField.val(itemCount);
 
-        // prepare data
-        var data = {
-            corpus: newCorpus,
-            inputCount: itemCount,
-        };
+        // remove unneeded inputs & rename last one
+        switch(inputType) {
+            case 'text':
+                $inputItem.attr('name', 'input');
+                $inputItemArea.remove();
+                $inputItemFile.remove();
+                break;
+            case 'textarea':
+                $inputItem.remove();
+                $inputItemArea.attr('name', 'input');
+                $inputItemFile.remove();
+                break;
+            case 'file':
+                $inputItem.remove();
+                $inputItemArea.remove();
+                $inputItemFile.attr('name', 'input');
+                break;
+        }
+
         // send to server
-        $.post('/api/corpus', data, function(response){
-            console.log(response);
-        });
+        $newCorpusForm.submit();
     };
 
     // render view
@@ -134,6 +140,8 @@ define([
         $sliderContainer = $('#slider_container');
         $corpusNameInput = $('#corpus_name');
         $nlpApiOptions = $('#nlp_api');
+        $newCorpusForm = $('#newcorpus_form');
+        $inputCountField = $('input#input_count');
 
         // apply styling to slider
         var corpusType = this.collection.find(function(item) {
