@@ -4,11 +4,13 @@ var Corpus = require('../db/corpus').Corpus;
 // include modules
 var feedProcessing = require('./inputProcessing/feed');
 var directProcessing = require('./inputProcessing/direct');
+var wpProcessing = require('./inputProcessing/wordpress');
 
 // array of processers
 var processers = {
     'feed': feedProcessing,
     'directinput': directProcessing,
+    'wordpress': wpProcessing,
 };
 
 //
@@ -17,7 +19,6 @@ var processers = {
 
 // new corpus creation
 var createCorpus = function(corpus, cb) {
-    console.log('creating new corpus', corpus);
     // step 1: save corpus to db
     var newCorpus = new Corpus(corpus);
     newCorpus.save(function(err) {

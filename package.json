@@ -47,7 +47,8 @@
     "underscore": "^1.6.0",
     "feedparser": "^0.16.6",
     "request": "^2.34.0",
-    "portfinder": "^0.2.1"
+    "portfinder": "^0.2.1",
+    "jsdom": "^0.10.1"
   },
   "engines": {
     "node": ">=0.10"

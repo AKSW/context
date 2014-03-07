@@ -29,7 +29,7 @@ var process = function(corpus) {
             var pubDate = item.pubDate;
             var description = item.description;
             // convert to html string
-            var body = '<div class="extracted-title">' + title + '</div>' + description;
+            var body = '<div class="extracted-title">' + title + '</div> ' + description;
             var doc = {
                 corpuses: [corpus._id],
                 uri: link,
@@ -71,7 +71,7 @@ var process = function(corpus) {
 // module
 var FeedProcessing = function () {
     // Super constructor
-    EventEmitter.call( this );
+    EventEmitter.call(this);
 
     // function
     this.process = process;
