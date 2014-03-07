@@ -44,7 +44,10 @@
     "connect-flash": "^0.1.1",
     "colors": "^0.6.2",
     "optimist": "^0.6.1",
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "feedparser": "^0.16.6",
+    "request": "^2.34.0",
+    "portfinder": "^0.2.1"
   },
   "engines": {
     "node": ">=0.10"

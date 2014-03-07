@@ -1,6 +1,8 @@
 var underscore = require('underscore');
 // include db
 var Corpus = require('../db/corpus').Corpus;
+// include modules
+var feedProcessing = require('./inputProcessing/feed');
 
 //
 // functions
@@ -28,7 +30,9 @@ var createCorpus = function(corpus, cb) {
 
 var processCorpus = function(corpus) {
     console.log('processing input from corpus ', corpus);
-    // step 3: await module response
+    if(corpus.input_type === 'feed') {
+        feedProcessing.process(corpus);
+    }
 };
 
 // main module object
