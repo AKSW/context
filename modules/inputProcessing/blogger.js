@@ -3,6 +3,7 @@ var EventEmitter = require('events').EventEmitter;
 var request = require('request');
 var jsdom = require('jsdom');
 var crypto = require('crypto');
+var moment = require('moment');
 // function requires
 var pageToJsdom = require('../../util/jsdom').pageToJsdom;
 // db
@@ -24,10 +25,11 @@ var parsePage = function(body, itemsLeft, cb) {
         var toProcess = posts.length;
         posts.each(function(idx, post) {
             var $entityTitile = $('.entry-title', post);
-            var $postHeading = $('.postHeading', post);
-            var $entryMeta = $('.entry-meta', post);
-            var $postHeader = $('.postHeader', post);
+            var $postTitle = $('.post-title', post);
+            var $postTimestamp = $('.post-timestamp', post);
+            var $publishDate = $('.publishdate', post);
             var $entryContent = $('.entry-content', post);
+            var $postBody = $('.post-body', post);
             var $moreLink = $entryContent.find('.more-link');
             var $postSummary = $('.postSummary', post);
             var $noResults = $(post).hasClass('no-results') ||
@@ -42,105 +44,59 @@ var parsePage = function(body, itemsLeft, cb) {
             // init entity
             var entity = {};
             // get title
-            entity.title = $entityTitile.html() || $postHeading.html() || '';
+            entity.title = $postTitle.html() || $entityTitile.html() || '';
             // remove whitespace
             entity.title = entity.title.trim();
             // get link
-            entity.link = $entityTitile.find('a').attr('href') ||
-                          $entityTitile.attr('href') ||
-                          $postHeading.find('a').attr('href') || 'no-link';
+            entity.link = $postTitle.find('a').attr('href') ||
+                          $entityTitile.find('a').attr('href') ||
+                          'no-link';
 
             // get date
-            var tmpDate = $entryMeta.find('.date').text() ||
-                          $entryMeta.find('.entry-date').text() ||
-                          $postHeader.find('.postMetaHeader').find('time').attr('datetime') ||
+            var tmpDate = $postTimestamp.find('abbr').attr('title') ||
+                          $publishDate.html() ||
                           '';
-            entity.date = new Date(tmpDate.trim()) || '';
-
-            if ($moreLink.length || $postSummary.length) {
-                var contentUrl = $moreLink.attr('href') || $postSummary.attr('href');
-                getPostContent(contentUrl, function(data) {
-                    //assign data
-                    entity.content = data;
-                    // clean
-                    entity.content = entity.content.trim().replace(/\t/g, '');
-
-                    // if all fails, special case
-                    if (!entity.content && !entity.title) {
-                        entity.content = $(post).html();
-                        // clean
-                        entity.content = entity.content.trim().replace(/\t/g, '');
-                    }
-
-                    // push
-                    results.push(entity);
-                    // decrease to process counter
-                    toProcess--;
-                    // check end
-                    if(toProcess === 0) {
-                        // free up memory
-                        window.close();
-                        cb(results);
-                    }
-                });
-            } else {
-                entity.content = $('.entry-content', post).html();
-
-                // if all fails, special case
-                if (!entity.content.trim() && !entity.title.trim()) {
-                    entity.content = $(post).html();
-                }
-
-                // push entity to results
-                results.push(entity);
-                // decrease to process counter
-                toProcess--;
-                // check end
-                if(toProcess === 0) {
-                    // free up memory
-                    window.close();
-                    cb(results);
-                }
-            }
-        });
-    });
-};
-
-// gets post content
-var getPostContent = function(url, cb) {
-    request(url, function (error, response, body) {
-        if (error) {
-            console.log('error loadgin wp page', error);
-            return cb(false);
-        }
-
-        // parse
-        pageToJsdom(body, function($, window) {
-            if(!$) {
-                return cb();
-            }
+            entity.dateString = tmpDate;
+            entity.date = moment(tmpDate.trim()).toDate() || '';
 
             // get content
-            var content = $('.entry-content').html();
-            // free up memory
-            window.close();
-            // trigger callback
-            cb(content);
+            entity.content = $postBody.html() || $entryContent.html() || '';
+            // clean
+            entity.content = entity.content.trim();
+
+            // if all fails, special case
+            if (!entity.content && !entity.title) {
+                entity.content = $(post).html();
+            }
+
+            // push entity to results
+            results.push(entity);
+            // decrease to process counter
+            toProcess--;
+            // check end
+            if(toProcess === 0) {
+                // free up memory
+                window.close();
+                cb(results);
+            }
         });
     });
 };
 
-var getNextPage = function(url, corpus, itemsLeft, page) {
-    var pageUrl = url + '/page/'+page+'/';
+var getNextPage = function(url, corpus, itemsLeft, date) {
+    var pageUrl = url + '/search?max-results=20';
+    if(date) {
+        pageUrl += '&updated-max=' + date;
+    }
     request(pageUrl, function (error, response, body) {
         if (error) {
-            return console.log('error loadgin wp page', error);
+            return console.log('error loading blogger page', error);
         }
 
         // parse
         parsePage(body, itemsLeft, function(res) {
             if(!res) {
-                return console.log('error loadgin wp page', error);
+                return console.log('error loading blogger page', error);
             }
             // get count
             var count = res.length;
@@ -181,8 +137,11 @@ var getNextPage = function(url, corpus, itemsLeft, page) {
                 return console.log('done processing wordpress');
             }
 
+            // get last item date
+            var lastDate = res[res.length-1].dateString;
+
             // process next paga
-            getNextPage(url, corpus, itemsLeft, page+1);
+            getNextPage(url, corpus, itemsLeft, lastDate);
         });
     });
 };
@@ -194,16 +153,16 @@ var process = function(corpus) {
     var limit = corpus.input_count;
 
     // get first page
-    getNextPage(url, corpus._id, limit, 1);
+    getNextPage(url, corpus._id, limit);
 };
 
 // module
-var WordpressProcessing = function () {
+var DirectProcessing = function () {
     // Super constructor
     EventEmitter.call( this );
 
     // name (also ID of processer used in client)
-    this.name = 'wordpress';
+    this.name = 'blogger';
 
     // function
     this.process = process;
@@ -211,4 +170,4 @@ var WordpressProcessing = function () {
     return this;
 };
 
-module.exports = new WordpressProcessing();
+module.exports = new DirectProcessing();
