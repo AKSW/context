@@ -81,13 +81,14 @@ define([
         haveItems: false,
     });
     // upload a doc
-    collection.add({
+    // TODO: implement, then re-enable
+    /*collection.add({
         name: 'doc',
         description: 'Upload a document',
         inputType: 'file',
         inputDescription: 'Document',
         haveItems: false,
-    });
+    });*/
 
     // Our module now returns our view
     return collection;

@@ -22,7 +22,6 @@ var parsePage = function(body, itemsLeft, cb) {
 
         // get all posts
         var posts = $('.post');
-        var toProcess = posts.length;
         posts.each(function(idx, post) {
             var $entityTitile = $('.entry-title', post);
             var $postTitle = $('.post-title', post);
@@ -71,15 +70,12 @@ var parsePage = function(body, itemsLeft, cb) {
 
             // push entity to results
             results.push(entity);
-            // decrease to process counter
-            toProcess--;
-            // check end
-            if(toProcess === 0) {
-                // free up memory
-                window.close();
-                cb(results);
-            }
         });
+
+        // free up memory
+        window.close();
+        // trigger callback
+        cb(results);
     });
 };
 
