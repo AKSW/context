@@ -60,10 +60,12 @@ var parsePage = function(body, itemsLeft, cb) {
             var entity = {};
             // get title
             entity.title = $entityTitile.html() || $postHeading.html() || '';
+            // remove whitespace
+            entity.title = entity.title.trim();
             // get link
             entity.link = $entityTitile.find('a').attr('href') ||
                           $entityTitile.attr('href') ||
-                          $postHeading.find('a').attr('href') || '';
+                          $postHeading.find('a').attr('href') || 'no-link';
 
             // get date
             var tmpDate = $entryMeta.find('.date').text() ||
@@ -77,10 +79,14 @@ var parsePage = function(body, itemsLeft, cb) {
                 getPostContent(contentUrl, function(data) {
                     //assign data
                     entity.content = data;
+                    // clean
+                    entity.content = entity.content.trim().replace(/\t/g, '');
 
                     // if all fails, special case
-                    if (!entity.content.trim() && !entity.title.trim()) {
+                    if (!entity.content && !entity.title) {
                         entity.content = $(post).html();
+                        // clean
+                        entity.content = entity.content.trim().replace(/\t/g, '');
                     }
 
                     // push
@@ -119,6 +125,7 @@ var parsePage = function(body, itemsLeft, cb) {
 
 // gets post content
 var getPostContent = function(url, cb) {
+    console.log('loading', url);
     request(url, function (error, response, body) {
         if (error) {
             console.log('error loadgin wp page', error);
@@ -143,6 +150,7 @@ var getPostContent = function(url, cb) {
 
 var getNextPage = function(url, corpus, itemsLeft, page) {
     var pageUrl = url + '/page/'+page+'/';
+    console.log('loading', pageUrl);
     request(pageUrl, function (error, response, body) {
         if (error) {
             return console.log('error loadgin wp page', error);
@@ -165,6 +173,14 @@ var getNextPage = function(url, corpus, itemsLeft, page) {
                 var entity = res[i];
                 // convert to html string
                 var content = '<div class="extracted-title">' + entity.title + '</div> ' + entity.content;
+                // if no link is given, generate a new unique one
+                if(entity.link === 'no-link') {
+                    // hash input
+                    var md5sum = crypto.createHash('md5');
+                    md5sum.update(content + Date.now().toString());
+                    // generate unique url for piece
+                    entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
+                }
                 var doc = {
                     corpuses: [corpus],
                     creation_date: entity.date,
