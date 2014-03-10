@@ -157,7 +157,7 @@ var process = function(corpus) {
 };
 
 // module
-var DirectProcessing = function () {
+var BloggerProcessing = function () {
     // Super constructor
     EventEmitter.call( this );
 
@@ -170,4 +170,4 @@ var DirectProcessing = function () {
     return this;
 };
 
-module.exports = new DirectProcessing();
+module.exports = new BloggerProcessing();
