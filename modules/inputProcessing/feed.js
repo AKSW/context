@@ -73,6 +73,9 @@ var FeedProcessing = function () {
     // Super constructor
     EventEmitter.call(this);
 
+    // name (also ID of processer used in client)
+    this.name = 'feed';
+
     // function
     this.process = process;
 

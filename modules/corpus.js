@@ -1,19 +1,10 @@
 var underscore = require('underscore');
+var fs = require('fs');
 // include db
 var Corpus = require('../db/corpus').Corpus;
-// include modules
-var feedProcessing = require('./inputProcessing/feed');
-var directProcessing = require('./inputProcessing/direct');
-var wpProcessing = require('./inputProcessing/wordpress');
-var webpageProcessing = require('./inputProcessing/webpage');
 
-// array of processers
-var processers = {
-    'feed': feedProcessing,
-    'directinput': directProcessing,
-    'wordpress': wpProcessing,
-    'webpage': webpageProcessing,
-};
+// array of processers, will be filled automatically
+var processers = {};
 
 //
 // functions
@@ -46,6 +37,12 @@ var processCorpus = function(corpus) {
 
 // main module object
 var CorpusModule = function () {
+    // autoload parsing modules
+    fs.readdirSync(__dirname + '/inputProcessing').forEach(function(moduleName){
+        var obj = require('./inputProcessing/' + moduleName);
+        processers[obj.name] = obj;
+    });
+
     this.createCorpus = createCorpus;
 };
 

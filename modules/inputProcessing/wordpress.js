@@ -219,6 +219,9 @@ var WordpressProcessing = function () {
     // Super constructor
     EventEmitter.call( this );
 
+    // name (also ID of processer used in client)
+    this.name = 'wordpress';
+
     // function
     this.process = process;
 

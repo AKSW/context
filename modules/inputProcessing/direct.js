@@ -30,6 +30,9 @@ var DirectProcessing = function () {
     // Super constructor
     EventEmitter.call( this );
 
+    // name (also ID of processer used in client)
+    this.name = 'directinput';
+
     // function
     this.process = process;
 
