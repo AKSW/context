@@ -125,7 +125,6 @@ var parsePage = function(body, itemsLeft, cb) {
 
 // gets post content
 var getPostContent = function(url, cb) {
-    console.log('loading', url);
     request(url, function (error, response, body) {
         if (error) {
             console.log('error loadgin wp page', error);
@@ -150,7 +149,6 @@ var getPostContent = function(url, cb) {
 
 var getNextPage = function(url, corpus, itemsLeft, page) {
     var pageUrl = url + '/page/'+page+'/';
-    console.log('loading', pageUrl);
     request(pageUrl, function (error, response, body) {
         if (error) {
             return console.log('error loadgin wp page', error);

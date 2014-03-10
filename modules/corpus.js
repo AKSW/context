@@ -5,12 +5,14 @@ var Corpus = require('../db/corpus').Corpus;
 var feedProcessing = require('./inputProcessing/feed');
 var directProcessing = require('./inputProcessing/direct');
 var wpProcessing = require('./inputProcessing/wordpress');
+var webpageProcessing = require('./inputProcessing/webpage');
 
 // array of processers
 var processers = {
     'feed': feedProcessing,
     'directinput': directProcessing,
     'wordpress': wpProcessing,
+    'webpage': webpageProcessing,
 };
 
 //
