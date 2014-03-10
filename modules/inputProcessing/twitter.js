@@ -61,7 +61,7 @@ var parsePage = function(body, username, itemsLeft, cb) {
 };
 
 
-var getNextPage = function(username, corpus, itemsLeft, lastId) {
+var getNextPage = function(username, corpus, itemsLeft, lastId, endCallback) {
     var pageUrl = 'https://twitter.com/i/profiles/show/'+username+'/timeline/with_replies?include_available_features=1&include_entities=1';
     if(lastId) {
         pageUrl += '&max_id='+lastId+'&oldest_unread_id=0';
@@ -94,7 +94,7 @@ var getNextPage = function(username, corpus, itemsLeft, lastId) {
                 // convert to html string
                 var content = entity.content+'<meta name="url" content="'+entity.url+'"><meta name="timestamp" content="'+entity.dateString+'">';
                 var doc = {
-                    corpuses: [corpus],
+                    corpuses: [corpus._id],
                     creation_date: entity.date,
                     uri: entity.link,
                     source: content,
@@ -109,20 +109,21 @@ var getNextPage = function(username, corpus, itemsLeft, lastId) {
             // check limit
             itemsLeft -= count;
             if (itemsLeft <= 0) {
-                return console.log('done processing twitter');
+                console.log('done processing twitter');
+                return endCallback(corpus);
             }
 
             // get last item id
             var nextLastId = res[res.length-1].id;
 
             // process next paga
-            getNextPage(username, corpus, itemsLeft, nextLastId);
+            getNextPage(username, corpus, itemsLeft, nextLastId, endCallback);
         });
     });
 };
 
 // process function
-var process = function(corpus) {
+var process = function(corpus, endCallback) {
     // get username
     var username = corpus.input;
     var limit = corpus.input_count;
@@ -133,7 +134,7 @@ var process = function(corpus) {
     }
 
     // start processing
-    getNextPage(username, corpus, limit);
+    getNextPage(username, corpus, limit, null, endCallback);
 };
 
 // module

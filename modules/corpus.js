@@ -3,11 +3,31 @@ var fs = require('fs');
 // include db
 var Corpus = require('../db/corpus').Corpus;
 
-// array of processers, will be filled automatically
-var processers = {};
+// dict of processers, will be filled automatically
+var inputProcessers = {};
+// dict of annotation services, will be filled automatically
+var annotationServices = {};
 
 //
-// functions
+// private functions
+//
+
+var processCorpus = function(corpus) {
+    console.log('starting to process input from corpus', corpus);
+    // start input processing
+    inputProcessers[corpus.input_type].process(corpus, annotateCorpus);
+};
+
+var annotateCorpus = function(corpus) {
+    console.log('starting to annotate corpus', corpus);
+    // start input processing
+    //inputProcessers[corpus.input_type].process(corpus);
+};
+
+
+
+//
+// public functions
 //
 
 // new corpus creation
@@ -29,20 +49,21 @@ var createCorpus = function(corpus, cb) {
     });
 };
 
-var processCorpus = function(corpus) {
-    console.log('processing input from corpus', corpus);
-    // process
-    processers[corpus.input_type].process(corpus);
-};
-
 // main module object
 var CorpusModule = function () {
-    // autoload parsing modules
+    // autoload input parsing modules
     fs.readdirSync(__dirname + '/inputProcessing').forEach(function(moduleName){
         var obj = require('./inputProcessing/' + moduleName);
-        processers[obj.name] = obj;
+        inputProcessers[obj.name] = obj;
     });
 
+    // autoload annotation modules
+    fs.readdirSync(__dirname + '/annotationServices').forEach(function(moduleName){
+        var obj = require('./annotationServices/' + moduleName);
+        annotationServices[obj.name] = obj;
+    });
+
+    // expose create function
     this.createCorpus = createCorpus;
 };
 

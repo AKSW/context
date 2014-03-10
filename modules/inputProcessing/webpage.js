@@ -5,7 +5,7 @@ var request = require('request');
 var Article = require('../../db/article').Article;
 
 // process function
-var process = function(corpus) {
+var process = function(corpus, endCallback) {
     // get url
     var url = corpus.input;
 
@@ -21,6 +21,9 @@ var process = function(corpus) {
             if(err) {
                 return console.log('error saving article', err);
             }
+
+            console.log('done saving webpage source');
+            return endCallback(corpus);
         });
     });
 };

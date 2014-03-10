@@ -6,7 +6,7 @@ var FeedParser = require('feedparser');
 var Article = require('../../db/article').Article;
 
 // process function
-var process = function(corpus) {
+var process = function(corpus, endCallback) {
     // get url
     var url = corpus.input;
     var limit = corpus.input_count;
@@ -47,6 +47,11 @@ var process = function(corpus) {
             // increase index
             index++;
         }
+
+        // log end
+        console.log('done processing feed');
+        // trigger callback with current corpus object
+        return endCallback(corpus);
     });
 
     // get data

@@ -79,7 +79,7 @@ var parsePage = function(body, itemsLeft, cb) {
     });
 };
 
-var getNextPage = function(url, corpus, itemsLeft, date) {
+var getNextPage = function(url, corpus, itemsLeft, date, endCallback) {
     var pageUrl = url + '/search?max-results=20';
     if(date) {
         pageUrl += '&updated-max=' + date;
@@ -115,7 +115,7 @@ var getNextPage = function(url, corpus, itemsLeft, date) {
                     entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
                 }
                 var doc = {
-                    corpuses: [corpus],
+                    corpuses: [corpus._id],
                     creation_date: entity.date,
                     uri: entity.link,
                     source: content,
@@ -130,26 +130,28 @@ var getNextPage = function(url, corpus, itemsLeft, date) {
             // check limit
             itemsLeft -= count;
             if (itemsLeft <= 0) {
-                return console.log('done processing wordpress');
+                console.log('done processing wordpress');
+                // trigger callback with current corpus object
+                return endCallback(corpus);
             }
 
             // get last item date
             var lastDate = res[res.length-1].dateString;
 
             // process next paga
-            getNextPage(url, corpus, itemsLeft, lastDate);
+            getNextPage(url, corpus, itemsLeft, lastDate, endCallback);
         });
     });
 };
 
 // process function
-var process = function(corpus) {
+var process = function(corpus, endCallback) {
     // generate unique url for piece
     var url = corpus.input;
     var limit = corpus.input_count;
 
     // get first page
-    getNextPage(url, corpus._id, limit);
+    getNextPage(url, corpus, limit, null, endCallback);
 };
 
 // module

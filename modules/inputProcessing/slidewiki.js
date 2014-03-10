@@ -77,7 +77,7 @@ var parseSubPage = function(url, cb) {
 };
 
 // process function
-var process = function(corpus) {
+var process = function(corpus, endCallback) {
     // generate unique url for piece
     var slidewikiId = corpus.input;
     var limit = corpus.input_count;
@@ -121,7 +121,9 @@ var process = function(corpus) {
             }
 
             // report done
-            return console.log('done processing wordpress');
+            console.log('done processing wordpress');
+            // trigger end callback
+            endCallback(corpus);
         });
     });
 };

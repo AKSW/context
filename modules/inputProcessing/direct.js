@@ -5,7 +5,7 @@ var crypto = require('crypto');
 var Article = require('../../db/article').Article;
 
 // process function
-var process = function(corpus) {
+var process = function(corpus, endCallback) {
     // hash input
     var md5sum = crypto.createHash('md5');
     md5sum.update(corpus.input);
@@ -22,6 +22,10 @@ var process = function(corpus) {
         if(err) {
             return console.log('error saving article', err);
         }
+
+        console.log('saved article for direct input');
+        // trigger end callback
+        return endCallback(corpus);
     });
 };
 

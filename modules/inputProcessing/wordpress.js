@@ -130,7 +130,7 @@ var getPostContent = function(url, cb) {
     });
 };
 
-var getNextPage = function(url, corpus, itemsLeft, page) {
+var getNextPage = function(url, corpus, itemsLeft, page, endCallback) {
     var pageUrl = url + '/page/'+page+'/';
     request(pageUrl, function (error, response, body) {
         if (error) {
@@ -163,7 +163,7 @@ var getNextPage = function(url, corpus, itemsLeft, page) {
                     entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
                 }
                 var doc = {
-                    corpuses: [corpus],
+                    corpuses: [corpus._id],
                     creation_date: entity.date,
                     uri: entity.link,
                     source: content,
@@ -178,23 +178,24 @@ var getNextPage = function(url, corpus, itemsLeft, page) {
             // check limit
             itemsLeft -= count;
             if (itemsLeft <= 0) {
-                return console.log('done processing wordpress');
+                console.log('done processing wordpress');
+                return endCallback(corpus);
             }
 
             // process next paga
-            getNextPage(url, corpus, itemsLeft, page+1);
+            getNextPage(url, corpus, itemsLeft, page+1, endCallback);
         });
     });
 };
 
 // process function
-var process = function(corpus) {
+var process = function(corpus, endCallback) {
     // generate unique url for piece
     var url = corpus.input;
     var limit = corpus.input_count;
 
     // get first page
-    getNextPage(url, corpus._id, limit, 1);
+    getNextPage(url, corpus, limit, 1, endCallback);
 };
 
 // module
