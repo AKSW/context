@@ -1,10 +1,33 @@
+// db
+var Corpus = require('../../db/corpus').Corpus;
 
 // export index
 exports.index = {
     path: '/',
     method: 'get',
     returns: function(req, res, next) {
-        return res.render('index', {error: req.flash('error'), oldusername: req.flash('oldusername')});
+        if(req.user) {
+            Corpus.find({user: req.user._id}, function(err, corpuses) {
+                if(err) {
+                    console.log('error getting user corpuses', err);
+                    return next(err);
+                }
+
+                // form data
+                var data = {
+                    error: req.flash('error'),
+                    oldusername: req.flash('oldusername'),
+                    corpuses: corpuses,
+                };
+                return res.render('index', data);
+            });
+        } else {
+            var data = {
+                error: req.flash('error'),
+                oldusername: req.flash('oldusername'),
+            };
+            return res.render('index', data);
+        }
     }
 };
 

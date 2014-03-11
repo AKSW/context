@@ -28,7 +28,7 @@
         {/error}
 
         {#user}
-        {>"helpers/selectcorpus.dust"/}
+        {>"helpers/selectcorpus.dust" corpuses=corpuses /}
         {:else}
         {>"helpers/auth.dust" username=oldusername /}
         {/user}

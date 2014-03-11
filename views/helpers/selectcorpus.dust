@@ -4,9 +4,11 @@
         <div class="form-group">
             <div class="input-group lead well corpus-select-input">
                 <span id="select_box" class="btn-padded">
-                    <select id="collection" class="selectpicker" data-live-search="true">
+                    <select id="collection" class="selectpicker">
                         <option value="0" selected>Select an existing corpus</option>
-                        <option value="1">Test corpus</option>';
+                        {#corpuses}
+                        <option value="{_id}">{name}</option>
+                        {/corpuses}
                     </select>
                 </span>
                 <strong class="btn-padded">OR</strong>
