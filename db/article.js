@@ -11,6 +11,15 @@ articleSchema = new Schema({
     creation_date: {type: Date, default: Date.now},
     corpuses: [{type: Schema.Types.ObjectId, ref: 'corpuses'}],
     processed: {type: Boolean, default: false},
+
+    // array of entities for annotation
+    entities: [{
+        name: String,
+        types: [String],
+        uri: String,
+        offset: Number,
+        precision: Number,
+    }],
 });
 
 // custom create method with additional checks
