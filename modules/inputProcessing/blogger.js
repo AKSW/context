@@ -99,6 +99,7 @@ var getNextPage = function(url, corpus, itemsLeft, date, endCallback) {
 
             // see what's the smallest number of posts to process
             var max = itemsLeft >= count ? count : itemsLeft;
+            var toSave = max;
 
             // save posts to db
             var i = 0;
@@ -124,22 +125,27 @@ var getNextPage = function(url, corpus, itemsLeft, date, endCallback) {
                     if(err) {
                         return console.log('error saving article', err);
                     }
+
+                    // decrease to process counter
+                    toSave--;
+                    // check end
+                    if(toSave === 0) {
+                        // check limit
+                        itemsLeft -= count;
+                        if (itemsLeft <= 0) {
+                            console.log('done processing wordpress');
+                            // trigger callback with current corpus object
+                            return endCallback(corpus);
+                        }
+
+                        // get last item date
+                        var lastDate = res[res.length-1].dateString;
+
+                        // process next paga
+                        getNextPage(url, corpus, itemsLeft, lastDate, endCallback);
+                    }
                 });
             }
-
-            // check limit
-            itemsLeft -= count;
-            if (itemsLeft <= 0) {
-                console.log('done processing wordpress');
-                // trigger callback with current corpus object
-                return endCallback(corpus);
-            }
-
-            // get last item date
-            var lastDate = res[res.length-1].dateString;
-
-            // process next paga
-            getNextPage(url, corpus, itemsLeft, lastDate, endCallback);
         });
     });
 };

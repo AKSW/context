@@ -147,6 +147,7 @@ var getNextPage = function(url, corpus, itemsLeft, page, endCallback) {
 
             // see what's the smallest number of posts to process
             var max = itemsLeft >= count ? count : itemsLeft;
+            var toSave = max;
 
             // save posts to db
             var i = 0;
@@ -170,20 +171,25 @@ var getNextPage = function(url, corpus, itemsLeft, page, endCallback) {
                 };
                 Article.createNew(doc, function(err, article) {
                     if(err) {
-                        return console.log('error saving article', err);
+                        console.log('error saving article', err);
+                    }
+
+                    // decrease to process counter
+                    toSave--;
+                    // check end
+                    if(toSave === 0) {
+                        // check limit
+                        itemsLeft -= count;
+                        if (itemsLeft <= 0) {
+                            console.log('done processing wordpress');
+                            return endCallback(corpus);
+                        }
+
+                        // process next paga
+                        getNextPage(url, corpus, itemsLeft, page+1, endCallback);
                     }
                 });
             }
-
-            // check limit
-            itemsLeft -= count;
-            if (itemsLeft <= 0) {
-                console.log('done processing wordpress');
-                return endCallback(corpus);
-            }
-
-            // process next paga
-            getNextPage(url, corpus, itemsLeft, page+1, endCallback);
         });
     });
 };

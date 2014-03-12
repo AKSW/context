@@ -86,6 +86,7 @@ var getNextPage = function(username, corpus, itemsLeft, lastId, endCallback) {
 
             // see what's the smallest number of posts to process
             var max = itemsLeft >= count ? count : itemsLeft;
+            var toSave = max;
 
             // save posts to db
             var i = 0;
@@ -103,21 +104,26 @@ var getNextPage = function(username, corpus, itemsLeft, lastId, endCallback) {
                     if(err) {
                         return console.log('error saving article', err);
                     }
+
+                    // decrease to process counter
+                    toSave--;
+                    // check end
+                    if(toSave === 0) {
+                        // check limit
+                        itemsLeft -= count;
+                        if (itemsLeft <= 0) {
+                            console.log('done processing twitter');
+                            return endCallback(corpus);
+                        }
+
+                        // get last item id
+                        var nextLastId = res[res.length-1].id;
+
+                        // process next paga
+                        getNextPage(username, corpus, itemsLeft, nextLastId, endCallback);
+                    }
                 });
             }
-
-            // check limit
-            itemsLeft -= count;
-            if (itemsLeft <= 0) {
-                console.log('done processing twitter');
-                return endCallback(corpus);
-            }
-
-            // get last item id
-            var nextLastId = res[res.length-1].id;
-
-            // process next paga
-            getNextPage(username, corpus, itemsLeft, nextLastId, endCallback);
         });
     });
 };

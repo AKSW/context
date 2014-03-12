@@ -10,20 +10,27 @@ var process = function(corpus, endCallback) {
     // get url
     var url = corpus.input;
     var limit = corpus.input_count;
+    var toSave = 0;
     var index = 0;
+    var streamEnded = false;
 
     // init feedparser
     var feedparser = new FeedParser();
     // add events
-    feedparser.on('error', function(error) {
+    feedparser
+    .on('error', function(error) {
         // always handle errors
         console.log('FeedParser error', error);
-    }).on('readable', function() {
+    })
+    .on('readable', function() {
         var stream = this;
         var meta = this.meta;
         var item = stream.read();
 
         while (item && index < limit) {
+            // increase to save count
+            toSave++;
+            // get data
             var title = item.title;
             var link = item.link;
             var pubDate = item.pubDate;
@@ -40,6 +47,16 @@ var process = function(corpus, endCallback) {
                 if(err) {
                     return console.log('error saving article', err);
                 }
+
+                // decrease count
+                toSave--;
+                // check end
+                if(toSave === 0 && streamEnded) {
+                    // log end
+                    console.log('done processing feed');
+                    // trigger callback with current corpus object
+                    return endCallback(corpus);
+                }
             });
 
             // get next item
@@ -47,13 +64,21 @@ var process = function(corpus, endCallback) {
             // increase index
             index++;
         }
+    })
+    .on('end', function() {
+        // indicate stream end
+        streamEnded = true;
 
-        // log end
-        console.log('done processing feed');
-        // trigger callback with current corpus object
-        return endCallback(corpus);
+        // check if all was saved
+        if(toSave === 0) {
+            // log end
+            console.log('done processing feed');
+            // trigger callback with current corpus object
+            return endCallback(corpus);
+        }
     });
 
+    console.log('starting request');
     // get data
     var req = request(url);
     // Some feeds do not respond without user-agent and accept headers.

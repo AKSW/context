@@ -100,6 +100,7 @@ var process = function(corpus, endCallback) {
 
             // see what's the smallest number of posts to process
             var max = limit >= count ? count : limit;
+            var toSave = max;
 
             // save posts to db
             var i = 0;
@@ -117,13 +118,18 @@ var process = function(corpus, endCallback) {
                     if(err) {
                         return console.log('error saving article', err);
                     }
+
+                    // decrease to process counter
+                    toSave--;
+                    // check end
+                    if(toSave === 0) {
+                        // report done
+                        console.log('done processing slidewiki');
+                        // trigger end callback
+                        endCallback(corpus);
+                    }
                 });
             }
-
-            // report done
-            console.log('done processing slidewiki');
-            // trigger end callback
-            endCallback(corpus);
         });
     });
 };
