@@ -22,6 +22,7 @@ var process = function(sourceText, endCallback) {
         method: 'POST',
         form: data,
     };
+
     // get data
     request(options, function(error, response, body){
         if (error) {
@@ -35,7 +36,11 @@ var process = function(sourceText, endCallback) {
         };
 
         // parse json
-        body = JSON.parse(body);
+        try {
+            body = JSON.parse(body);
+        } catch (e) {
+            console.log('error parsing', body);
+        }
 
         // process resources
         if(body.Resources) {
