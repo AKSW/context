@@ -108,7 +108,7 @@ var process = function(corpus, endCallback) {
                 // convert to html string
                 var content = '<div class="extracted-title">' + entity.title + '</div> ' + entity.content;
                 var doc = {
-                    corpuses: [corpus],
+                    corpuses: [corpus._id],
                     creation_date: entity.date,
                     uri: entity.link,
                     source: content,
@@ -121,7 +121,7 @@ var process = function(corpus, endCallback) {
             }
 
             // report done
-            console.log('done processing wordpress');
+            console.log('done processing slidewiki');
             // trigger end callback
             endCallback(corpus);
         });
