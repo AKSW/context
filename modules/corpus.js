@@ -45,7 +45,6 @@ var annotateCorpus = function(corpus) {
                     }
 
                     var data = _.extend(result, {processed: true});
-                    console.log('saving', data);
                     article.update(data, handleSaveError);
                 });
             } else {

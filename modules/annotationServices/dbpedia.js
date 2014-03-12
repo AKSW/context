@@ -50,12 +50,12 @@ var process = function(sourceText, endCallback) {
 
                 // get entity types
                 var types = [];
-                if(resource['@types'] && resource['@types'].length > 0) {
+                if(resource['@types'] && resource['@types'] !== '') {
                     // split coma separated types
                     var tmpTypes = resource['@types'].split(',');
                     // only pick types with DBpedia prefix
                     types = tmpTypes.filter(function(item) {
-                        var prefix = item.split[':'][0];
+                        var prefix = item.split(':')[0];
                         return prefix === 'DBpedia';
                     });
                 } else {
