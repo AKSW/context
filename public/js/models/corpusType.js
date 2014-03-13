@@ -1,4 +1,6 @@
-define(function(){
+define([
+    'backbone',
+], function(Backbone){
     var CorpusTypeModel = Backbone.Model.extend({
         defaults: {
             name: '', // e.g. 'feed'

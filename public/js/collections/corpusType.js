@@ -1,7 +1,8 @@
 define([
+    'backbone',
     // Pull in the Model module from above
     'models/corpusType'
-], function(CorpusTypeModel){
+], function(Backbone, CorpusTypeModel){
     var CorpusTypeCollection = Backbone.Collection.extend({
         model: CorpusTypeModel
     });

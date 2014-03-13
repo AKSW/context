@@ -40,8 +40,8 @@ define([
             var view = new CreateCorpusView();
             view.render();
         });
-        appRouter.on('route:showCorpus', function(){
-            var view = new CorpusView();
+        appRouter.on('route:showCorpus', function(id){
+            var view = new CorpusView({id: id});
             view.render();
         });
         appRouter.on('route:defaultAction', function(actions){
