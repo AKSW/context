@@ -1,0 +1,10 @@
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+        <p class="text-muted credit text-center">
+            This project is maintained and supported by
+            <a href="http://aksw.org" class="sponsor"><img src="/img/sponsors/aksw.png" style="max-height:25px"/></a>
+            <a href="http://www.iais.fraunhofer.de" class="sponsor"><img src="/img/sponsors/iais_logo.gif" style="max-height:25px"/></a>
+            <a href="http://lod2.eu" class="sponsor"><img src="/img/sponsors/lod2_logo.png" style="max-height:25px"/></a>
+        </p>
+    </div>
+</div>
