@@ -7,6 +7,8 @@ define([
 ], function(_, Backbone, CorpusModel, corpusExtentionViewCollection, corpusTemplate){
     // reference to router
     var appRouter;
+    // cached views
+    var cachedViews = {};
     // route to init with
     var renderExtention;
 
@@ -24,7 +26,13 @@ define([
         // render view
         var View = subviewModel.get('view');
         var newPath = subviewModel.get('path');
-        currentSubview = new View({el: defaultElement, corpus: currentCorpus});
+        if(cachedViews[newPath]) {
+            currentSubview = cachedViews[newPath];
+        } else {
+            var view = new View({el: defaultElement, corpus: currentCorpus});
+            cachedViews[newPath] = view;
+            currentSubview = view;
+        }
         currentSubview.render();
         // change topbar selection
         $('.viewExtention').each(function(index, item) {
