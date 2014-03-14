@@ -2,12 +2,14 @@
 <ul class="nav nav-tabs" id="corpusTabs">
     <% _.each(extentions, function(item, index) { %>
     <li <% if(index === 0) { %> class="active" <% } %> >
-        <a href="<%= item.get('path') %>"><%= item.get('name') %></a>
+        <a href="#" data-path="<%= item.get('path') %>" class="viewExtention"><%= item.get('name') %></a>
     </li>
     <% }); %>
 </ul>
 
 <!-- content -->
 <div class="tab-content">
-    <div class="tab-pane active" id="contentTab"></div>
+    <div class="tab-pane active" id="contentTab">
+        Loading...
+    </div>
 </div>

@@ -1,8 +1,10 @@
 var _ = require('underscore');
 // includes
 var Corpus = require('../../modules/corpus');
+var CorpusDB = require('../../db/corpus').Corpus;
+var Article = require('../../db/article').Article;
 
-// export index
+// export create corpus
 exports.createCorpus = {
     path: '/api/corpus',
     method: 'post',
@@ -20,6 +22,45 @@ exports.createCorpus = {
             }
 
             return res.redirect('/corpus/'+id);
+        });
+    }
+};
+
+// export get corpus
+exports.getCorpus = {
+    path: '/api/corpus/:id',
+    method: 'get',
+    returns: function(req, res, next){
+        // get data
+        var corpus = req.params.id;
+
+        // find corpus
+        CorpusDB.findOne({_id: corpus}, function(err, corpus) {
+            if(err) {
+                return next(err);
+            }
+
+            // find articles
+            Article.find({corpuses: corpus._id}, function(err, articles) {
+                if(err) {
+                    return next(err);
+                }
+                var articlesCount = articles.length;
+                var entitiesCount = 0;
+
+                // count entities
+                articles.forEach(function(article) {
+                    entitiesCount += article.entities.length;
+                });
+
+                // append counts to corpus
+                corpus = corpus.toObject();
+                corpus.articlesCount = articlesCount;
+                corpus.entitiesCount = entitiesCount;
+
+                // send response
+                return res.send(corpus);
+            });
         });
     }
 };

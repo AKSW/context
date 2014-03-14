@@ -2,19 +2,20 @@ define([
     'underscore',
     'backbone',
     'text!/templates/corpusOverview.html',
-], function(_, Backbone, corpusOverviewTemplate){
+], function(_, Backbone, mainTemplate){
+    var currentCorpus;
+
     // view
     var CorpusOverviewView = Backbone.View.extend({
         initialize: function(options) {
-            console.log('corpus opt', options);
             // set element
             this.el = $(options.el);
+            // set corpus
+            currentCorpus = options.corpus;
         },
         render: function(){
-            console.log('corpus overview view');
-
             // compile template
-            var compiledTemplate = _.template(corpusOverviewTemplate);
+            var compiledTemplate = _.template(mainTemplate, {corpus: currentCorpus});
             this.$el.html(compiledTemplate);
         },
     });

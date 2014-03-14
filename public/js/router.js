@@ -8,6 +8,7 @@ define([
     'views/createCorpus',
     'views/corpus',
 ], function(_, Backbone, HomeView, RegisterView, ProfileView, CreateCorpusView, CorpusView){
+    // router class
     var AppRouter = Backbone.Router.extend({
         routes: {
             // Define URL routes
@@ -16,6 +17,7 @@ define([
             'register': 'showRegistration',
             'createCorpus': 'showCreateCorpus',
             'corpus/:id': 'showCorpus',
+            'corpus/:id/:ex': 'showCorpus',
 
             // Default
             '*actions': 'defaultAction'
@@ -23,6 +25,7 @@ define([
     });
 
     var initialize = function(){
+        // router instance
         var appRouter = new AppRouter();
         appRouter.on('route:showHome', function(){
             var view = new HomeView();
@@ -40,8 +43,8 @@ define([
             var view = new CreateCorpusView();
             view.render();
         });
-        appRouter.on('route:showCorpus', function(id){
-            var view = new CorpusView({id: id});
+        appRouter.on('route:showCorpus', function(id, ex){
+            var view = new CorpusView({corpusId: id, extention: ex, router: appRouter});
             view.render();
         });
         appRouter.on('route:defaultAction', function(actions){

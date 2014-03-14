@@ -1,15 +1,22 @@
 define([
     'collections/corpusExtentionView',
     // used views
-    'views/subviews/corpus-overview',
-], function(CorpusExtentionViewCollection, CorpusOverviewView){
+    'views/subviews/corpus.overview',
+    'views/subviews/corpus.facets',
+], function(CorpusExtentionViewCollection, CorpusOverviewView, CorpusFacetsView){
     // build collection of items
     var collection = new CorpusExtentionViewCollection();
     // overview
     collection.add({
-        name: 'Overview', // string with name, e.g. 'Overview'
-        path: '#overview', // string with path, e.g. '#overview'
-        view: CorpusOverviewView, // bakcbone view class, e.g. CorpusOverviewView
+        name: 'Overview',
+        path: '/overview',
+        view: CorpusOverviewView,
+    });
+    // facets
+    collection.add({
+        name: 'Facets',
+        path: '/facets',
+        view: CorpusFacetsView,
     });
 
     // Our module now returns our view

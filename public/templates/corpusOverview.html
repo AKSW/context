@@ -1,64 +1,40 @@
-<h1 contenteditable="true" class="corpus-name-text">http://blog.aksw.org/2014/aksw-colloquium-with-lemon-lexicon-model-for-ontologies-on-wednesday-february-26/</h1>
-<table class="table table-striped table-bordered table-hover table-condensed ">  
+<h1 contenteditable="true" class="corpus-name-text"><%= corpus.get('name') %></h1>
+<table class="table table-striped table-bordered table-hover table-condensed ">
     <tbody>
         <tr>
             <td>URL</td>
             <td class="text-info">
-                <a href="http://blog.aksw.org/2014/aksw-colloquium-with-lemon-lexicon-model-for-ontologies-on-wednesday-february-26/" target="_blank">http://blog.aksw.org/201...-wednesday-february-26/</a>
-            </td>
-        </tr>
-        <tr>
-            <td>Creation date</td>
-            <td class="text-info">2014-03-05 18:33:28</td>
-        </tr>
-        <tr>
-            <td>Input type</td>
-            <td class="text-info">    wordpress       </td>
-        </tr>
-        <tr>
-            <td>Number of articles</td>
-            <td class="text-info">
-                <a href="hub.php?corpus=599&amp;action=articles"><b>99</b></a>
-            </td>
-        </tr>
-        <tr>
-            <td>Annotator API(s)</td>
-            <td class="text-info">DBpedia-Spotlight</td>
-        </tr>
-        <tr>
-            <td>Number of detected entities</td>
-            <td class="text-info">
-                <a onclick="create_facets();" href="#facets">3267</a>
-                <a title="Export as JSON-LD" href="export.php?corpus=599&amp;format=json-ld">
-                    <img src="img/json-ld.png" alt="json-ld">
+                <a href="<%= corpus.uri() %>" target="_blank">
+                <% if(corpus.uri().length > 50) { %>
+                    <%= corpus.uri().slice(0, 50) + '...' %>
+                <% } else { %>
+                    <%= corpus.uri() %>
+                <% } %>
                 </a>
             </td>
         </tr>
         <tr>
-            <td>
-                In-use <span class="text-warning"><i>DBpedia</i></span> classes
-            </td>
+            <td>Creation date</td>
+            <td class="text-info"><%= corpus.get('creation_date') %></td>
+        </tr>
+        <tr>
+            <td>Input type</td>
+            <td class="text-info"><%= corpus.get('input_type') %></td>
+        </tr>
+        <tr>
+            <td>Number of articles</td>
             <td class="text-info">
-                <a href="corpus_type_config.php?corpus=599">All</a>
+                <a href="#"><b><%= corpus.get('articlesCount') %></b></a>
             </td>
         </tr>
         <tr>
-            <td id="sharing_link">Status</td>
+            <td>Annotator API(s)</td>
+            <td class="text-info"><%= corpus.get('nlp_api') %></td>
+        </tr>
+        <tr>
+            <td>Number of detected entities</td>
             <td class="text-info">
-                <div class="has-switch" tabindex="0">
-                    <div class="switch-off switch-animate">
-                        <span class="switch-left">Public</span>
-                        <label for="share_corpus_switch">&nbsp;</label>
-                        <span class="switch-right">Private</span>
-                        <input type="checkbox" id="share_corpus_switch" data-on-label="Public" data-off-label="Private">
-                    </div>
-                </div>
-                <span id="scoial_share" class="animated bounceIn hide">
-                    <a href="https://twitter.com/intent/tweet?button_hashtag=conTEXT&amp;text=Check out my analyzed corpus at http://context.aksw.org/app/hub.php?corpus=599" target="_blank"><img src="img/twitter_share.png" alt="Twitter"></a>
-                    <a href="https://plus.google.com/share?url=http://context.aksw.org/app/hub.php?corpus=599" target="_blank"><img src="img/google_share.png" alt="Google+"></a>
-                    <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http://context.aksw.org/app/hub.php?corpus=599&amp;title=My analyzed corpus" target="_blank"><img src="img/linkedin_share.png" alt="LinkedIn"></a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=context.aksw.org/app/hub.php?corpus=599" target="_blank"><img src="img/facebook_share.png" alt="Facebook"></a>
-                </span>
+                <a href="#facets"><%= corpus.get('entitiesCount') %></a>
             </td>
         </tr>
     </tbody>
