@@ -29,8 +29,9 @@
             <div class="form-group">
                 <label class="control-label" for="nlp_api">NLP API</label>
                 <select id="nlp_api" name="nlp_api" class="form-control">
-                    <option value="DBpedia-Spotlight">DBpedia Spotlight</option>
-                    <option value="FOX">FOX</option>
+                    {{~it.nlpApi :item:index}}
+                    <option value="{{= item.get('id') }}">{{= item.get('name') }}</option>
+                    {{~}}
                 </select>
             </div>
             <div class="form-group" id="c_name_field">

@@ -2,8 +2,9 @@ define([
     'underscore',
     'backbone',
     'data/corpusTypesCollection',
+    'data/nlpApiCollection',
     'doT!/templates/createCorpus',
-], function(_, Backbone, corpusTypesCollection, createCorpusTemplate){
+], function(_, Backbone, corpusTypesCollection, nlpApiCollection, createCorpusTemplate){
     // DOM references
     var $inputCount, $inputItem, $inputLabel, $inputItemArea, $inputItemFile,
         $sliderContainer, $corpusNameInput, $nlpApiOptions, $newCorpusForm,
@@ -126,7 +127,7 @@ define([
         this.collection = corpusTypesCollection;
 
         // compile template
-        var compiledTemplate = createCorpusTemplate({types: this.collection.models});
+        var compiledTemplate = createCorpusTemplate({types: this.collection.models, nlpApi: nlpApiCollection.models});
 
         // render compiled template to this Views "el"
         this.$el.html(compiledTemplate);
