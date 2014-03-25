@@ -2,7 +2,7 @@ define([
     'underscore',
     'backbone',
     'data/corpusTypesCollection',
-    'text!/templates/createCorpus.html',
+    'doT!/templates/createCorpus',
 ], function(_, Backbone, corpusTypesCollection, createCorpusTemplate){
     // DOM references
     var $inputCount, $inputItem, $inputLabel, $inputItemArea, $inputItemFile,
@@ -126,7 +126,7 @@ define([
         this.collection = corpusTypesCollection;
 
         // compile template
-        var compiledTemplate = _.template(createCorpusTemplate, {types: this.collection.models});
+        var compiledTemplate = createCorpusTemplate({types: this.collection.models});
 
         // render compiled template to this Views "el"
         this.$el.html(compiledTemplate);

@@ -1,7 +1,7 @@
 define([
     'underscore',
     'backbone',
-    'text!/templates/corpusOverview.html',
+    'doT!/templates/corpusOverview',
 ], function(_, Backbone, mainTemplate){
     var currentCorpus;
 
@@ -15,7 +15,7 @@ define([
         },
         render: function(){
             // compile template
-            var compiledTemplate = _.template(mainTemplate, {corpus: currentCorpus});
+            var compiledTemplate = mainTemplate({corpus: currentCorpus});
             this.$el.html(compiledTemplate);
         },
     });

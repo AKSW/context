@@ -3,7 +3,7 @@ define([
     'backbone',
     'models/corpus',
     'data/corpusExtentionViewCollection',
-    'text!/templates/corpusView.html',
+    'doT!/templates/corpusView',
 ], function(_, Backbone, CorpusModel, corpusExtentionViewCollection, corpusTemplate){
     // reference to router
     var appRouter;
@@ -70,7 +70,7 @@ define([
     // handle rendering
     var handleRender = function(){
         // compile template
-        var compiledTemplate = _.template(corpusTemplate, {extentions: this.collection.models});
+        var compiledTemplate = corpusTemplate({extentions: this.collection.models});
         this.$el.html(compiledTemplate);
 
         // prepare first view
