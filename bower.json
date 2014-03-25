@@ -9,8 +9,7 @@
     "underscore": "~1.6.0",
     "backbone": "~1.1.2",
     "seiyria-bootstrap-slider": "~1.9.5",
-    "requirejs-doT": "~0.1.2",
-    "jquery.browser": "~0.0.6"
+    "requirejs-doT": "~0.1.2"
   },
   "devDependencies": {}
 }

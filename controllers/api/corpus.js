@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var crypto = require('crypto');
 // includes
 var Corpus = require('../../modules/corpus');
 var CorpusDB = require('../../db/corpus').Corpus;
@@ -64,3 +65,36 @@ exports.getCorpus = {
         });
     }
 };
+
+// export get corpus
+exports.getCorpusJson = {
+    path: '/api/corpus/:id/json',
+    method: 'get',
+    returns: function(req, res, next){
+        // get data
+        var corpus = req.params.id;
+
+        // find corpus
+        CorpusDB.findOne({_id: corpus}).exec(function(err, corpus) {
+            if(err) {
+                return next(err);
+            }
+
+            // find articles
+            Article.find({corpuses: corpus._id}, function(err, articles) {
+                if(err) {
+                    return next(err);
+                }
+
+                // append counts to corpus
+                corpus = corpus.toObject();
+                corpus.articles = articles;
+
+                // send response
+                return res.send(corpus);
+            });
+        });
+    }
+};
+
+

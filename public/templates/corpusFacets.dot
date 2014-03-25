@@ -8,7 +8,7 @@
                 <div id="panel_search" class="facet-panel">
                     <div ex:role="facet"  ex:collectionID="c-type-entity" ex:facetClass="TextSearch" ex:expressions=".label,!entities .label,.entity_types .label">
                     </div>
-                </div> 
+                </div>
                 <div id="panel_articles" class="facet-panel">
                 <div ex:role="facet" ex:collectionID="c-type-entity"  ex:expression="!entities .label" ex:facetLabel="Articles" ex:sortMode="count"></div>
                 </div>
@@ -17,12 +17,6 @@
                 </div>
                 <div id="panel_entities" class="facet-panel">
                     <div ex:role="facet" ex:showMissing="false" ex:collectionID="c-type-entity" ex:expression=".label" ex:facetLabel="Entities" ex:sortMode="count"></div>
-                </div>
-                <div id="panel_entities_cloud" class="facet-panel">
-                    <div ex:role="facet" ex:facetClass="Cloud" ex:showMissing="false" ex:collectionID="c-type-entity" ex:expression=".label" ex:facetLabel="Entities Cloud"></div>
-                </div> 
-                <div id="panel_dates" class="facet-panel">
-                    <div ex:role="facet" ex:showMissing="false" ex:collectionID="c-type-entity" ex:expression="!entities .created_at" ex:facetLabel="Articles Date" ex:sortMode="count"></div>
                 </div>
                 <!-- END FACETS -->
             </td>
