@@ -1,8 +1,9 @@
 define([
     'underscore',
     'backbone',
+    'exhibit',
     'doT!/templates/corpusFacets',
-], function(_, Backbone, mainTemplate){
+], function(_, Backbone, _ex, mainTemplate){
     var currentCorpus;
 
     // view
