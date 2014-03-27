@@ -1,39 +1,15 @@
-<div ex:role="exhibit-collection" id="c-type-entity" ex:itemTypes="Entity"></div>
-<div ex:role="exhibit-collection" id="c-type-article" ex:itemTypes="Article"></div>
-<div id="facets_container" class="container">
-    <table id="facets_table">
-        <tr>
-            <td valign="top" id="facet_col">
-                <!-- FACETS -->
-                <div id="panel_search" class="facet-panel">
-                    <div ex:role="facet"  ex:collectionID="c-type-entity" ex:facetClass="TextSearch" ex:expressions=".label,!entities .label,.entity_types .label">
-                    </div>
-                </div>
-                <div id="panel_articles" class="facet-panel">
-                <div ex:role="facet" ex:collectionID="c-type-entity"  ex:expression="!entities .label" ex:facetLabel="Articles" ex:sortMode="count"></div>
-                </div>
-                <div id="panel_types" class="facet-panel">
-                    <div ex:role="facet" ex:facetClass="Exhibit.HierarchicalFacet" ex:uniformGrouping=".subtopicOf" ex:expression=".entity_types" ex:showMissing="false" ex:collectionID="c-type-entity"  ex:facetLabel="Types" ex:sortMode="count"></div>
-                </div>
-                <div id="panel_entities" class="facet-panel">
-                    <div ex:role="facet" ex:showMissing="false" ex:collectionID="c-type-entity" ex:expression=".label" ex:facetLabel="Entities" ex:sortMode="count"></div>
-                </div>
-                <!-- END FACETS -->
-            </td>
+<div class="row">
+    <!-- left col -->
+    <div class="col-md-4">
+        {{= it.panels}}
+    </div>
 
-            <!-- MAIN PANEL -->
-            <td valign="top" id="panel_view">
-                <div ex:role="view" ex:collectionID="c-type-entity" ex:paginate="true" ex:showSummary="false" ex:showHeader="false" ex:pageSize="10" ex:alwaysShowPagingControls="true" ex:pagingControlLocations="bottom" ex:showDuplicates="false">
-                    <div ex:role="lens" ex:onshow="prepareArticles(this);">
-                        <h2 ex:content="!entities" class="i-article"></h2>
-                        <h3 ex:content=".label" class="i-label"></h3>
-                        <span ex:content=".url" class="i-url"></span> <span ex:content="!entities !articles .input_type" class="i-input-type"></span> <span ex:content="!entities !articles .nlp_api" class="i-nlp-api"></span>
-                        <div class="i-body">
-                            <span class="i-loading text-warning"></span>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <!-- right col -->
+    <div class="col-md-8">
+        {{~ it.articles :item:index}}
+        <div class="row well facetArticle">
+            {{= item.source }}
+        </div>
+        {{~}}
+    </div>
 </div>

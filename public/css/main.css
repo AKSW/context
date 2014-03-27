@@ -37,3 +37,28 @@ body {
 #input_count {
     max-width: 100%;
 }
+
+/* Facets stuff */
+
+.facetList {
+    overflow: scroll;
+    max-height: 200px;
+    margin-bottom: 0;
+}
+
+.facetBody {
+    padding: 0;
+}
+
+.facetPanel {
+    margin-bottom: 10px;
+}
+
+.facetArticle {
+    padding: 10px;
+}
+
+.extracted-title {
+    font-weight: bold;
+    font-size: 150%;
+}

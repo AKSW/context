@@ -68,7 +68,7 @@ exports.getCorpus = {
 
 // export get corpus
 exports.getCorpusJson = {
-    path: '/api/corpus/:id/json',
+    path: '/api/corpus/:id/facets',
     method: 'get',
     returns: function(req, res, next){
         // get data

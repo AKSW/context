@@ -13,7 +13,6 @@ requirejs.config({
 
         // jquery and plugins
         'jquery': '../bower_components/jquery/dist/jquery',
-        'jquery.browser': '../bower_components/jquery.browser/dist/jquery.browser',
 
         // bootstrap and plugins
         'bootstrap': '../bower_components/bootstrap/dist/js/bootstrap',
@@ -23,15 +22,13 @@ requirejs.config({
         'backbone': '../bower_components/backbone/backbone',
         'underscore': '../bower_components/underscore/underscore',
 
-        // exhibit3 and deps
-        'exhibit': '../libs/exhibit3/exhibit-api',
+        // stringjs
+        'string': '../bower_components/stringjs/lib/string',
     },
     shim: {
         'bootstrap': ['jquery'],
         'bootstrap-slider': ['bootstrap'],
         'backbone': ['underscore'],
-        'jquery.browser': ['jquery'],
-        'exhibit': ['jquery.browser'],
     },
     include: ['requireLib'],
 });
