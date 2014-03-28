@@ -21,6 +21,7 @@ requirejs.config({
         // backbone and deps
         'backbone': '../bower_components/backbone/backbone',
         'underscore': '../bower_components/underscore/underscore',
+        'backbone.facetr': '../bower_components/Backbone.Facetr/dist/backbone.facetr',
 
         // stringjs
         'string': '../bower_components/stringjs/lib/string',
@@ -29,6 +30,7 @@ requirejs.config({
         'bootstrap': ['jquery'],
         'bootstrap-slider': ['bootstrap'],
         'backbone': ['underscore'],
+        'backbone.facetr': ['backbone'],
     },
     include: ['requireLib'],
 });

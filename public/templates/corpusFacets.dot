@@ -6,9 +6,9 @@
 
     <!-- right col -->
     <div class="col-md-8">
-        {{~ it.articles :item:index}}
+        {{~it.articles :item:index}}
         <div class="row well facetArticle">
-            {{= item.source }}
+            {{= item.get('source') }}
         </div>
         {{~}}
     </div>

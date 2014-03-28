@@ -1,12 +1,12 @@
 <div class="panel panel-default facetPanel">
-    <div class="panel-heading">{{= it.title}}</div>
+    <div class="panel-heading">{{= it.title }}</div>
     <div class="panel-body facetBody">
         <div class="list-group facetList">
             {{~it.facets :item:index }}
-            <a href="#" class="list-group-item facet" data-id="{{= item.id }}">
-                {{= item.name }}
-                {{? item.count }}
-                <span class="badge">{{= item.count }}</span>
+            <a href="#" class="list-group-item facet {{? item.get('active') }}active{{?}}" data-id="{{= item.get('id') }}" data-name="{{= item.get('name') }}" data-type="{{= it.type }}">
+                {{= item.get('name') }}
+                {{? item.get('count') }}
+                <span class="badge">{{= item.get('count') }}</span>
                 {{?}}
             </a>
             {{~}}

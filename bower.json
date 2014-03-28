@@ -10,7 +10,8 @@
     "backbone": "~1.1.2",
     "seiyria-bootstrap-slider": "~1.9.5",
     "requirejs-doT": "~0.1.2",
-    "stringjs": "~1.8.0"
+    "stringjs": "~1.8.0",
+    "Backbone.Facetr": "*"
   },
   "devDependencies": {}
 }
