@@ -2,49 +2,42 @@
 var EventEmitter = require('events').EventEmitter;
 var request = require('request');
 var crypto = require('crypto');
-// function requires
-var pageToJsdom = require('../../util/jsdom').pageToJsdom;
+var cheerio = require('cheerio');
 // db
 var Article = require('../../db/article').Article;
 
 // process page and return entities
 var parsePage = function(body, cb) {
     // parse
-    pageToJsdom(body, function($, window) {
-        if(!$) {
-            return cb();
-        }
+    var $ = cheerio.load(body);
 
-        // form results object
-        var results = [];
+    // form results object
+    var results = [];
 
-        // get all posts
-        var posts = $('#content ol li');
-        var toProcess = posts.length;
-        posts.each(function(idx, post) {
-            var $post = $(post);
+    // get all posts
+    var posts = $('#content ol li');
+    var toProcess = posts.length;
+    posts.each(function(idx, post) {
+        var $post = $(post);
 
-            // init entity
-            var entity = {};
-            // get link
-            entity.link = 'http://slidewiki.org/' + $post.find('a').attr('href');
-            // process subpage
-            parseSubPage(entity.link, function(data) {
-                // set data
-                entity.title = data.title;
-                entity.content = data.content;
+        // init entity
+        var entity = {};
+        // get link
+        entity.link = 'http://slidewiki.org/' + $post.find('a').attr('href');
+        // process subpage
+        parseSubPage(entity.link, function(data) {
+            // set data
+            entity.title = data.title;
+            entity.content = data.content;
 
-                // push entity to results
-                results.push(entity);
-                // decrease to process counter
-                toProcess--;
-                // check end
-                if(toProcess === 0) {
-                    // free up memory
-                    window.close();
-                    cb(results);
-                }
-            });
+            // push entity to results
+            results.push(entity);
+            // decrease to process counter
+            toProcess--;
+            // check end
+            if(toProcess === 0) {
+                cb(results);
+            }
         });
     });
 };
@@ -56,23 +49,17 @@ var parseSubPage = function(url, cb) {
         }
 
         // parse
-        pageToJsdom(body, function($, window) {
-            if(!$) {
-                return cb();
-            }
-            // get element
-            var $slideArea = $('#slide-area');
+        var $ = cheerio.load(body);
+        // get element
+        var $slideArea = $('#slide-area');
 
-            // set data
-            var data = {};
-            data.title = $slideArea.find('.slide-title').html();
-            data.content = $slideArea.find('.slide-body').html();
+        // set data
+        var data = {};
+        data.title = $slideArea.find('.slide-title').html();
+        data.content = $slideArea.find('.slide-body').html();
 
-            // free up memory
-            window.close();
-            // trigger callback
-            cb(data);
-        });
+        // trigger callback
+        cb(data);
     });
 };
 

@@ -1,63 +1,55 @@
 // includes
 var EventEmitter = require('events').EventEmitter;
 var request = require('request');
-var jsdom = require('jsdom');
+var cheerio = require('cheerio');
 var crypto = require('crypto');
-// function requires
-var pageToJsdom = require('../../util/jsdom').pageToJsdom;
 // db
 var Article = require('../../db/article').Article;
 
 
 // process page and return entities
-var parsePage = function(body, username, itemsLeft, cb) {
+var parsePage = function(body, username, itemsLeft) {
     // parse
-    pageToJsdom(body, function($, window) {
-        if(!$) {
-            return cb();
+    var $ = cheerio.load(body);
+
+    // form results object
+    var results = [];
+
+    // get all posts
+    var posts = $('li');
+    posts.each(function(idx, post) {
+        var $post = $(post);
+
+        // init entity
+        var entity = {};
+        // get id
+        var id = $post.attr('data-item-id');
+        // do not continue if item has no id
+        if(!id) {
+            return;
         }
 
-        // form results object
-        var results = [];
+        // set id
+        entity.id = id;
+        // get link
+        entity.link = 'http://twitter.com/' + username + '/statuses/' + $post.attr('data-item-id');
 
-        // get all posts
-        var posts = $('li');
-        posts.each(function(idx, post) {
-            var $post = $(post);
+        // get date
+        var tmpDate = $post.find('.time').find('._timestamp').attr('data-time');
+        entity.dateString = tmpDate.trim();
+        entity.date = new Date(entity.dateString) || '';
 
-            // init entity
-            var entity = {};
-            // get id
-            var id = $post.attr('data-item-id');
-            // do not continue if item has no id
-            if(!id) {
-                return;
-            }
+        // get content
+        entity.content = $post.find('.tweet-text').html();
+        // clean
+        entity.content = entity.content.trim();
 
-            // set id
-            entity.id = id;
-            // get link
-            entity.link = 'http://twitter.com/' + username + '/statuses/' + $post.attr('data-item-id');
-
-            // get date
-            var tmpDate = $post.find('.time').find('._timestamp').attr('data-time');
-            entity.dateString = tmpDate.trim();
-            entity.date = new Date(entity.dateString) || '';
-
-            // get content
-            entity.content = $post.find('.tweet-text').html();
-            // clean
-            entity.content = entity.content.trim();
-
-            // push entity to results
-            results.push(entity);
-        });
-
-        // free up memory
-        window.close();
-        // trigger callback
-        cb(results);
+        // push entity to results
+        results.push(entity);
     });
+
+    // trigger callback
+    return results;
 };
 
 
@@ -77,54 +69,53 @@ var getNextPage = function(username, corpus, itemsLeft, lastId, endCallback) {
         body = '<html><body>' + body + '</body></html>';
 
         // parse
-        parsePage(body, username, itemsLeft, function(res) {
-            if(!res) {
-                return console.log('error loading twitter page', error);
-            }
-            // get count
-            var count = res.length;
+        var res = parsePage(body, username, itemsLeft);
+        if(!res) {
+            return console.log('error loading twitter page', error);
+        }
+        // get count
+        var count = res.length;
 
-            // see what's the smallest number of posts to process
-            var max = itemsLeft >= count ? count : itemsLeft;
-            var toSave = max;
+        // see what's the smallest number of posts to process
+        var max = itemsLeft >= count ? count : itemsLeft;
+        var toSave = max;
 
-            // save posts to db
-            var i = 0;
-            for(i = 0; i < max; i++){
-                var entity = res[i];
-                // convert to html string
-                var content = entity.content+'<meta name="url" content="'+entity.url+'"><meta name="timestamp" content="'+entity.dateString+'">';
-                var doc = {
-                    corpuses: [corpus._id],
-                    creation_date: entity.date,
-                    uri: entity.link,
-                    source: content,
-                };
-                Article.createNew(doc, function(err, article) {
-                    if(err) {
-                        return console.log('error saving article', err);
+        // save posts to db
+        var i = 0;
+        for(i = 0; i < max; i++){
+            var entity = res[i];
+            // convert to html string
+            var content = entity.content+'<meta name="url" content="'+entity.url+'"><meta name="timestamp" content="'+entity.dateString+'">';
+            var doc = {
+                corpuses: [corpus._id],
+                creation_date: entity.date,
+                uri: entity.link,
+                source: content,
+            };
+            Article.createNew(doc, function(err, article) {
+                if(err) {
+                    return console.log('error saving article', err);
+                }
+
+                // decrease to process counter
+                toSave--;
+                // check end
+                if(toSave === 0) {
+                    // check limit
+                    itemsLeft -= count;
+                    if (itemsLeft <= 0) {
+                        console.log('done processing twitter');
+                        return endCallback(corpus);
                     }
 
-                    // decrease to process counter
-                    toSave--;
-                    // check end
-                    if(toSave === 0) {
-                        // check limit
-                        itemsLeft -= count;
-                        if (itemsLeft <= 0) {
-                            console.log('done processing twitter');
-                            return endCallback(corpus);
-                        }
+                    // get last item id
+                    var nextLastId = res[res.length-1].id;
 
-                        // get last item id
-                        var nextLastId = res[res.length-1].id;
-
-                        // process next paga
-                        getNextPage(username, corpus, itemsLeft, nextLastId, endCallback);
-                    }
-                });
-            }
-        });
+                    // process next paga
+                    getNextPage(username, corpus, itemsLeft, nextLastId, endCallback);
+                }
+            });
+        }
     });
 };
 

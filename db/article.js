@@ -1,7 +1,5 @@
 // requires
-var jsdom = require('jsdom');
-// function requires
-var pageToJsdom = require('../util/jsdom').pageToJsdom;
+var cheerio = require('cheerio');
 // db requires
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
@@ -59,19 +57,19 @@ articleSchema.statics.createNew = function (article, cb) {
 // Model methods
 articleSchema.methods.shortTitle = function(cb) {
     var src = this.source;
-    pageToJsdom(src, function($, window) {
-        var tmp = $('.extracted-title');
-        var source = '';
-        if (tmp) {
-            source = $(tmp[0]).text().trim();
-        } else {
-            source = $(src).text().trim();
-        }
-        if (!source) {
-            source = '';
-        }
-        return cb(source);
-    });
+    var $ = cheerio.load(src);
+    var tmp = $('.extracted-title');
+    var source = '';
+    if (tmp) {
+        source = $(tmp[0]).text().trim();
+    } else {
+        source = $(src).text().trim();
+    }
+    if (!source) {
+        source = '';
+    }
+
+    return source;
 };
 
 

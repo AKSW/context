@@ -1,108 +1,99 @@
 // includes
 var EventEmitter = require('events').EventEmitter;
 var request = require('request');
-var jsdom = require('jsdom');
+var cheerio = require('cheerio');
 var crypto = require('crypto');
-// function requires
-var pageToJsdom = require('../../util/jsdom').pageToJsdom;
 // db
 var Article = require('../../db/article').Article;
 
 // process page and return entities
 var parsePage = function(body, itemsLeft, cb) {
     // parse
-    pageToJsdom(body, function($, window) {
-        if(!$) {
-            return cb();
+    var $ = cheerio.load(body);
+
+    // form results object
+    var results = [];
+
+    // get all posts
+    var posts = $('.post');
+    var toProcess = posts.length;
+    posts.each(function(idx, post) {
+        var $entityTitile = $('.entry-title', $(post));
+        var $postHeading = $('.postHeading', $(post));
+        var $entryMeta = $('.entry-meta', $(post));
+        var $postHeader = $('.postHeader', $(post));
+        var $entryContent = $('.entry-content', $(post));
+        var $moreLink = $entryContent.find('.more-link');
+        var $postSummary = $('.postSummary', $(post));
+        var $noResults = $(post).hasClass('no-results') ||
+                         $(post).hasClass('not-found') ||
+                         $(post).hasClass('error404');
+
+        // if no posts, just finish
+        if ($noResults) {
+            return;
         }
 
-        // form results object
-        var results = [];
+        // init entity
+        var entity = {};
+        // get title
+        entity.title = $entityTitile.html() || $postHeading.html() || '';
+        // remove whitespace
+        entity.title = entity.title.trim();
+        // get link
+        entity.link = $entityTitile.find('a').attr('href') ||
+                      $entityTitile.attr('href') ||
+                      $postHeading.find('a').attr('href') || 'no-link';
 
-        // get all posts
-        var posts = $('.post');
-        var toProcess = posts.length;
-        posts.each(function(idx, post) {
-            var $entityTitile = $('.entry-title', post);
-            var $postHeading = $('.postHeading', post);
-            var $entryMeta = $('.entry-meta', post);
-            var $postHeader = $('.postHeader', post);
-            var $entryContent = $('.entry-content', post);
-            var $moreLink = $entryContent.find('.more-link');
-            var $postSummary = $('.postSummary', post);
-            var $noResults = $(post).hasClass('no-results') ||
-                             $(post).hasClass('not-found') ||
-                             $(post).hasClass('error404');
+        // get date
+        var tmpDate = $entryMeta.find('.date').text() ||
+                      $entryMeta.find('.entry-date').text() ||
+                      $postHeader.find('.postMetaHeader').find('time').attr('datetime') ||
+                      '';
+        entity.date = new Date(tmpDate.trim()) || '';
 
-            // if no posts, just finish
-            if ($noResults) {
-                return;
-            }
-
-            // init entity
-            var entity = {};
-            // get title
-            entity.title = $entityTitile.html() || $postHeading.html() || '';
-            // remove whitespace
-            entity.title = entity.title.trim();
-            // get link
-            entity.link = $entityTitile.find('a').attr('href') ||
-                          $entityTitile.attr('href') ||
-                          $postHeading.find('a').attr('href') || 'no-link';
-
-            // get date
-            var tmpDate = $entryMeta.find('.date').text() ||
-                          $entryMeta.find('.entry-date').text() ||
-                          $postHeader.find('.postMetaHeader').find('time').attr('datetime') ||
-                          '';
-            entity.date = new Date(tmpDate.trim()) || '';
-
-            if ($moreLink.length || $postSummary.length) {
-                var contentUrl = $moreLink.attr('href') || $postSummary.attr('href');
-                getPostContent(contentUrl, function(data) {
-                    //assign data
-                    entity.content = data;
-                    // clean
-                    entity.content = entity.content.trim().replace(/\t/g, '');
-
-                    // if all fails, special case
-                    if (!entity.content && !entity.title) {
-                        entity.content = $(post).html();
-                        // clean
-                        entity.content = entity.content.trim().replace(/\t/g, '');
-                    }
-
-                    // push
-                    results.push(entity);
-                    // decrease to process counter
-                    toProcess--;
-                    // check end
-                    if(toProcess === 0) {
-                        // free up memory
-                        window.close();
-                        cb(results);
-                    }
-                });
-            } else {
-                entity.content = $('.entry-content', post).html();
+        if ($moreLink.length || $postSummary.length) {
+            var contentUrl = $moreLink.attr('href') || $postSummary.attr('href');
+            getPostContent(contentUrl, function(data) {
+                //assign data
+                entity.content = data;
+                // clean
+                entity.content = entity.content.trim().replace(/\t/g, '');
 
                 // if all fails, special case
-                if (!entity.content.trim() && !entity.title.trim()) {
+                if (!entity.content && !entity.title) {
                     entity.content = $(post).html();
+                    // clean
+                    entity.content = entity.content.trim().replace(/\t/g, '');
                 }
 
-                // push entity to results
+                // push
                 results.push(entity);
                 // decrease to process counter
                 toProcess--;
                 // check end
                 if(toProcess === 0) {
-                    // free up memory
-                    window.close();
                     cb(results);
                 }
+            });
+        } else {
+            entity.content = $('.entry-content', $(post)).html();
+
+            // if all fails, special case
+            if (!entity.content.trim() && !entity.title.trim()) {
+                entity.content = $(post).html();
             }
-        });
+
+            // push entity to results
+            results.push(entity);
+            // decrease to process counter
+            toProcess--;
+            // check end
+            if(toProcess === 0) {
+                // free up memory
+                cb(results);
+            }
+        }
     });
 };
 
@@ -115,18 +106,11 @@ var getPostContent = function(url, cb) {
         }
 
         // parse
-        pageToJsdom(body, function($, window) {
-            if(!$) {
-                return cb();
-            }
-
-            // get content
-            var content = $('.entry-content').html();
-            // free up memory
-            window.close();
-            // trigger callback
-            cb(content);
-        });
+        var $ = cheerio.load(body);
+        // get content
+        var content = $('.entry-content').html();
+        // trigger callback
+        cb(content);
     });
 };
 

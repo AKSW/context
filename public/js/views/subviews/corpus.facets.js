@@ -7,6 +7,10 @@ define([
 ], function(_, Backbone, S, facetsPanelTemplate, mainTemplate){
     var currentCorpus;
 
+    var escapeRegExp = function(str) {
+        return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    };
+
     // view
     var CorpusFacetsView = Backbone.View.extend({
         initialize: function(options) {
@@ -94,7 +98,7 @@ define([
 
                                 // check for match
                                 //if(entityName === testEntity) console.log('matching: ', srcWordClean.match(new RegExp(cleanWord+'(\W?)')));
-                                if(srcWordClean.match(new RegExp(matchRegStart+cleanWord+matchReg)) && i >= startIndex) {
+                                if(srcWordClean.match(new RegExp(matchRegStart+escapeRegExp(cleanWord)+matchReg)) && i >= startIndex) {
                                     //console.log('----> found', cleanWord, 'in', srcWordClean, 'with icomp', startIndex, i, i >= startIndex);
                                     sourceIndex = i;
                                     break;
@@ -111,7 +115,7 @@ define([
 
                     // get entities
                     item.entities.forEach(function(entity){
-                        console.log('------>>> Entity: ', entity.name);
+                        //console.log('------>>> Entity: ', entity.name);
                         var entityParts = entity.name.split(' ');
 
                         if(entity.name === testEntity) console.log('--->>> test ', entity.name, srcText.indexOf(entity.name));
@@ -190,17 +194,21 @@ define([
                                     return;
                                 }
                                 // test match
-                                var match = firstWord.match(new RegExp(matchRegStart+cleanWord+matchReg)) !== null;
+                                var match = firstWord.match(new RegExp(matchRegStart+escapeRegExp(cleanWord)+matchReg)) !== null;
                                 if(match) {
                                     //console.log('---->>> first word match: ', match, index);
                                     //console.log('---->>> match seq: ', srcText[index-1], srcText[index], srcText[index+1]);
                                     var i = 0;
                                     for(i = 1; i < entityParts.length; i++) {
+                                        if(index+i >= srcText.length) {
+                                            continue;
+                                        }
+
                                         var nextCleanWord = srcText[index+i].replace(cleanReg, '');
                                         if(nextCleanWord.indexOf('span%marked%') !== -1) {
                                             continue;
                                         }
-                                        match = match && entityParts[i].match(new RegExp(matchRegStart+nextCleanWord+matchReg)) !== null;
+                                        match = match && entityParts[i].match(new RegExp(matchRegStart+escapeRegExp(nextCleanWord)+matchReg)) !== null;
                                         //if(entityParts[i] === testEntity) console.log('matching: ', nextCleanWord, entityParts[i], entityParts[i].match(new RegExp(nextCleanWord+'(\W?)')) !== null)
                                     }
 
@@ -213,6 +221,9 @@ define([
 
                                         // Replace end part
                                         var endIndex = index+entityParts.length-1;
+                                        if(endIndex >= srcText.length) {
+                                            return;
+                                        }
                                         var endWord = srcText[endIndex];
                                         var endCleanWord = endWord.replace(/[^\w]/, '');
                                         // try to get plain match from original source for start
@@ -229,7 +240,7 @@ define([
 
                                             // enrich source
                                             src[sourceStartIndex] = src[sourceStartIndex].replace(
-                                                new RegExp(firstWord+'$'),
+                                                new RegExp(escapeRegExp(firstWord)+'$'),
                                                 '<span%marked% class="label label-warning hasTooltip" data-toggle="tooltip" title="' +
                                                 entity.types.join(' ') + '">' + firstWord
                                             );
