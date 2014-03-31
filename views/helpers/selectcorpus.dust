@@ -4,8 +4,8 @@
         <div class="form-group">
             <div class="input-group lead well corpus-select-input">
                 <span id="select_box" class="btn-padded">
-                    <select id="collection" class="selectpicker">
-                        <option value="0" selected>Select an existing corpus</option>
+                    <select id="collection" class="selectpicker" ng-model="corpus" ng-change="corpusSelect()">
+                        <option value="0" ng-selected="true">Select an existing corpus</option>
                         {#corpuses}
                         <option value="{_id}">{name}</option>
                         {/corpuses}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="context-app">
 <head>
     <!-- meta stuff -->
     <meta charset="utf-8">
@@ -18,17 +18,12 @@
     <!-- apple icon -->
     <link rel="apple-touch-icon" href="/img/icon.png" />
 
-    {?debug}
-    <!-- scripts -->
-    <script data-main="/js/main" src="/bower_components/requirejs/require.js"></script>
-    <script src="/js/config.js"></script>
-
     <!-- styles -->
+    {?debug}
     <link rel="stylesheet"  href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet"  href="/bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css" />
     <link rel="stylesheet"  href="/css/main.css" />
     {:else}
-    <script src="/js/app.min.js"></script>
     <link rel="stylesheet" href="/css/main.min.css" />
     {/debug}
 </head>
@@ -58,5 +53,8 @@
 
     <!-- page body -->
     {+body/}
+
+    <!-- scripts -->
+    <script src="/js/app.min.js"></script>
 </body>
 </html>

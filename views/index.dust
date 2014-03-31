@@ -6,7 +6,7 @@
     {>"menu/mainmenuRight.dust" user=user /}
 {/menu_right}
 {<body}
-    <div class="container">
+    <div class="container" ng-controller="HomeController">
         <div class="row" id="description_block">
             <div class="col-xs-6 col-md-4">
                 <img class="img-responsive img-rounded" src="img/play.png" id="play_video" />

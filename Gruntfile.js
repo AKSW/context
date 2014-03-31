@@ -107,16 +107,18 @@ module.exports = function(grunt) {
             }
         },
 
-        // requirejs
-        requirejs: {
-            build: {
+        // bower
+        browserify: {
+            js: {
+                // A single entry point for our app
+                src: 'public/js/app.js',
+                // Compile to a single file to add a script tag for in your HTML
+                dest: 'public/js/app.min.js',
                 options: {
-                    baseUrl: 'public/js',
-                    mainConfigFile: 'public/js/config.js',
-                    name: 'main',
-                    out: 'public/js/app.min.js'
+                    debug: grunt.option('debug'),
+                    transform: ['debowerify', 'deamdify'],
                 }
-            }
+            },
         },
 
         // css compression
@@ -135,14 +137,14 @@ module.exports = function(grunt) {
     // load extensions
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-shell');
 
     // define the tasks
     grunt.registerTask('init', 'Initializes app configs and libraries', ['copy', 'bower']);
-    grunt.registerTask('build', 'Builds and minimizes stuff', ['shell:build', 'requirejs', 'cssmin']);
+    grunt.registerTask('build', 'Builds and minimizes stuff', ['shell:build', 'browserify', 'cssmin']);
     grunt.registerTask('test', 'Runs tests', ['jshint']);
 
     // Default task(s).

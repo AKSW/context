@@ -1,24 +1,15 @@
-// load common libraries
-define([
-    'bootstrap',
-    'backbone',
-    'router',
-    'bootstrap-slider',
-], function(
-    Bootstrap,
-    Backbone,
-    Router,
-    _slider
-) {
-    // define app
-    var App = function(){
-        this.initialize = function () {
-            // initialize router
-            Router.initialize();
-        };
+// load bower libs
+window.$ = window.jQuery = require('jquery');
+require('bootstrap');
+// load angular and router
+var angular = require('angular');
+require('angular-router-browserify')(angular);
 
-        return this;
-    };
+// init app
+var app = angular.module('context-app', ['ngRoute']);
 
-    return new App();
-});
+// config app routes
+require('./routes')(app);
+
+// init controllers
+require('./controllers')(app);

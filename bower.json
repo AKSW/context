@@ -2,16 +2,10 @@
   "name": "conTEXT",
   "version": "1.0.0",
   "dependencies": {
-    "requirejs": "~2.1.11",
     "jquery": "~2.1.0",
     "bootstrap": "~3.1.1",
-    "requirejs-text": "~2.0.10",
-    "underscore": "~1.6.0",
-    "backbone": "~1.1.2",
     "seiyria-bootstrap-slider": "~1.9.5",
-    "requirejs-doT": "~0.1.2",
-    "stringjs": "~1.8.0",
-    "Backbone.Facetr": "*"
+    "stringjs": "~1.8.0"
   },
   "devDependencies": {}
 }
