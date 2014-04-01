@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var Corpus = require('../../modules/corpus');
 var CorpusDB = require('../../db/corpus').Corpus;
 var Article = require('../../db/article').Article;
+var FacetsProcesser = require('../../modules/FacetsProcesser');
 
 // export create corpus
 exports.createCorpus = {
@@ -90,8 +91,10 @@ exports.getCorpusJson = {
                 corpus = corpus.toObject();
                 corpus.articles = articles;
 
+                var data = FacetsProcesser.processData(corpus);
+
                 // send response
-                return res.send(corpus);
+                return res.send(data);
             });
         });
     }

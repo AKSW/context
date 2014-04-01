@@ -3,10 +3,9 @@ define([
     'backbone',
     'string',
     'backbone.facetr',
-    'modules/FacetsProcesser',
     'doT!/templates/facetsPanel',
     'doT!/templates/corpusFacets',
-], function(_, Backbone, S, Facetr, FacetsProcesser, facetsPanelTemplate, mainTemplate){
+], function(_, Backbone, S, Facetr, facetsPanelTemplate, mainTemplate){
     var $el;
     var currentCorpus;
     var facetsData;
@@ -35,18 +34,14 @@ define([
         $.getJSON('/api/corpus/' + currentCorpus.get('_id') + '/facets', function(data) {
             facetsData = data;
 
-            // prepare data
-            var processedData = FacetsProcesser.processData(facetsData);
-            console.log(processedData);
-
             // types
-            types = new Backbone.Collection(processedData.types);
+            types = new Backbone.Collection(facetsData.types);
             typesFacetr = new Facetr(types);
             // entities
-            entities = new Backbone.Collection(processedData.entities);
+            entities = new Backbone.Collection(facetsData.entities);
             entitiesFacetr = new Facetr(entities);
             // articles
-            articles = new Backbone.Collection(processedData.articles);
+            articles = new Backbone.Collection(facetsData.articles);
             articlesFacetr = new Facetr(articles);
 
             // render
