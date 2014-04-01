@@ -1,7 +1,6 @@
-var HomeController = require('./controllers/home.js');
-var RegisterController = require('./controllers/register.js');
-
 module.exports = function applyControllers (app) {
-    app.controller('HomeController', ['$scope', HomeController]);
-    app.controller('RegisterController', ['$scope', RegisterController]);
+    app.controller('HomeController', ['$scope', require('./controllers/home.js')]);
+    app.controller('RegisterController', ['$scope', require('./controllers/register.js')]);
+    app.controller('ProfileController', ['$scope', require('./controllers/profile.js')]);
+    app.controller('CreateCorpusController', ['$scope', require('./controllers/createcorpus.js')]);
 };

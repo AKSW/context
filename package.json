@@ -24,7 +24,6 @@
   ],
   "scripts": {
     "start": "node ./bin/context",
-    "debug": "node ./bin/debug",
     "test": "./node_modules/.bin/grunt test",
     "postinstall": "./node_modules/.bin/grunt init"
   },

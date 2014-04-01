@@ -3,23 +3,22 @@
         <legend>Insert new corpus data for analysis</legend>
         <div class="form-group">
             <div class="row">
-                {{~it.types :type:i }}
-                <div class="col-xs-12 col-sm-4 check-input-comp">
+                <div class="col-xs-12 col-sm-4 check-input-comp" ng-repeat="type in corpusTypes">
                     <div class="input-group">
                         <span class="input-group-addon">
-                            <input type="radio" name="input_type" value="{{= type.get('name') }}" class="radio-btn" {{? i === 0 }}checked {{?}} >
+                            <input type="radio" name="input_type" value="{{ $index }}" class="radio-btn" ng-checked="!$index"
+                            ng-model="corpusSelection.index" ng-value="$index">
                         </span>
-                        <input type="text" class="col-lg-3 form-control disabled-input btn-default btn" value="{{= type.get('description') }}" disabled>
+                        <input type="text" class="col-lg-3 form-control disabled-input btn-default btn" value="{{ type.description }}" disabled>
                     </div><!-- /input-group -->
                 </div>
-                {{~}}
             </div><!-- /.row -->
         </div>
         <div class="form-group" id="type_field">
-            <label class="control-label" for="input_item" id="input_label">URL</label>
-            <input type="text" class="form-control" placeholder="URL" id="input_item" name="input_item" />
-            <textarea name="input_item_area" id="input_item_area" class="form-control" style="display: none;"></textarea>
-            <input type="file" name="input_item_file" id="input_item_file" class="form-control" style="display: none;"/>
+            <label class="control-label" for="input_item" id="input_label" ng-bind="currentCorpus.inputDescription"></label>
+            <input type="text" class="form-control" placeholder="URL" id="input_item" name="input_item" ng-show="currentCorpus.inputType == 'text'" />
+            <textarea name="input_item_area" id="input_item_area" class="form-control" ng-show="currentCorpus.inputType == 'textarea'"></textarea>
+            <input type="file" name="input_item_file" id="input_item_file" class="form-control" ng-show="currentCorpus.inputType == 'file'"/>
         </div>
         <div id="advanced_options">
             <div class="form-group" id="slider_container">
@@ -29,9 +28,7 @@
             <div class="form-group">
                 <label class="control-label" for="nlp_api">NLP API</label>
                 <select id="nlp_api" name="nlp_api" class="form-control">
-                    {{~it.nlpApi :item:index}}
-                    <option value="{{= item.get('id') }}">{{= item.get('name') }}</option>
-                    {{~}}
+                    <option ng-repeat="item in nlpApis" value="{{ item.id }}">{{ item.name }}</option>
                 </select>
             </div>
             <div class="form-group" id="c_name_field">

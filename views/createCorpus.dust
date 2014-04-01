@@ -7,7 +7,7 @@
 {/menu_right}
 {<body}
     <div class="container">
-        <div id="createCorpusContainer">
+        <div id="createCorpusContainer" ng-view>
             Loading...
         </div>
 
