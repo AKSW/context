@@ -13,3 +13,6 @@ require('./routes')(app);
 
 // init controllers
 require('./controllers')(app);
+
+// config app directives
+require('./directives')(app);

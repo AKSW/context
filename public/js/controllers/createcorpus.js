@@ -43,4 +43,68 @@ module.exports = function CreateCorpusController($scope) {
 
     // update slider
     $scope.$on('$viewContentLoaded', updateView);
+
+    // analysis start function
+    $scope.startAnalysis = function () {
+        // get fields
+        var $inputItem = $('#input_item');
+        var $inputItemArea = $('#input_item_area');
+        var $inputItemFile = $('#input_item_file');
+        var $inputCountField = $('input#input_count');
+        var $newCorpusForm = $('#newcorpus_form');
+        var $inputType = $('input[name=input_type]:checked');
+
+        // remove old warning
+        $inputItem.parent().removeClass('has-warning');
+
+        // validate input
+        var input = null;
+        var corpusType = $scope.currentCorpus.name;
+        var inputType = $scope.currentCorpus.inputType;
+        switch(inputType) {
+            case 'text':
+                input = $inputItem.val().trim();
+                break;
+            case 'textarea':
+                input = $inputItemArea.val().trim();
+                break;
+            case 'file':
+                input = $inputItemFile.val();
+                break;
+        }
+
+        if (!input) {
+            $inputItem.parent().addClass('has-warning');
+            return;
+        }
+
+        // assign count to input field
+        var itemCount = $inputCount.slider('getValue');
+        $inputCountField.val(itemCount);
+
+        // remove unneeded inputs & rename last one
+        switch(inputType) {
+            case 'text':
+                $inputItem.attr('name', 'input');
+                $inputItemArea.remove();
+                $inputItemFile.remove();
+                break;
+            case 'textarea':
+                $inputItem.remove();
+                $inputItemArea.attr('name', 'input');
+                $inputItemFile.remove();
+                break;
+            case 'file':
+                $inputItem.remove();
+                $inputItemArea.remove();
+                $inputItemFile.attr('name', 'input');
+                break;
+        }
+
+        // swap input type value
+        $inputType.val(corpusType);
+
+        // send to server
+        $newCorpusForm.submit();
+    };;
 };

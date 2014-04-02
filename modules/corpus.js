@@ -24,6 +24,10 @@ var handleSaveError = function(err) {
 var annotateArtice = function(article, corpus) {
     // get plain text
     var sourceText = S(article.source).stripTags().s;
+    if(!annotationServices[corpus.nlp_api]) {
+        console.log('error! annotation service not found!');
+        return;
+    }
     // check if source is valid
     if(sourceText && sourceText.length > 0) {
         // start input processing
@@ -55,8 +59,12 @@ var annotateCorpus = function(corpus) {
 
 var processCorpus = function(corpus) {
     console.log('starting to process input from corpus', corpus._id);
-    // start input processing
-    inputProcessers[corpus.input_type].process(corpus, annotateCorpus);
+    if(inputProcessers[corpus.input_type]) {
+        // start input processing
+        inputProcessers[corpus.input_type].process(corpus, annotateCorpus);
+    } else {
+        console.log('error! corpus processer not found!');
+    }
 };
 
 //

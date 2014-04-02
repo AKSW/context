@@ -1,4 +1,4 @@
-<form id="newcorpus_form" action="/api/corpus" method="post" class="well">
+<form id="newcorpus_form" action="/api/corpus" method="post" class="well" ng-submit="startAnalysis()">
     <fieldset>
         <legend>Insert new corpus data for analysis</legend>
         <div class="form-group">
@@ -33,9 +33,9 @@
             </div>
             <div class="form-group" id="c_name_field">
                 <label class="control-label" for="corpus_name">Save as</label>
-                <input type="text" class="form-control" placeholder="Corpus name" id="corpus_name" name="name" />
+                <input type="text" class="form-control" placeholder="Corpus name" id="corpus_name" name="name" ng-minlength="1" required />
             </div>
         </div>
-        <a href="#" id="analyzeBtn" class="btn btn-primary">Start Analysis</a>
+        <button type="submit" id="analyzeBtn" class="btn btn-primary">Start Analysis</button>
     </fieldset>
 </form>

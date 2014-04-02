@@ -20,7 +20,7 @@ var context = require('../app'),
         scripts.transform('debowerify');
         scripts.transform('deamdify');
         var rebundle = function (ids) {
-            log('Watchify has rebuild scripts:\n', ids);
+            log('[', new Date(), ']', 'Watchify has rebuild scripts:\n', ids);
             return scripts.bundle().pipe(fs.createWriteStream('./public/js/app.min.js'));
         };
         // listen for events
