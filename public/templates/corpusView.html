@@ -1,13 +1,13 @@
 <!-- menu -->
-<ul class="nav nav-tabs" id="corpusTabs" ng-repeat="item in extentions">
-    <li ng-class="{active : $first, item : true}">
-        <a href="#" data-path="{{ path }}" class="viewExtention">{{ name }}</a>
+<ul class="nav nav-tabs" id="corpusTabs">
+    <li ng-class="{active : $first, item : true}" ng-repeat="item in extentions">
+        <a ui-sref="corpus.{{ item.name }}" class="viewExtention">{{ item.name }}</a>
     </li>
 </ul>
 
 <!-- content -->
 <div class="tab-content">
-    <div class="tab-pane active" id="contentTab">
+    <div class="tab-pane active" id="contentTab" ui-view>
         Loading...
     </div>
 </div>

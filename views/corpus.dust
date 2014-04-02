@@ -7,7 +7,7 @@
 {/menu_right}
 {<body}
     <div class="container">
-        <div id="corpusContainer">
+        <div id="corpusContainer" ui-view>
             Loading...
         </div>
 

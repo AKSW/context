@@ -8,6 +8,6 @@ module.exports = function HomeController($scope) {
             return;
         }
         // redirect to corpus
-        window.location = '/corpus/' + $scope.corpus;
+        $location.path('/corpus/' + $scope.corpus);
     };
 };

@@ -30,6 +30,7 @@
   "dependencies": {
     "angular": "^1.2.15",
     "angular-router-browserify": "0.0.1",
+    "angular-ui-router": "^0.2.10",
     "captchapng": "0.0.1",
     "cheerio": "^0.13.1",
     "colors": "^0.6.2",

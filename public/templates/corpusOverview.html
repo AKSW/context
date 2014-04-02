@@ -1,40 +1,34 @@
-<h1 contenteditable="true" class="corpus-name-text">{{= it.corpus.get('name') }}</h1>
+<h1 contenteditable="true" class="corpus-name-text">{{ currentCorpus.name }}</h1>
 <table class="table table-striped table-bordered table-hover table-condensed ">
     <tbody>
         <tr>
             <td>URL</td>
             <td class="text-info">
-                <a href="{{= it.corpus.uri() }}" target="_blank">
-                {{? it.corpus.uri().length > 50 }}
-                    {{= it.corpus.uri().slice(0, 50) + '...' }}
-                {{??}}
-                    {{= it.corpus.uri() }}
-                {{?}}
-                </a>
+                <a href="{{ currentCorpus.uri() }}" target="_blank">{{ currentCorpus.uri() }}</a>
             </td>
         </tr>
         <tr>
             <td>Creation date</td>
-            <td class="text-info">{{= it.corpus.get('creation_date') }}</td>
+            <td class="text-info">{{ currentCorpus.creation_date }}</td>
         </tr>
         <tr>
             <td>Input type</td>
-            <td class="text-info">{{= it.corpus.get('input_type') }}</td>
+            <td class="text-info">{{ currentCorpus.input_type }}</td>
         </tr>
         <tr>
             <td>Number of articles</td>
             <td class="text-info">
-                <a href="#"><b>{{= it.corpus.get('articlesCount') }}</b></a>
+                <a href="#"><b>{{ currentCorpus.articlesCount }}</b></a>
             </td>
         </tr>
         <tr>
             <td>Annotator API(s)</td>
-            <td class="text-info">{{= it.corpus.get('nlp_api') }}</td>
+            <td class="text-info">{{ currentCorpus.nlp_api }}</td>
         </tr>
         <tr>
             <td>Number of detected entities</td>
             <td class="text-info">
-                <a href="#facets">{{= it.corpus.get('entitiesCount') }}</a>
+                <a href="#facets">{{ currentCorpus.entitiesCount }}</a>
             </td>
         </tr>
     </tbody>
