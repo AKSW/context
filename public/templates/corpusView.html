@@ -1,6 +1,6 @@
 <!-- menu -->
 <ul class="nav nav-tabs" id="corpusTabs">
-    <li ng-class="{active : $first, item : true}" ng-repeat="item in extentions">
+    <li ng-class="{active: $state.includes('corpus.{{item.name}}')}" ng-repeat="item in extentions">
         <a ui-sref="corpus.{{ item.name }}" class="viewExtention">{{ item.name }}</a>
     </li>
 </ul>

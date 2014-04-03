@@ -25,6 +25,8 @@ module.exports = function MainCorpusController($scope, $location, $state, corpus
 
     // init extentions
     $scope.extentions = extentions;
+    // expose state
+    $scope.$state = $state;
 
     // render first view if needed
     $scope.$on('$viewContentLoaded', function onRender() {

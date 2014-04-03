@@ -32,7 +32,9 @@ corpusModule.config(function ($stateProvider, $urlRouterProvider) {
 });
 
 // register controllers
-corpusModule.controller('CorpusOverviewController', ['$scope', require('../controllers/corpus/overview.js')]);
+extentions.forEach(function(ex) {
+    corpusModule.controller(ex.controller, ['$scope', '$state', '$sce', ex.js]);
+});
 
 // export
 module.exports = corpusModule;
