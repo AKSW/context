@@ -29,6 +29,7 @@ var processData = function(data, filters) {
         var article = {
             id: item._id,
             name: title,
+            type: 'article',
             count: 0,
             entities: [],
             types: [],
@@ -248,14 +249,19 @@ var processData = function(data, filters) {
             if(ind !== -1) {
                 newEntity = entities[ind];
                 entities[ind].count += 1;
-                entities[ind].article.push(article.id);
-                article.entities.push(newEntity.id);
+                if(entities[ind].articles.indexOf(article.id) === -1) {
+                    entities[ind].articles.push(article.id);
+                }
+                if(article.entities.indexOf(newEntity.id) === -1) {
+                    article.entities.push(newEntity.id);
+                }
             } else {
                 newEntity = {
                     id: entity._id,
                     name: entity.name,
+                    type: 'entity',
                     count: 1,
-                    article: [article.id],
+                    articles: [article.id],
                     types: []
                 };
                 article.entities.push(newEntity.id);
@@ -265,22 +271,33 @@ var processData = function(data, filters) {
             entity.types.forEach(function(type){
                 // get type data
                 var name = type.split(':')[1];
+                var tid = 'type_'+name;
                 var ind = typeNames.indexOf(name);
                 if(ind !== -1) {
                     types[ind].count += 1;
                     types[ind].entities.push(newEntity.id);
                     types[ind].articles.push(article.id);
-                    newEntity.types.push(name);
-                    article.types.push(name);
+                    if(newEntity.types.indexOf(tid) === -1) {
+                        newEntity.types.push(tid);
+                    }
+                    if(article.types.indexOf(tid) === -1) {
+                        article.types.push(tid);
+                    }
                 } else {
                     types.push({
+                        id: tid,
                         name: name,
+                        type: 'type',
                         count: 1,
                         entities: [newEntity.id],
                         articles: [article.id],
                     });
-                    newEntity.types.push(name);
-                    article.types.push(name);
+                    if(newEntity.types.indexOf(tid) === -1) {
+                        newEntity.types.push('type_'+name);
+                    }
+                    if(article.types.indexOf(tid) === -1) {
+                        article.types.push('type_'+name);
+                    }
                     typeNames.push(name);
                 }
             });
