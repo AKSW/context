@@ -1,4 +1,4 @@
 {#user}
-    <li {?profile}class="active"{/profile}><a href="/profile">Profile ({username})</a></li>
-    <li><a href="/logout">Sign out</a></li>
+    <li {?profile}class="active"{/profile}><a href="/profile" target="_self">Profile ({username})</a></li>
+    <li><a href="/logout" target="_self">Sign out</a></li>
 {/user}

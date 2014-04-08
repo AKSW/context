@@ -7,7 +7,7 @@
 {/menu_right}
 {<body}
     <div class="container">
-        <div id="createCorpusContainer" ng-init="csrf='{csrf}'" ng-view>
+        <div id="createCorpusContainer" ng-view ng-init="csrf='{csrf}'">
             Loading...
         </div>
 
