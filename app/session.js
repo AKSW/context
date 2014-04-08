@@ -7,6 +7,7 @@ module.exports = function(app) {
     app.use(express.cookieParser(config.cookieParserSalt));
     app.use(express.session({
         secret: config.cookieParserSalt + config.sidSalt,
-        store: new MongoStore(config.sessionDb)
+        store: new MongoStore(config.sessionDb),
+        key: 'sessionId',
     }));
 };
