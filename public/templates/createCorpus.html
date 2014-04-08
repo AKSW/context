@@ -36,6 +36,7 @@
                 <input type="text" class="form-control" placeholder="Corpus name" id="corpus_name" name="name" ng-minlength="1" required />
             </div>
         </div>
+        <input type="hidden" name="_csrf" value="{{ csrf }}" />
         <button type="submit" id="analyzeBtn" class="btn btn-primary">Start Analysis</button>
     </fieldset>
 </form>

@@ -39,6 +39,8 @@
                         <input class="login_input form-control" id="email" placeholder="User's email" type="email" name="email" {#user}value="{email}"{/user} required />
                     </div>
 
+                    <input type="hidden" name="_csrf" value="{csrf}" />
+
                     <input type="submit" name="save" value="Save" class="btn btn-primary"/>
                 </form>
             </div>

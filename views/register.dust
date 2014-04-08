@@ -58,6 +58,8 @@
                         <input type="text" class="form-control" id="captcha" placeholder="Copy text of image" name="captcha" required />
                     </div>
 
+                    <input type="hidden" name="_csrf" value="{csrf}" />
+
                     <input type="submit" name="register" value="Register" class="btn btn-primary"/>
                 </form>
             </div>

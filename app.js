@@ -18,6 +18,9 @@ require('./app/session')(app);
 // load passport auth config
 require('./app/passport')(app);
 
+// load security app config
+require('./app/security')(app);
+
 // load custom render function
 require('./app/customrender')(app);
 

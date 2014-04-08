@@ -106,5 +106,5 @@ module.exports = function CreateCorpusController($scope) {
 
         // send to server
         $newCorpusForm.submit();
-    };;
+    };
 };

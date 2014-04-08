@@ -13,6 +13,7 @@
                     <input type="password" class="form-control" id="password" placeholder="Password" name="password" autocomplete="off" required>
                 </div>
                 <div class="form-group">
+                    <input type="hidden" name="_csrf" value="{csrf}" />
                     <input type="submit" name="login" value="Sign in" class="btn btn-primary"/>
                     <a class="btn btn-default pull-right" href="/register">Register</a>
                 </div>

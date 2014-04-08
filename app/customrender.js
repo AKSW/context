@@ -6,13 +6,18 @@ module.exports = function(app) {
         var render = res.render;
         res.render = function(view, locals, cb) {
             if (typeof locals === 'object') {
+                // pass debug indication
                 locals.debug = config.debug;
+                // pass user
                 locals.user = req.user;
+                // pass csrf
+                locals.csrf = req.csrfToken();
             }
             if (locals === undefined) {
                 locals = {
                     debug: config.debug,
                     user: req.user,
+                    csrf: req.csrfToken(),
                 };
             }
             render.call(res, view, locals, cb);
