@@ -23,9 +23,9 @@
     "nlp"
   ],
   "scripts": {
-    "start": "node ./bin/context",
-    "test": "./node_modules/.bin/grunt test",
-    "postinstall": "./node_modules/.bin/grunt init"
+    "start": "./bin/context",
+    "test": "./node_modules/.bin/gulp test",
+    "postinstall": "./node_modules/.bin/gulp init"
   },
   "dependencies": {
     "angular": "^1.2.15",
@@ -62,15 +62,16 @@
     "browserify": "^3.38.0",
     "deamdify": "^0.1.1",
     "debowerify": "^0.7.0",
-    "grunt": "^0.4.2",
-    "grunt-bower-task": "^0.3.4",
-    "grunt-browserify": "^2.0.1",
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-copy": "^0.5.0",
-    "grunt-contrib-cssmin": "^0.9.0",
-    "grunt-contrib-jshint": "^0.8.0",
-    "grunt-shell": "^0.6.4",
-    "nodemon": "^1.0.17",
-    "watchify": "^0.6.3"
+    "gulp": "^3.6.0",
+    "gulp-bower": "0.0.4",
+    "gulp-browserify": "^0.5.0",
+    "gulp-concat": "^2.2.0",
+    "gulp-jshint": "^1.5.3",
+    "gulp-livereload": "^1.2.0",
+    "gulp-minify-css": "^0.3.1",
+    "gulp-open": "^0.2.8",
+    "gulp-rename": "^1.2.0",
+    "gulp-watch": "^0.5.3",
+    "nodemon": "^1.0.17"
   }
 }

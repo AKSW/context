@@ -19,13 +19,7 @@
     <link rel="apple-touch-icon" href="/img/icon.png" />
 
     <!-- styles -->
-    {?debug}
-    <link rel="stylesheet"  href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet"  href="/bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css" />
-    <link rel="stylesheet"  href="/css/main.css" />
-    {:else}
-    <link rel="stylesheet" href="/css/main.min.css" />
-    {/debug}
+    <link rel="stylesheet" href="/dist/main.min.css" />
 </head>
 <body>
     <!-- menu -->
@@ -55,6 +49,6 @@
     {+body/}
 
     <!-- scripts -->
-    <script src="/js/app.min.js"></script>
+    <script src="/dist/app.min.js"></script>
 </body>
 </html>
