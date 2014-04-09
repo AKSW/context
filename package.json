@@ -41,6 +41,7 @@
     "dustjs-linkedin": "^2.2.8",
     "express": "^3.4.8",
     "feedparser": "^0.16.6",
+    "jquery": "^2.1.0",
     "moment": "^2.5.1",
     "mongoose": "^3.8.8",
     "optimist": "^0.6.1",

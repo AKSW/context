@@ -12,4 +12,4 @@ var gulp = require('./gulp')([
 gulp.task('init', ['bower', 'bootstrap', 'config']);
 gulp.task('build', ['browserify', 'minifycss']);
 gulp.task('test', ['jshint']);
-gulp.task('default', ['build', 'watch', 'serve', 'open']);
+gulp.task('default', ['build', 'watch', 'serve']);
