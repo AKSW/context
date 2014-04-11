@@ -32,10 +32,11 @@ articleSchema = new Schema({
 });
 
 // custom create method with additional checks
-articleSchema.statics.createNew = function (article, cb) {
+articleSchema.statics.createNew = function (article) {
+    var self = this;
     return new Promise(function (resolve, reject) {
         // check username
-        this.findOne({uri: article.uri}, function(err, exarticle) {
+        self.findOne({uri: article.uri}, function(err, exarticle) {
             if(err) {
                 return reject(err);
             }

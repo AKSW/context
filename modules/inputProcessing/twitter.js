@@ -77,7 +77,6 @@ var getNextPage = async(function(username, lastId, corpus) {
     // parse
     var res = parsePage(body, username);
     if(!res) {
-        console.log('error loading twitter page');
         throw new Error('Error loading twitter page!');
     }
     var results = [];
@@ -91,6 +90,7 @@ var getNextPage = async(function(username, lastId, corpus) {
         entity = res[i];
         // convert to html string
         var doc = {
+            item_id: entity.id,
             corpuses: [corpus._id],
             creation_date: entity.date,
             uri: entity.link,
@@ -118,7 +118,7 @@ var process = async(function(corpus) {
     // process pages while there are less results than needed
     while(results.length < limit) {
         // get last item date
-        var lastId = results.length > 0 ? results[results.length-1].id : null;
+        var lastId = results.length > 0 ? results[results.length-1].item_id : null;
 
         // get next page
         var res = await(getNextPage(username, lastId, corpus));

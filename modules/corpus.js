@@ -62,22 +62,27 @@ var annotateCorpus = function(corpus) {
     });
 };
 
-var processCorpus = async(function(corpus) {
+var processCorpus = function(corpus) {
     console.log('starting to process input from corpus', corpus._id);
     if(inputProcessers[corpus.input_type]) {
         // start input processing
         inputProcessers[corpus.input_type]
         .process(corpus)
-        .then(function(res) {
-            res.forEach(function(item) {
-                var res = await(Article.createNew(item));
-            });
+        .then(async(function(res) {
+            var i, len = res.length, item;
+            for(i = 0; i < len; i++){
+                item = res[i];
+                console.log(item);
+                var resp = await(Article.createNew(item));
+                console.log(resp);
+            }
+
             annotateCorpus(corpus);
-        });
+        }));
     } else {
         console.log('error! corpus processer not found!');
     }
-});
+};
 
 //
 // public functions
