@@ -1,38 +1,33 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
-var request = require('request');
-// db
-var Article = require('../../db/article').Article;
+// async-await fetures
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// promise
+var Promise = require('bluebird');
+// promisified request
+var request = Promise.promisify(require('request'));
 
 // process function
-var process = function(corpus, endCallback) {
+var process = async(function(corpus) {
     // get url
     var url = corpus.input;
 
     // get content
-    request(url, function (error, response, body) {
-        // convert to html string
-        var doc = {
-            corpuses: [corpus._id],
-            uri: url,
-            source: body,
-        };
-        Article.createNew(doc, function(err, article) {
-            if(err) {
-                return console.log('error saving article', err);
-            }
+    var res = await(request(url));
+    var body = res[1];
 
-            console.log('done saving webpage source');
-            return endCallback(corpus);
-        });
-    });
-};
+    // convert to html string
+    var doc = {
+        corpuses: [corpus._id],
+        uri: url,
+        source: body,
+    };
+
+    return [doc];
+});
 
 // module
 var WebpageProcessing = function () {
-    // Super constructor
-    EventEmitter.call( this );
-
     // name (also ID of processer used in client)
     this.name = 'webpage';
 

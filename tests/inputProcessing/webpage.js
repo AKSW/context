@@ -2,31 +2,26 @@
 var should = require('should');
 
 // module being tested
-var feed = require('../../modules/inputProcessing/feed');
+var webpage = require('../../modules/inputProcessing/webpage');
 
 // test data
-var url = 'http://www.rockpapershotgun.com/feed/';
 var corpus = {
     _id: 'test',
-    input: url,
-    input_count: 12
+    input: 'http://www.rockpapershotgun.com/2014/04/11/garrys-mod-cheap/'
 };
 
-describe('Feed input processing suit', function () {
-    it('should get 12 results', function (done) {
-        feed.process(corpus)
+describe('Webpage input processing suit', function () {
+    it('should get 1 results', function (done) {
+        webpage.process(corpus)
         .then(function(res){
             // check length
-            res.length.should.eql(12);
+            res.length.should.eql(1);
             // check fields
             res.forEach(function(item) {
                 // check corpuses
                 item.should.have.property('corpuses');
                 item.corpuses.should.be.an.Array;
                 item.corpuses.length.should.be.above(0);
-                // check creation_date
-                item.should.have.property('creation_date');
-                item.creation_date.should.be.instanceOf(Date);
                 // check uri
                 item.should.have.property('uri');
                 item.uri.should.be.a.String;

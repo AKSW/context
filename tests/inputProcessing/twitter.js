@@ -2,22 +2,22 @@
 var should = require('should');
 
 // module being tested
-var feed = require('../../modules/inputProcessing/feed');
+var twitter = require('../../modules/inputProcessing/twitter');
 
 // test data
-var url = 'http://www.rockpapershotgun.com/feed/';
+var username = 'yamalight';
 var corpus = {
     _id: 'test',
-    input: url,
-    input_count: 12
+    input: username,
+    input_count: 200
 };
 
-describe('Feed input processing suit', function () {
-    it('should get 12 results', function (done) {
-        feed.process(corpus)
+describe('Twitter input processing suit', function () {
+    it('should get 200 results', function (done) {
+        twitter.process(corpus)
         .then(function(res){
             // check length
-            res.length.should.eql(12);
+            res.length.should.eql(200);
             // check fields
             res.forEach(function(item) {
                 // check corpuses

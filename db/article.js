@@ -1,5 +1,11 @@
 // requires
 var cheerio = require('cheerio');
+// async-await fetures
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// promise
+var Promise = require('bluebird');
+
 // db requires
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
@@ -27,30 +33,32 @@ articleSchema = new Schema({
 
 // custom create method with additional checks
 articleSchema.statics.createNew = function (article, cb) {
-    // check username
-    this.findOne({uri: article.uri}, function(err, exarticle) {
-        if(err) {
-            return cb(err, null);
-        }
-
-        // if article already exists, just append it to new corpus
-        if(exarticle) {
-            exarticle.update({'$push': {corpuses: article.corpuses[0]}}, function(err){
-                if(err) {
-                    return cb(err, null);
-                }
-                return cb(null, exarticle);
-            });
-            return;
-        }
-
-        // save article if none found
-        var doc = new Article(article);
-        doc.save(function(err) {
+    return new Promise(function (resolve, reject) {
+        // check username
+        this.findOne({uri: article.uri}, function(err, exarticle) {
             if(err) {
-                return cb(err, null);
+                return reject(err);
             }
-            return cb(null, doc);
+
+            // if article already exists, just append it to new corpus
+            if(exarticle) {
+                exarticle.update({'$push': {corpuses: article.corpuses[0]}}, function(err){
+                    if(err) {
+                        return reject(err);
+                    }
+                    return resolve(exarticle);
+                });
+                return;
+            }
+
+            // save article if none found
+            var doc = new Article(article);
+            doc.save(function(err) {
+                if(err) {
+                    return reject(err);
+                }
+                return resolve(doc);
+            });
         });
     });
 };

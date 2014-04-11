@@ -1,13 +1,32 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
-var request = require('request');
+// async-await fetures
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// promise
+var Promise = require('bluebird');
+// promisified request
+var request = Promise.promisify(require('request'));
+// dom stuff
 var cheerio = require('cheerio');
+// crypto
 var crypto = require('crypto');
-// db
-var Article = require('../../db/article').Article;
+
+// gets post content
+var getPostContent = async(function(url) {
+    // get resp
+    var res = await(request(url));
+    var body = res[1];
+
+    // parse
+    var $ = cheerio.load(body);
+    // get content
+    var content = $('.entry-content').html();
+    // trigger callback
+    return content;
+});
 
 // process page and return entities
-var parsePage = function(body, itemsLeft, cb) {
+var parsePage = async(function(body) {
     // parse
     var $ = cheerio.load(body);
 
@@ -54,28 +73,21 @@ var parsePage = function(body, itemsLeft, cb) {
 
         if ($moreLink.length || $postSummary.length) {
             var contentUrl = $moreLink.attr('href') || $postSummary.attr('href');
-            getPostContent(contentUrl, function(data) {
-                //assign data
-                entity.content = data;
+            var data = await(getPostContent(contentUrl));
+            //assign data
+            entity.content = data;
+            // clean
+            entity.content = entity.content.trim().replace(/\t/g, '');
+
+            // if all fails, special case
+            if (!entity.content && !entity.title) {
+                entity.content = $(post).html();
                 // clean
                 entity.content = entity.content.trim().replace(/\t/g, '');
+            }
 
-                // if all fails, special case
-                if (!entity.content && !entity.title) {
-                    entity.content = $(post).html();
-                    // clean
-                    entity.content = entity.content.trim().replace(/\t/g, '');
-                }
-
-                // push
-                results.push(entity);
-                // decrease to process counter
-                toProcess--;
-                // check end
-                if(toProcess === 0) {
-                    cb(results);
-                }
-            });
+            // push
+            results.push(entity);
         } else {
             entity.content = $('.entry-content', $(post)).html();
 
@@ -86,113 +98,86 @@ var parsePage = function(body, itemsLeft, cb) {
 
             // push entity to results
             results.push(entity);
-            // decrease to process counter
-            toProcess--;
-            // check end
-            if(toProcess === 0) {
-                // free up memory
-                cb(results);
-            }
         }
     });
-};
 
-// gets post content
-var getPostContent = function(url, cb) {
-    request(url, function (error, response, body) {
-        if (error) {
-            console.log('error loadgin wp page', error);
-            return cb(false);
-        }
+    return results;
+});
 
-        // parse
-        var $ = cheerio.load(body);
-        // get content
-        var content = $('.entry-content').html();
-        // trigger callback
-        cb(content);
-    });
-};
-
-var getNextPage = function(url, corpus, itemsLeft, page, endCallback) {
+var getNextPage = async(function(url, page) {
+    // form url
     var pageUrl = url + '/page/'+page+'/';
-    request(pageUrl, function (error, response, body) {
-        if (error) {
-            return console.log('error loadgin wp page', error);
-        }
 
-        // parse
-        parsePage(body, itemsLeft, function(res) {
-            if(!res) {
-                return console.log('error loadgin wp page', error);
-            }
-            // get count
-            var count = res.length;
+    // get resp
+    var resp = await(request(pageUrl));
+    var body = resp[1];
 
-            // see what's the smallest number of posts to process
-            var max = itemsLeft >= count ? count : itemsLeft;
-            var toSave = max;
+    // parse
+    var res = await(parsePage(body));
+    if(!res) {
+        console.log('error loading wp page');
+        throw new Error('Error loading wordpress page!');
+    }
 
-            // save posts to db
-            var i = 0;
-            for(i = 0; i < max; i++){
-                var entity = res[i];
-                // convert to html string
-                var content = '<div class="extracted-title">' + entity.title + '</div> ' + entity.content;
-                // if no link is given, generate a new unique one
-                if(entity.link === 'no-link') {
-                    // hash input
-                    var md5sum = crypto.createHash('md5');
-                    md5sum.update(content + Date.now().toString());
-                    // generate unique url for piece
-                    entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
-                }
-                var doc = {
-                    corpuses: [corpus._id],
-                    creation_date: entity.date,
-                    uri: entity.link,
-                    source: content,
-                };
-                Article.createNew(doc, function(err, article) {
-                    if(err) {
-                        console.log('error saving article', err);
-                    }
+    // return
+    return res;
+});
 
-                    // decrease to process counter
-                    toSave--;
-                    // check end
-                    if(toSave === 0) {
-                        // check limit
-                        itemsLeft -= count;
-                        if (itemsLeft <= 0) {
-                            console.log('done processing wordpress');
-                            return endCallback(corpus);
-                        }
-
-                        // process next paga
-                        getNextPage(url, corpus, itemsLeft, page+1, endCallback);
-                    }
-                });
-            }
-        });
-    });
+// convert entity to doc
+var entityToDocument = function(entity, url, corpus) {
+    // if no link is given, generate a new unique one
+    if(entity.link === 'no-link') {
+        // hash input
+        var md5sum = crypto.createHash('md5');
+        md5sum.update(entity.content + Date.now().toString());
+        // generate unique url for piece
+        entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
+    }
+    var doc = {
+        corpuses: [corpus._id],
+        creation_date: entity.date,
+        dateString: entity.dateString,
+        uri: entity.link,
+        source: entity.content,
+        title: entity.title,
+    };
+    return doc;
 };
 
 // process function
-var process = function(corpus, endCallback) {
+var process = async(function(corpus) {
     // generate unique url for piece
     var url = corpus.input;
     var limit = corpus.input_count;
 
-    // get first page
-    getNextPage(url, corpus, limit, 1, endCallback);
-};
+    // init results
+    var results = [];
+
+    // init page number
+    var lastPage = 1;
+
+    // process pages while there are less results than needed
+    while(results.length < limit) {
+        // get next page
+        var res = await(getNextPage(url, lastPage));
+
+        // get count
+        var count = res.length;
+        var i, entity, doc;
+        for(i = 0; i < count; i++){
+            doc = entityToDocument(res[i], url, corpus);
+            results.push(doc);
+        }
+
+        // increase page
+        lastPage++;
+    }
+
+    return results.slice(0, limit);
+});
 
 // module
 var WordpressProcessing = function () {
-    // Super constructor
-    EventEmitter.call( this );
-
     // name (also ID of processer used in client)
     this.name = 'wordpress';
 

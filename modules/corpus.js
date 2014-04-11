@@ -1,6 +1,11 @@
-var underscore = require('underscore');
+// async-await fetures
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// filesystem stuff
 var fs = require('fs');
+// string.js
 var S = require('string');
+// underscore
 var _ = require('underscore');
 // include db
 var Corpus = require('../db/corpus').Corpus;
@@ -57,15 +62,22 @@ var annotateCorpus = function(corpus) {
     });
 };
 
-var processCorpus = function(corpus) {
+var processCorpus = async(function(corpus) {
     console.log('starting to process input from corpus', corpus._id);
     if(inputProcessers[corpus.input_type]) {
         // start input processing
-        inputProcessers[corpus.input_type].process(corpus, annotateCorpus);
+        inputProcessers[corpus.input_type]
+        .process(corpus)
+        .then(function(res) {
+            res.forEach(function(item) {
+                var res = await(Article.createNew(item));
+            });
+            annotateCorpus(corpus);
+        });
     } else {
         console.log('error! corpus processer not found!');
     }
-};
+});
 
 //
 // public functions

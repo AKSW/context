@@ -2,22 +2,22 @@
 var should = require('should');
 
 // module being tested
-var feed = require('../../modules/inputProcessing/feed');
+var wordpress = require('../../modules/inputProcessing/wordpress');
 
 // test data
-var url = 'http://www.rockpapershotgun.com/feed/';
+var url = 'http://x443.wordpress.com/';
 var corpus = {
     _id: 'test',
     input: url,
-    input_count: 12
+    input_count: 50
 };
 
-describe('Feed input processing suit', function () {
-    it('should get 12 results', function (done) {
-        feed.process(corpus)
+describe('Wordpress input processing suit', function () {
+    it('should get 50 results', function (done) {
+        wordpress.process(corpus)
         .then(function(res){
             // check length
-            res.length.should.eql(12);
+            res.length.should.eql(50);
             // check fields
             res.forEach(function(item) {
                 // check corpuses
@@ -35,6 +35,9 @@ describe('Feed input processing suit', function () {
                 item.should.have.property('source');
                 item.source.should.be.a.String;
                 item.source.length.should.be.above(0);
+                // check title
+                item.should.have.property('title');
+                item.title.should.be.a.String;
             });
             done();
         });

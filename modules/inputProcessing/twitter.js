@@ -1,14 +1,19 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
-var request = require('request');
+// async-await fetures
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// promise
+var Promise = require('bluebird');
+// promisified request
+var request = Promise.promisify(require('request'));
+// dom stuff
 var cheerio = require('cheerio');
+// crypto
 var crypto = require('crypto');
-// db
-var Article = require('../../db/article').Article;
 
 
 // process page and return entities
-var parsePage = function(body, username, itemsLeft) {
+var parsePage = function(body, username) {
     // parse
     var $ = cheerio.load(body);
 
@@ -53,92 +58,85 @@ var parsePage = function(body, username, itemsLeft) {
 };
 
 
-var getNextPage = function(username, corpus, itemsLeft, lastId, endCallback) {
+var getNextPage = async(function(username, lastId, corpus) {
+    // form url
     var pageUrl = 'https://twitter.com/i/profiles/show/'+username+'/timeline/with_replies?include_available_features=1&include_entities=1';
+    // append lastid if given
     if(lastId) {
         pageUrl += '&max_id='+lastId+'&oldest_unread_id=0';
     }
-    request(pageUrl, function (error, response, body) {
-        if (error) {
-            return console.log('error loading twitter page', error);
-        }
 
-        // get html piece
-        body = JSON.parse(body).items_html;
-        // form proper html
-        body = '<html><body>' + body + '</body></html>';
+    // get res
+    var pageRes = await(request(pageUrl));
+    var body = pageRes[1];
+    // get html piece
+    body = JSON.parse(body).items_html;
+    // form proper html
+    body = '<html><body>' + body + '</body></html>';
 
-        // parse
-        var res = parsePage(body, username, itemsLeft);
-        if(!res) {
-            return console.log('error loading twitter page', error);
-        }
-        // get count
-        var count = res.length;
+    // parse
+    var res = parsePage(body, username);
+    if(!res) {
+        console.log('error loading twitter page');
+        throw new Error('Error loading twitter page!');
+    }
+    var results = [];
+    // get count
+    var count = res.length;
 
-        // see what's the smallest number of posts to process
-        var max = itemsLeft >= count ? count : itemsLeft;
-        var toSave = max;
+    // save posts to db
+    var entity;
+    var i = 0;
+    for(i = 0; i < count; i++){
+        entity = res[i];
+        // convert to html string
+        var doc = {
+            corpuses: [corpus._id],
+            creation_date: entity.date,
+            uri: entity.link,
+            source: entity.content,
+        };
+        results.push(doc);
+    }
 
-        // save posts to db
-        var i = 0;
-        for(i = 0; i < max; i++){
-            var entity = res[i];
-            // convert to html string
-            var content = entity.content+'<meta name="url" content="'+entity.url+'"><meta name="timestamp" content="'+entity.dateString+'">';
-            var doc = {
-                corpuses: [corpus._id],
-                creation_date: entity.date,
-                uri: entity.link,
-                source: content,
-            };
-            Article.createNew(doc, function(err, article) {
-                if(err) {
-                    return console.log('error saving article', err);
-                }
-
-                // decrease to process counter
-                toSave--;
-                // check end
-                if(toSave === 0) {
-                    // check limit
-                    itemsLeft -= count;
-                    if (itemsLeft <= 0) {
-                        console.log('done processing twitter');
-                        return endCallback(corpus);
-                    }
-
-                    // get last item id
-                    var nextLastId = res[res.length-1].id;
-
-                    // process next paga
-                    getNextPage(username, corpus, itemsLeft, nextLastId, endCallback);
-                }
-            });
-        }
-    });
-};
+    return results;
+});
 
 // process function
-var process = function(corpus, endCallback) {
+var process = async(function(corpus) {
     // get username
     var username = corpus.input;
     var limit = corpus.input_count;
+    // init results
+    var results = [];
 
     // if username is url, get username part
     if(username.indexOf('twitter.') !== -1){
         username = username.split('twitter.com/')[1];
     }
 
+    // process pages while there are less results than needed
+    while(results.length < limit) {
+        // get last item date
+        var lastId = results.length > 0 ? results[results.length-1].id : null;
+
+        // get next page
+        var res = await(getNextPage(username, lastId, corpus));
+
+        // get count
+        var count = res.length;
+        var i;
+        for(i = 0; i < count; i++){
+            results.push(res[i]);
+        }
+    }
+
     // start processing
-    getNextPage(username, corpus, limit, null, endCallback);
-};
+    return results;
+});
 
 // module
 var TwitterProcessing = function () {
-    // Super constructor
-    EventEmitter.call( this );
-
     // name (also ID of processer used in client)
     this.name = 'twitter';
 

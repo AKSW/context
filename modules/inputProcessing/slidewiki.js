@@ -1,13 +1,37 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
-var request = require('request');
-var crypto = require('crypto');
+// async-await fetures
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// promise
+var Promise = require('bluebird');
+// promisified request
+var request = Promise.promisify(require('request'));
+// dom stuff
 var cheerio = require('cheerio');
-// db
-var Article = require('../../db/article').Article;
+// crypto
+var crypto = require('crypto');
+
+// subpage parser
+var parseSubPage = async(function(url) {
+    var res = await(request(url));
+    var body = res[1];
+
+    // parse
+    var $ = cheerio.load(body);
+    // get element
+    var $slideArea = $('#slide-area');
+
+    // set data
+    var data = {};
+    data.title = $slideArea.find('.slide-title').html();
+    data.content = $slideArea.find('.slide-body').html();
+
+    // trigger callback
+    return data;
+});
 
 // process page and return entities
-var parsePage = function(body, cb) {
+var parsePage = async(function(body) {
     // parse
     var $ = cheerio.load(body);
 
@@ -16,7 +40,6 @@ var parsePage = function(body, cb) {
 
     // get all posts
     var posts = $('#content ol li');
-    var toProcess = posts.length;
     posts.each(function(idx, post) {
         var $post = $(post);
 
@@ -25,107 +48,60 @@ var parsePage = function(body, cb) {
         // get link
         entity.link = 'http://slidewiki.org/' + $post.find('a').attr('href');
         // process subpage
-        parseSubPage(entity.link, function(data) {
-            // set data
-            entity.title = data.title;
-            entity.content = data.content;
-
-            // push entity to results
-            results.push(entity);
-            // decrease to process counter
-            toProcess--;
-            // check end
-            if(toProcess === 0) {
-                cb(results);
-            }
-        });
-    });
-};
-
-var parseSubPage = function(url, cb) {
-    request(url, function (error, response, body) {
-        if (error) {
-            return console.log('error loading slidewiki subpage', error);
-        }
-
-        // parse
-        var $ = cheerio.load(body);
-        // get element
-        var $slideArea = $('#slide-area');
-
+        var data = await(parseSubPage(entity.link));
         // set data
-        var data = {};
-        data.title = $slideArea.find('.slide-title').html();
-        data.content = $slideArea.find('.slide-body').html();
+        entity.title = data.title;
+        entity.content = data.content;
 
-        // trigger callback
-        cb(data);
+        // push entity to results
+        results.push(entity);
     });
-};
+
+    return results;
+});
 
 // process function
-var process = function(corpus, endCallback) {
+var process = async(function(corpus) {
     // generate unique url for piece
     var slidewikiId = corpus.input;
     var limit = corpus.input_count;
+    // init reults
+    var results = [];
 
     // form page url
     var pageUrl = 'http://slidewiki.org/static/deck/' + slidewikiId;
     // get page
-    request(pageUrl, function (error, response, body) {
-        if (error) {
-            return console.log('error loading slidewiki page', error);
-        }
+    var mainRes = await(request(pageUrl));
+    var body = mainRes[1];
 
-        // parse
-        parsePage(body, function(res) {
-            if(!res) {
-                return console.log('error loading slidewiki page', error);
-            }
-            // get count
-            var count = res.length;
+    // parse
+    var res = await(parsePage(body));
+    if(!res) {
+        throw new Error('Slidewiki returned no data!');
+    }
+    // get count
+    var count = res.length;
 
-            // see what's the smallest number of posts to process
-            var max = limit >= count ? count : limit;
-            var toSave = max;
+    // save posts to db
+    var i = 0;
+    var entity;
+    for(i = 0; i < count; i++){
+        entity = res[i];
+        // convert to html string
+        var doc = {
+            corpuses: [corpus._id],
+            uri: entity.link,
+            source: entity.content,
+            title: entity.title
+        };
+        results.push(doc);
+    }
 
-            // save posts to db
-            var i = 0;
-            for(i = 0; i < max; i++){
-                var entity = res[i];
-                // convert to html string
-                var content = '<div class="extracted-title">' + entity.title + '</div> ' + entity.content;
-                var doc = {
-                    corpuses: [corpus._id],
-                    creation_date: entity.date,
-                    uri: entity.link,
-                    source: content,
-                };
-                Article.createNew(doc, function(err, article) {
-                    if(err) {
-                        return console.log('error saving article', err);
-                    }
-
-                    // decrease to process counter
-                    toSave--;
-                    // check end
-                    if(toSave === 0) {
-                        // report done
-                        console.log('done processing slidewiki');
-                        // trigger end callback
-                        endCallback(corpus);
-                    }
-                });
-            }
-        });
-    });
-};
+    return results.slice(0, limit);
+});
 
 // module
 var SlidewikiProcessing = function () {
-    // Super constructor
-    EventEmitter.call( this );
-
     // name (also ID of processer used in client)
     this.name = 'slidewiki';
 
