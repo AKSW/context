@@ -72,9 +72,7 @@ var processCorpus = function(corpus) {
             var i, len = res.length, item;
             for(i = 0; i < len; i++){
                 item = res[i];
-                console.log(item);
                 var resp = await(Article.createNew(item));
-                console.log(resp);
             }
 
             annotateCorpus(corpus);
