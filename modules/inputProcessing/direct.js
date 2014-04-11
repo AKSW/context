@@ -1,11 +1,9 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
+var async = require('asyncawait/async');
 var crypto = require('crypto');
-// db
-var Article = require('../../db/article').Article;
 
 // process function
-var process = function(corpus, endCallback) {
+var process = async(function(corpus) {
     // hash input
     var md5sum = crypto.createHash('md5');
     md5sum.update(corpus.input);
@@ -16,24 +14,14 @@ var process = function(corpus, endCallback) {
     var doc = {
         corpuses: [corpus._id],
         uri: url,
-        source: corpus.input,
+        source: corpus.input
     };
-    Article.createNew(doc, function(err, article) {
-        if(err) {
-            return console.log('error saving article', err);
-        }
 
-        console.log('saved article for direct input');
-        // trigger end callback
-        return endCallback(corpus);
-    });
-};
+    return [doc];
+});
 
 // module
 var DirectProcessing = function () {
-    // Super constructor
-    EventEmitter.call( this );
-
     // name (also ID of processer used in client)
     this.name = 'directinput';
 

@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 
 articleSchema = new Schema({
     uri: {type: String, unique: true},
-    title: String,
+    title: {type: String, default: ''},
     source: String,
     annotation: String,
     creation_date: {type: Date, default: Date.now},
