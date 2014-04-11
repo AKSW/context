@@ -1,6 +1,7 @@
+var should = require('should');
 
-describe('Test suite', function () {
-    it('should be true', function () {
-        expect(true).toBe(true);
+describe('Mocha test suite', function () {
+    it('should be ok', function () {
+        true.should.be.true;
     });
 });

@@ -7,10 +7,10 @@ var gulp = require('./gulp')([
     'bootstrap',
     'config',
     'jshint',
-    'jasmine',
+    'mocha',
 ]);
 
 gulp.task('init', ['bower', 'bootstrap', 'config']);
 gulp.task('build', ['browserify', 'minifycss']);
-gulp.task('test', ['jshint', 'jasmine']);
+gulp.task('test', ['jshint', 'mocha']);
 gulp.task('default', ['build', 'watch', 'serve']);

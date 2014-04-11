@@ -1,14 +1,20 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
-var request = require('request');
+// async-await fetures
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// promise
+var Promise = require('bluebird');
+// promisified request
+var request = Promise.promisify(require('request'));
+// dom stuff
 var cheerio = require('cheerio');
+// crypto
 var crypto = require('crypto');
+// date-time manipulations
 var moment = require('moment');
-// db
-var Article = require('../../db/article').Article;
 
 // process page and return entities
-var parsePage = function(body, itemsLeft) {
+var parsePage = function(body) {
     // parse
     var $ = cheerio.load(body);
 
@@ -71,91 +77,80 @@ var parsePage = function(body, itemsLeft) {
     return results;
 };
 
-var getNextPage = function(url, corpus, itemsLeft, date, endCallback) {
+var getNextPage = async(function(url, date) {
+    // form url
     var pageUrl = url + '/search?max-results=20';
+    // append date if needed
     if(date) {
         pageUrl += '&updated-max=' + date;
     }
-    request(pageUrl, function (error, response, body) {
-        if (error) {
-            return console.log('error loading blogger page', error);
-        }
 
-        // parse
-        var res = parsePage(body, itemsLeft);
-        if(!res) {
-            return console.log('error loading blogger page', error);
-        }
-        // get count
-        var count = res.length;
+    // get page
+    var resp = await(request(pageUrl));
+    var body = resp[1];
 
-        // see what's the smallest number of posts to process
-        var max = itemsLeft >= count ? count : itemsLeft;
-        var toSave = max;
+    // parse
+    var res = parsePage(body);
+    if(!res) {
+        console.log('error loading blogger page');
+        throw new Error('Error loadin blogger page!');
+    }
 
-        // save posts to db
-        var i = 0;
-        for(i = 0; i < max; i++){
-            var entity = res[i];
-            // convert to html string
-            var content = '<div class="extracted-title">' + entity.title + '</div> ' + entity.content;
-            // if no link is given, generate a new unique one
-            if(entity.link === 'no-link') {
-                // hash input
-                var md5sum = crypto.createHash('md5');
-                md5sum.update(content + Date.now().toString());
-                // generate unique url for piece
-                entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
-            }
-            var doc = {
-                corpuses: [corpus._id],
-                creation_date: entity.date,
-                uri: entity.link,
-                source: content,
-            };
-            Article.createNew(doc, function(err, article) {
-                if(err) {
-                    return console.log('error saving article', err);
-                }
+    return res;
+});
 
-                // decrease to process counter
-                toSave--;
-                // check end
-                if(toSave === 0) {
-                    // check limit
-                    itemsLeft -= count;
-                    if (itemsLeft <= 0) {
-                        console.log('done processing blogger');
-                        // trigger callback with current corpus object
-                        return endCallback(corpus);
-                    }
-
-                    // get last item date
-                    var lastDate = res[res.length-1].dateString;
-
-                    // process next paga
-                    getNextPage(url, corpus, itemsLeft, lastDate, endCallback);
-                }
-            });
-        }
-    });
+// convert entity to doc
+var entityToDocument = function(entity, url, corpus) {
+    // if no link is given, generate a new unique one
+    if(entity.link === 'no-link') {
+        // hash input
+        var md5sum = crypto.createHash('md5');
+        md5sum.update(entity.content + Date.now().toString());
+        // generate unique url for piece
+        entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
+    }
+    var doc = {
+        corpuses: [corpus._id],
+        creation_date: entity.date,
+        dateString: entity.dateString,
+        uri: entity.link,
+        source: entity.content,
+        title: entity.title,
+    };
+    return doc;
 };
 
 // process function
-var process = function(corpus, endCallback) {
+var process = async(function(corpus) {
     // generate unique url for piece
     var url = corpus.input;
     var limit = corpus.input_count;
+    // init results
+    var results = [];
 
-    // get first page
-    getNextPage(url, corpus, limit, null, endCallback);
-};
+    // process pages while there are less results than needed
+    while(results.length < limit) {
+        //console.log(results[results.length-1]);
+        // get last item date
+        var lastDate = results.length > 0 ? results[results.length-1].dateString : null;
+
+        // get next page
+        var res = await(getNextPage(url, lastDate));
+
+        // get count
+        var count = res.length;
+        var i, entity, doc;
+        for(i = 0; i < count; i++){
+            doc = entityToDocument(res[i], url, corpus);
+            results.push(doc);
+        }
+    }
+
+    return results.slice(0, limit);
+});
 
 // module
 var BloggerProcessing = function () {
-    // Super constructor
-    EventEmitter.call( this );
-
     // name (also ID of processer used in client)
     this.name = 'blogger';
 

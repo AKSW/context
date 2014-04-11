@@ -31,6 +31,8 @@
     "angular": "^1.2.15",
     "angular-router-browserify": "0.0.1",
     "angular-ui-router": "^0.2.10",
+    "asyncawait": "^0.6.1",
+    "bluebird": "^1.2.2",
     "captchapng": "0.0.1",
     "cheerio": "^0.13.1",
     "colors": "^0.6.2",
@@ -67,13 +69,14 @@
     "gulp-bower": "0.0.4",
     "gulp-browserify": "^0.5.0",
     "gulp-concat": "^2.2.0",
-    "gulp-jasmine": "^0.2.0",
     "gulp-jshint": "^1.5.3",
     "gulp-livereload": "^1.2.0",
     "gulp-minify-css": "^0.3.1",
+    "gulp-mocha": "^0.4.1",
     "gulp-open": "^0.2.8",
     "gulp-rename": "^1.2.0",
     "gulp-watch": "^0.5.3",
-    "nodemon": "^1.0.17"
+    "nodemon": "^1.0.17",
+    "should": "^3.3.0"
   }
 }
