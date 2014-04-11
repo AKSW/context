@@ -7,25 +7,16 @@
     "browser": true, // Standard browser globals e.g. `window`, `document`.
     "node": true, // node predefined stuff
     "jquery": true,
-    "rhino": false,
-    "couch": false,
-    "wsh": false,
-    "prototypejs": false,
-    "mootools": false,
-    "dojo": false,
 
     "predef": [ // Custom globals.
-        "define",
         "module",
         "__dirname",
         "exports",
-        "process",
-        "alert",
-        "requirejs"
+        "process"
     ],
 
     // Development.
-    "debug": true, // Allow debugger statements e.g. browser breakpoints.
+    "debug": false, // Allow debugger statements e.g. browser breakpoints.
     "devel": false, // Allow developments statements e.g. `console.log();`.
 
     // ECMAScript 5.

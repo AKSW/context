@@ -6,10 +6,11 @@ var gulp = require('./gulp')([
     'bower',
     'bootstrap',
     'config',
-    'jshint'
+    'jshint',
+    'jasmine',
 ]);
 
 gulp.task('init', ['bower', 'bootstrap', 'config']);
 gulp.task('build', ['browserify', 'minifycss']);
-gulp.task('test', ['jshint']);
+gulp.task('test', ['jshint', 'jasmine']);
 gulp.task('default', ['build', 'watch', 'serve']);

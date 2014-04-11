@@ -7,6 +7,28 @@ var User = require('../../db/user').User;
 var passport = require('passport');
 var passportFacebook = require('passport-facebook');
 
+// define register function
+var registerNewUser = function(profile, done) {
+    var user = {
+        username: profile.username,
+        first_name: profile.name.givenName,
+        last_name: profile.name.familyName,
+        social_networks: [{
+            network: 'facebook',
+            id: profile.id
+        }]
+    };
+
+    // register
+    User.registerNewUser(user, function(err, userData) {
+        if(err) {
+            return done(err);
+        }
+
+        return done(null, userData);
+    });
+};
+
 // make passport policy
 var FacebookStrategy = passportFacebook.Strategy;
 passport.use(new FacebookStrategy(config.facebook,
@@ -32,27 +54,6 @@ passport.use(new FacebookStrategy(config.facebook,
         });
     }
 ));
-
-var registerNewUser = function(profile, done) {
-    var user = {
-        username: profile.username,
-        first_name: profile.name.givenName,
-        last_name: profile.name.familyName,
-        social_networks: [{
-            network: 'facebook',
-            id: profile.id
-        }]
-    };
-
-    // register
-    User.registerNewUser(user, function(err, userData) {
-        if(err) {
-            return done(err);
-        }
-
-        return done(null, userData);
-    });
-};
 
 // Redirect the user to Facebook for authentication.  When complete,
 // Facebook will redirect the user back to the application at

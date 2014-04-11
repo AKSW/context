@@ -7,6 +7,28 @@ var User = require('../../db/user').User;
 var passport = require('passport');
 var passportTwitter = require('passport-twitter');
 
+// define register function
+var registerNewUser = function(profile, done) {
+    var user = {
+        username: profile.username,
+        first_name: profile.displayName,
+        last_name: '',
+        social_networks: [{
+            network: 'twitter',
+            id: profile.id
+        }]
+    };
+
+    // register
+    User.registerNewUser(user, function(err, userData) {
+        if(err) {
+            return done(err);
+        }
+
+        return done(null, userData);
+    });
+};
+
 // make passport policy
 var TwitterStrategy = passportTwitter.Strategy;
 passport.use(new TwitterStrategy(config.twitter,
@@ -32,27 +54,6 @@ passport.use(new TwitterStrategy(config.twitter,
         });
     }
 ));
-
-var registerNewUser = function(profile, done) {
-    var user = {
-        username: profile.username,
-        first_name: profile.displayName,
-        last_name: '',
-        social_networks: [{
-            network: 'twitter',
-            id: profile.id
-        }]
-    };
-
-    // register
-    User.registerNewUser(user, function(err, userData) {
-        if(err) {
-            return done(err);
-        }
-
-        return done(null, userData);
-    });
-};
 
 // Redirect the user to Twitter for authentication.  When complete,
 // Twitter will redirect the user back to the application at

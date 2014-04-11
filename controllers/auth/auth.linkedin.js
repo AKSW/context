@@ -7,6 +7,28 @@ var User = require('../../db/user').User;
 var passport = require('passport');
 var passportLinkedin = require('passport-linkedin');
 
+// define register function
+var registerNewUser = function(profile, done) {
+    var user = {
+        username: profile.displayName,
+        first_name: profile.name.givenName,
+        last_name: profile.name.familyName,
+        social_networks: [{
+            network: 'linkedin',
+            id: profile.id
+        }]
+    };
+
+    // register
+    User.registerNewUser(user, function(err, userData) {
+        if(err) {
+            return done(err);
+        }
+
+        return done(null, userData);
+    });
+};
+
 // make passport policy
 var LinkedinStrategy = passportLinkedin.Strategy;
 passport.use(new LinkedinStrategy(config.linkedin,
@@ -32,27 +54,6 @@ passport.use(new LinkedinStrategy(config.linkedin,
         });
     }
 ));
-
-var registerNewUser = function(profile, done) {
-    var user = {
-        username: profile.displayName,
-        first_name: profile.name.givenName,
-        last_name: profile.name.familyName,
-        social_networks: [{
-            network: 'linkedin',
-            id: profile.id
-        }]
-    };
-
-    // register
-    User.registerNewUser(user, function(err, userData) {
-        if(err) {
-            return done(err);
-        }
-
-        return done(null, userData);
-    });
-};
 
 // Redirect the user to Linkedin for authentication.  When complete,
 // Linkedin will redirect the user back to the application at

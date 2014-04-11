@@ -7,6 +7,29 @@ var User = require('../../db/user').User;
 var passport = require('passport');
 var passportGoogle = require('passport-google');
 
+// define register function
+var registerNewUser = function(profile, id, done) {
+    var user = {
+        username: profile.displayName,
+        email: profile.emails[0].value,
+        first_name: profile.name.givenName,
+        last_name: profile.name.familyName,
+        social_networks: [{
+            network: 'google',
+            id: id
+        }]
+    };
+
+    // register
+    User.registerNewUser(user, function(err, userData) {
+        if(err) {
+            return done(err);
+        }
+
+        return done(null, userData);
+    });
+};
+
 // make passport policy
 var GoogleStrategy = passportGoogle.Strategy;
 passport.use(new GoogleStrategy(config.google,
@@ -32,28 +55,6 @@ passport.use(new GoogleStrategy(config.google,
         });
     }
 ));
-
-var registerNewUser = function(profile, id, done) {
-    var user = {
-        username: profile.displayName,
-        email: profile.emails[0].value,
-        first_name: profile.name.givenName,
-        last_name: profile.name.familyName,
-        social_networks: [{
-            network: 'google',
-            id: id
-        }]
-    };
-
-    // register
-    User.registerNewUser(user, function(err, userData) {
-        if(err) {
-            return done(err);
-        }
-
-        return done(null, userData);
-    });
-};
 
 // Redirect the user to Google for authentication.  When complete,
 // Google will redirect the user back to the application at

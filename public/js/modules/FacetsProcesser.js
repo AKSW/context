@@ -36,12 +36,6 @@ var processData = function(data, filters) {
             source: item.source,
         };
 
-        //console.log('--------------------- PROCESSING NEW ARTICLE ------------------------');
-        //console.log('------> Article has ', item.entities.length, 'entites');
-
-        // join source back
-        //console.log(item.source);
-
         // get article plain text
         var sourceText = S(item.source).stripTags().s;
         // split plain text and full source into words
@@ -56,14 +50,10 @@ var processData = function(data, filters) {
         // flatten arrays
         srcText = _.flatten(srcText);
 
-        var testEntity = 'er';// 'Roanoke';
-
         var findSourceIndex = function(word, cleanWord, entityName, startIndex) {
             startIndex = startIndex || -1;
-            //if(entityName === testEntity) console.log('looking for ', testEntity);
             // try to get plain match from original source
             var sourceIndex = src.indexOf(word, startIndex);
-            //if(entityName === testEntity) console.log('got index ', sourceIndex);
             // if not found, find by string
             if(sourceIndex === -1) {
                 //if(entityName === testEntity) console.log('searching index in array');
@@ -76,18 +66,8 @@ var processData = function(data, filters) {
                         continue;
                     }
 
-                    // debug
-                    if(entityName === testEntity){
-                        //console.log(word, cleanWord, srcWordClean);
-                        if(srcWordClean.indexOf(cleanWord) !== -1) {
-                            console.log('found match!', srcWordClean, src[i-1], src[i], src[i+1]);
-                        }
-                    }
-
                     // check for match
-                    //if(entityName === testEntity) console.log('matching: ', srcWordClean.match(new RegExp(cleanWord+'(\W?)')));
                     if(srcWordClean.match(new RegExp(matchRegStart+escapeRegExp(cleanWord)+matchReg)) && i >= startIndex) {
-                        //console.log('----> found', cleanWord, 'in', srcWordClean, 'with icomp', startIndex, i, i >= startIndex);
                         sourceIndex = i;
                         break;
                     }
@@ -99,14 +79,11 @@ var processData = function(data, filters) {
 
         var cleanReg = /(^[\W]+)|([\W]+$)/g;
         var matchRegStart = '';
-        var matchReg = '(\W?)';
+        var matchReg = '(\\W?)';
 
         // get entities
         item.entities.forEach(function(entity){
-            //console.log('------>>> Entity: ', entity.name);
             var entityParts = entity.name.split(' ');
-
-            if(entity.name === testEntity) console.log('--->>> test ', entity.name, srcText.indexOf(entity.name));
 
             // if only one word
             if(entityParts.length === 1) {
@@ -117,7 +94,6 @@ var processData = function(data, filters) {
                     var entityClean = entity.name.replace(cleanReg, '');
 
                     // cehck match
-                    //if(entity.name === testEntity) console.log('--->>> matching ', word, cleanWord);
                     if(cleanWord === entity.name || word === entity.name) {
                         // get match from original source
                         var sourceIndex = findSourceIndex(word, cleanWord, entity.name);
@@ -128,7 +104,6 @@ var processData = function(data, filters) {
                             var img = origSrc.match(/src="(.+?)"/);
                             var alt = origSrc.match(/alt="(.+?)"/);
                             if(link) {
-                                //if(entity.name === testEntity) console.log('--->>> link found ', link);
                                 link = link[1];
                                 origSrc = origSrc.replace(link, '%link%');
                             }
@@ -141,17 +116,12 @@ var processData = function(data, filters) {
                                 origSrc = origSrc.replace(alt, '%alt%');
                             }
 
-                            //console.log('--------> replacing', word, 'with', entity.name);
-                            //console.log('--------> replacing in', src[sourceIndex-1], src[sourceIndex], src[sourceIndex+1]);
-
                             // enrich source
                             src[sourceIndex] = origSrc.replace(
                                 entity.name,
                                 '<span%marked% class="label label-warning hasTooltip" data-toggle="tooltip" title="' +
                                 entity.types.join(' ') + '">' + entity.name + '</span%marked%>'
                             );
-
-                            //console.log('--------> replaced', src[sourceIndex]);
 
                             if(link) {
                                 src[sourceIndex] = src[sourceIndex].replace('%link%', link);
@@ -168,12 +138,9 @@ var processData = function(data, filters) {
                     }
                 });
             } else {
-                //console.log('---->>> multipart check');
                 // check match
                 var firstWord = entityParts[0];
                 var lastWord = entityParts[entityParts.length-1];
-                //console.log('---->>> first word: ', firstWord);
-                //console.log('---->>> last word: ', lastWord);
                 // find word that matches current entity
                 srcText.forEach(function(word, index) {
                     // clean word from commas, dots and other suplementary stuff
@@ -184,8 +151,6 @@ var processData = function(data, filters) {
                     // test match
                     var match = firstWord.match(new RegExp(matchRegStart+escapeRegExp(cleanWord)+matchReg)) !== null;
                     if(match) {
-                        //console.log('---->>> first word match: ', match, index);
-                        //console.log('---->>> match seq: ', srcText[index-1], srcText[index], srcText[index+1]);
                         var i = 0;
                         for(i = 1; i < entityParts.length; i++) {
                             if(index+i >= srcText.length) {
@@ -197,12 +162,10 @@ var processData = function(data, filters) {
                                 continue;
                             }
                             match = match && entityParts[i].match(new RegExp(matchRegStart+escapeRegExp(nextCleanWord)+matchReg)) !== null;
-                            //if(entityParts[i] === testEntity) console.log('matching: ', nextCleanWord, entityParts[i], entityParts[i].match(new RegExp(nextCleanWord+'(\W?)')) !== null)
                         }
 
                         // check complete match
                         if(match) {
-                            //console.log('---->>> complete match!', entity.name, index);
                             // Replace first part
                             // get match from original source
                             var sourceStartIndex = findSourceIndex(word, cleanWord, firstWord, index);
@@ -219,13 +182,6 @@ var processData = function(data, filters) {
 
                             // if word was found
                             if(sourceStartIndex !== -1 && sourceEndIndex !== -1 && Math.abs(sourceStartIndex - sourceEndIndex) < 5) {
-                                // log
-                                //console.log('---->>>>>> replacing start', firstWord, index, 'at', sourceStartIndex);
-                                //console.log('---->>>>>> replacing data', firstWord, src[sourceStartIndex-1], src[sourceStartIndex], src[sourceStartIndex+1]);
-                                //console.log('---->>>>>> replacing end', lastWord, endIndex, 'at', sourceEndIndex);
-                                //console.log('---->>>>>> replacing end data', endWord, src[sourceEndIndex]);
-                                //console.log('---->>>>>> replacing with', lastWord);
-
                                 // enrich source
                                 src[sourceStartIndex] = src[sourceStartIndex].replace(
                                     new RegExp(escapeRegExp(firstWord)+'$'),
@@ -235,7 +191,6 @@ var processData = function(data, filters) {
 
                                 // enrich source
                                 src[sourceEndIndex] = src[sourceEndIndex].replace(lastWord, lastWord + '</span%marked%>');
-                                //console.log('---->>> replaced', src[sourceEndIndex], sourceEndIndex);
                             }
                         }
                         return;
