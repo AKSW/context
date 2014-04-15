@@ -36,13 +36,14 @@ var annotateArtice = function(article, corpus) {
     // check if source is valid
     if(sourceText && sourceText.length > 0) {
         // start input processing
-        annotationServices[corpus.nlp_api].process(sourceText, function(err, result) {
-            if(err) {
-                return console.log('error getting annotation from service', err);
-            }
-
+        annotationServices[corpus.nlp_api]
+        .process(sourceText)
+        .then(function(result) {
             var data = _.extend(result, {processed: true});
             article.update(data, handleSaveError);
+        })
+        .catch(function(err) {
+            console.log('error getting annotation from service', err);
         });
     } else {
         article.update({processed: true, annotation: ''}, handleSaveError);
