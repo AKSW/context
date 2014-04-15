@@ -1,88 +1,94 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
-var request = require('request');
+// async-await fetures
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// promise
+var Promise = require('bluebird');
+// promisified request
+var request = Promise.promisify(require('request'));
+// underscore
+var _ = require('underscore');
 
 // service url
 var SpotlightUrl = 'http://spotlight.sztaki.hu:2222/rest/annotate';
 
+// default headers
+var defaultHeaders = {'content-type': 'application/x-www-form-urlencoded', 'accept': 'application/json'};
+
+// default form data
+var defaultData = {
+    confidence: 0.20,
+    support: 20
+};
+
+// default options
+var defaultOptions = {
+    url: SpotlightUrl,
+    headers: defaultHeaders,
+    method: 'POST',
+};
+
 // process function
-var process = function(sourceText, endCallback) {
-    // default headers
-    var headers = {'content-type': 'application/x-www-form-urlencoded', 'accept': 'application/json'};
+var process = async(function(sourceText) {
     // form data
-    var data = {
-        text: sourceText,
-        confidence: 0.20,
-        support: 20
-    };
+    var data = _.extend(defaultData, {text: sourceText});
     // form request options
-    var options = {
-        url: SpotlightUrl,
-        headers: headers,
-        method: 'POST',
-        form: data,
-    };
+    var options = _.extend(defaultOptions, {form: data});
 
     // get data
-    request(options, function(error, response, body){
-        if (error) {
-            return console.log('error loading DBpedia-Spotlight', error);
-        }
+    var resp = await(request(options));
+    var body = resp[1];
 
-        // form response
-        var result = {
-            annotation: body,
-            entities: [],
-        };
+    // form response
+    var result = {
+        annotation: body,
+        entities: [],
+    };
 
-        // parse json
-        try {
-            body = JSON.parse(body);
-        } catch (e) {
-            console.log('error parsing', body);
-        }
+    // parse json
+    try {
+        body = JSON.parse(body);
+    } catch (e) {
+        console.log('error parsing', body);
+    }
 
-        // process resources
-        if(body.Resources) {
-            body.Resources.forEach(function(resource) {
-                // create new entity
-                var entity = {
-                    name: resource['@surfaceForm'],
-                    uri: resource['@URI'],
-                    offset: resource['@offset'],
-                    precision: resource['@similarityScore'],
-                };
+    // process resources
+    if(body.Resources) {
+        body.Resources.forEach(function(resource) {
+            // create new entity
+            var entity = {
+                name: resource['@surfaceForm'],
+                uri: resource['@URI'],
+                offset: parseInt(resource['@offset'], 10),
+                precision: parseFloat(resource['@similarityScore']),
+            };
 
-                // get entity types
-                var types = [];
-                if(resource['@types'] && resource['@types'] !== '') {
-                    // split coma separated types
-                    var tmpTypes = resource['@types'].split(',');
-                    // only pick types with DBpedia prefix
-                    types = tmpTypes.filter(function(item) {
-                        var prefix = item.split(':')[0];
-                        return prefix === 'DBpedia';
-                    });
-                } else {
-                    // use misc by default
-                    types.push('DBpedia:Misc');
-                }
-                // assing type to new entity
-                entity.types = types;
-                // append entity to result
-                result.entities.push(entity);
-            });
-        }
+            // get entity types
+            var types = [];
+            if(resource['@types'] && resource['@types'] !== '') {
+                // split coma separated types
+                var tmpTypes = resource['@types'].split(',');
+                // only pick types with DBpedia prefix
+                types = tmpTypes.filter(function(item) {
+                    var prefix = item.split(':')[0];
+                    return prefix === 'DBpedia';
+                });
+            } else {
+                // use misc by default
+                types.push('DBpedia:Misc');
+            }
+            // assing type to new entity
+            entity.types = types;
+            // append entity to result
+            result.entities.push(entity);
+        });
+    }
 
-        return endCallback(null, result);
-    });
-};
+    return result;
+});
 
 // module
 var DBPediaAnnotation = function () {
-    // Super constructor
-    EventEmitter.call( this );
-
     // name (also ID of processer used in client)
     this.name = 'DBpedia-Spotlight';
 
