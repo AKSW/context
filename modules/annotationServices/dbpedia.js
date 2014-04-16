@@ -10,7 +10,7 @@ var request = Promise.promisify(require('request'));
 var _ = require('underscore');
 
 // service url
-var SpotlightUrl = 'http://spotlight.sztaki.hu:2222/rest/annotate';
+var SpotlightUrl = 'http://context.aksw.org/spotlight_clone.php';
 
 // default headers
 var defaultHeaders = {'content-type': 'application/x-www-form-urlencoded', 'accept': 'application/json'};

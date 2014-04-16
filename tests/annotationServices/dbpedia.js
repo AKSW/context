@@ -12,7 +12,7 @@ Besides the Greater Himalayas of these high peaks there are parallel lower range
 The Himalayas abut or cross six countries: Bhutan, India, Nepal, China, Afghanistan and Pakistan, with the first three countries having sovereignty over most of the range.[3] The Himalayas are bordered on the northwest by the Karakoram and Hindu Kush ranges, on the north by the Tibetan Plateau, and on the south by the Indo-Gangetic Plain.';
 
 describe('DBPedia annotation suit', function () {
-    it('should get X entities', function (done) {
+    it('should get at least 29 entities', function (done) {
         dbpedia.process(testData)
         .then(function(res){
             // check properties
@@ -20,7 +20,7 @@ describe('DBPedia annotation suit', function () {
             res.should.have.property('entities');
             // check entity count
             res.entities.should.be.an.Array;
-            res.entities.length.should.be.above(37);
+            res.entities.length.should.be.above(29);
             // check entity format
             res.entities.forEach(function(item) {
                 // check typs property
