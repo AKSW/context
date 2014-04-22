@@ -1,8 +1,9 @@
 var nodemon = require('gulp-nodemon');
-var config = require('../../config');
-var logger = require('../../logger');
 
 module.exports = function(){
+    var config = require('../../config');
+    var logger = require('../../logger');
+
     // start nodemon
     return nodemon({
             script: './app.js',

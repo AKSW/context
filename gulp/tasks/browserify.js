@@ -4,9 +4,10 @@ var livereload = require('gulp-livereload');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var gulpif = require('gulp-if');
-var config = require('../../config');
 
 module.exports = function() {
+    var config = require('../../config');
+
     return gulp.src('./public/js/app.js')
         .pipe(browserify({
             debug: config.debug,

@@ -1,4 +1,4 @@
-var gulp       = require('gulp');
+var gulp = require('gulp');
 
 module.exports = function(){
     gulp.watch('public/js/**/*', ['browserify']);
