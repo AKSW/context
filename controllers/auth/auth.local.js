@@ -1,9 +1,13 @@
 // includes
+// config
+var config = require('../../config');
 // db
 var User = require('../../models').User;
 // passport
 var passport = require('passport');
 var passportLocal = require('passport-local');
+// crypto
+var crypto = require('crypto');
 
 // make passport policy
 var LocalStrategy = passportLocal.Strategy;
@@ -16,8 +20,14 @@ passport.use(new LocalStrategy(
             if (!user) {
                 return done(null, false);
             }
-            // TODO: proper passwords comparison
-            if (user.password !== password) {
+
+            // encode password
+            var md5sum = crypto.createHash('md5');
+            md5sum.update(password + config.passwordSalt);
+            var passHex = md5sum.digest('hex');
+
+            // chek password
+            if (passHex !== user.password) {
                 return done(null, false);
             }
             // if all is OK, return user
@@ -45,10 +55,15 @@ exports.register = {
             return res.redirect('/register');
         }
 
+        // encode password
+        var md5sum = crypto.createHash('md5');
+        md5sum.update(req.body.password_new + config.passwordSalt);
+        var passHex = md5sum.digest('hex');
+
         // make new user data
         var newUser = {
             username: req.body.username,
-            password: req.body.password_new,
+            password: passHex,
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             email: req.body.email,
