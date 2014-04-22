@@ -37,7 +37,7 @@ exports.index = {
 exports.profile = {
     path: '/profile',
     method: 'get',
-    returns: function(req, res, next) {
+    returns: function(req, res) {
         return res.render('profile', {error: req.flash('error'), success: req.flash('success')});
     }
 };
@@ -46,7 +46,7 @@ exports.profile = {
 exports.createCorpus = {
     path: '/createCorpus',
     method: 'get',
-    returns: function(req, res, next) {
+    returns: function(req, res) {
         return res.render('createCorpus');
     }
 };

@@ -1,8 +1,8 @@
-// init app
-var app = angular.module('context-app', ['ngRoute', 'mgcrea.ngStrap', 'CorpusModule']);
-
 // load modules
 var CorpusModule = require('./modules/corpus');
+
+// init app
+var app = angular.module('context-app', ['ngRoute', 'mgcrea.ngStrap', 'CorpusModule']);
 
 // config app routes
 require('./routes')(app);

@@ -4,7 +4,7 @@ var captchapng = require('captchapng');
 exports.captcha = {
     path: '/api/captcha',
     method: 'get',
-    returns: function(req, res, next) {
+    returns: function(req, res) {
         var captcha = parseInt(Math.random()*9000+1000);
         var p = new captchapng(100, 50, captcha); // width, height, numeric captcha
         p.color(0, 0, 0, 0);  // First color: background
