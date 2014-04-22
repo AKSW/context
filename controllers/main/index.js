@@ -1,5 +1,6 @@
 // db
 var Corpus = require('../../models').Corpus;
+var logger = require('../../logger');
 
 // export index
 exports.index = {
@@ -9,7 +10,7 @@ exports.index = {
         if(req.user) {
             Corpus.find({user: req.user._id}, function(err, corpuses) {
                 if(err) {
-                    console.log('error getting user corpuses', err);
+                    logger.error('error getting user corpuses', err);
                     return next(err);
                 }
 
