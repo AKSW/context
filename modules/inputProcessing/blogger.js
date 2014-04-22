@@ -12,6 +12,8 @@ var cheerio = require('cheerio');
 var crypto = require('crypto');
 // date-time manipulations
 var moment = require('moment');
+// logger
+var logger = require('../../logger');
 
 // process page and return entities
 var parsePage = function(body) {
@@ -92,7 +94,7 @@ var getNextPage = async(function(url, date) {
     // parse
     var res = parsePage(body);
     if(!res) {
-        console.log('error loading blogger page');
+        logger.error('error loading blogger page');
         throw new Error('Error loadin blogger page!');
     }
 
@@ -130,7 +132,6 @@ var process = async(function(corpus) {
 
     // process pages while there are less results than needed
     while(results.length < limit) {
-        //console.log(results[results.length-1]);
         // get last item date
         var lastDate = results.length > 0 ? results[results.length-1].dateString : null;
 
@@ -139,7 +140,7 @@ var process = async(function(corpus) {
 
         // get count
         var count = res.length;
-        var i, entity, doc;
+        var i, doc;
         for(i = 0; i < count; i++){
             doc = entityToDocument(res[i], url, corpus);
             results.push(doc);

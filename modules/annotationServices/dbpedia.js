@@ -8,6 +8,8 @@ var Promise = require('bluebird');
 var request = Promise.promisify(require('request'));
 // lodash
 var _ = require('lodash');
+// logger
+var logger = require('../../logger');
 
 // service url
 var SpotlightUrl = 'http://context.aksw.org/spotlight_clone.php';
@@ -49,7 +51,7 @@ var process = async(function(sourceText) {
     try {
         body = JSON.parse(body);
     } catch (e) {
-        console.log('error parsing', body);
+        logger.error('error parsing', body);
     }
 
     // process resources

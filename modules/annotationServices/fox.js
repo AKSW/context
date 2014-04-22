@@ -8,6 +8,8 @@ var Promise = require('bluebird');
 var request = Promise.promisify(require('request'));
 // lodash
 var _ = require('lodash');
+// logger
+var logger = require('../../logger');
 
 // service url
 var FoxUrl = 'http://139.18.2.164:4444/api';
@@ -62,7 +64,7 @@ var process = async(function(sourceText) {
         // parse json
         out = JSON.parse(out);
     } catch (e) {
-        console.log('error parsing', body);
+        logger.error('error parsing', body);
     }
 
     // process resources

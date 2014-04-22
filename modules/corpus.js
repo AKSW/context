@@ -10,6 +10,8 @@ var _ = require('lodash');
 // include db
 var Corpus = require('../models').Corpus;
 var Article = require('../models').Article;
+// logger
+var logger = require('../logger');
 
 // dict of processers, will be filled automatically
 var inputProcessers = {};
@@ -22,7 +24,7 @@ var annotationServices = {};
 
 var handleSaveError = function(err) {
     if(err) {
-        return console.log('error updating article', err);
+        return logger.error('error updating article', err);
     }
 };
 
@@ -30,7 +32,7 @@ var annotateArtice = function(article, corpus) {
     // get plain text
     var sourceText = S(article.source).stripTags().s;
     if(!annotationServices[corpus.nlp_api]) {
-        console.log('error! annotation service not found!');
+        logger.error('error! annotation service not found!');
         return;
     }
     // check if source is valid
@@ -43,7 +45,7 @@ var annotateArtice = function(article, corpus) {
             article.update(data, handleSaveError);
         })
         .catch(function(err) {
-            console.log('error getting annotation from service', err);
+            logger.error('error getting annotation from service', err);
         });
     } else {
         article.update({processed: true, annotation: ''}, handleSaveError);
@@ -54,7 +56,7 @@ var annotateCorpus = function(corpus) {
     // find all not processed articles for current corpus
     Article.find({corpuses: corpus._id, processed: false}, function(err, articles) {
         if(err) {
-            return console.log('error gettin articles for annotation', err);
+            return logger.error('error gettin articles for annotation', err);
         }
         // process
         articles.forEach(function(item){
@@ -64,7 +66,7 @@ var annotateCorpus = function(corpus) {
 };
 
 var processCorpus = function(corpus) {
-    console.log('starting to process input from corpus', corpus._id);
+    logger.info('starting to process input from corpus', corpus._id);
     if(inputProcessers[corpus.input_type]) {
         // start input processing
         inputProcessers[corpus.input_type]
@@ -79,7 +81,7 @@ var processCorpus = function(corpus) {
             annotateCorpus(corpus);
         }));
     } else {
-        console.log('error! corpus processer not found!');
+        logger.error('error! corpus processer not found!');
     }
 };
 
@@ -93,7 +95,7 @@ var createCorpus = function(corpus, cb) {
     var newCorpus = new Corpus(corpus);
     newCorpus.save(function(err) {
         if(err) {
-            console.log('error saving new corpus', err);
+            logger.error('error saving new corpus', err);
             return cb(err, null);
         }
 

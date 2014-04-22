@@ -10,6 +10,8 @@ var request = Promise.promisify(require('request'));
 var cheerio = require('cheerio');
 // crypto
 var crypto = require('crypto');
+// logger
+var logger = require('../../logger');
 
 // gets post content
 var getPostContent = async(function(url) {
@@ -115,7 +117,7 @@ var getNextPage = async(function(url, page) {
     // parse
     var res = await(parsePage(body));
     if(!res) {
-        console.log('error loading wp page');
+        logger.error('error loading wp page');
         throw new Error('Error loading wordpress page!');
     }
 
