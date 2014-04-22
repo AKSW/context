@@ -1,4 +1,3 @@
-
 // build collection of items
 var collection = [];
 // rss

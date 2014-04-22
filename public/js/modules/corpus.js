@@ -1,6 +1,3 @@
-var angular = require('angular');
-var angularui = require('angular-ui-router');
-
 // get extentions
 var extentions = require('../data/corpusextentions');
 

@@ -6,8 +6,8 @@ var await = require('asyncawait/await');
 var Promise = require('bluebird');
 // promisified request
 var request = Promise.promisify(require('request'));
-// underscore
-var _ = require('underscore');
+// lodash
+var _ = require('lodash');
 
 // service url
 var SpotlightUrl = 'http://context.aksw.org/spotlight_clone.php';

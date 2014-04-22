@@ -1,5 +1,5 @@
-var passport = require('passport'),
-    User = require('../db/user').User;
+var passport = require('passport');
+var User = require('../models').User;
 
 module.exports = function(app) {
     // Initialize Passport!  Also use passport.session() middleware, to support

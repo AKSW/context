@@ -1,5 +1,5 @@
 // includes
-var User = require('../../db/user').User;
+var User = require('../../models').User;
 
 // export index
 exports.updateUser = {

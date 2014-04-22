@@ -1,18 +1,14 @@
 // requires
 var cheerio = require('cheerio');
-// async-await fetures
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
 // promise
 var Promise = require('bluebird');
 
 // db requires
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    db = require('./db').db,
-    articleSchema, Article;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var Article;
 
-articleSchema = new Schema({
+var articleSchema = new Schema({
     uri: {type: String, unique: true},
     title: {type: String, default: ''},
     source: String,
@@ -87,4 +83,4 @@ articleSchema.methods.shortTitle = function(cb) {
 Article = mongoose.model('articles', articleSchema);
 
 // export
-exports.Article = Article;
+module.exports = Article;

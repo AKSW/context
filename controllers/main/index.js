@@ -1,5 +1,5 @@
 // db
-var Corpus = require('../../db/corpus').Corpus;
+var Corpus = require('../../models').Corpus;
 
 // export index
 exports.index = {

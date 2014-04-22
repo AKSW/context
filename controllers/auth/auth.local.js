@@ -1,6 +1,6 @@
 // includes
 // db
-var User = require('../../db/user').User;
+var User = require('../../models').User;
 // passport
 var passport = require('passport');
 var passportLocal = require('passport-local');
@@ -84,7 +84,7 @@ exports.login = {
     path: '/auth/login',
     method: 'post',
     returns: function(req, res, next){
-        passport.authenticate('local', function(err, user, info) {
+        passport.authenticate('local', function(err, user) {
             if (err) {
                 return next(err);
             }

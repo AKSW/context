@@ -2,8 +2,15 @@
   "name": "conTEXT",
   "version": "1.0.0",
   "dependencies": {
+    "jquery": "~2.1.0",
     "bootstrap": "~3.1.1",
-    "seiyria-bootstrap-slider": "~1.9.5"
+    "seiyria-bootstrap-slider": "~1.9.5",
+    "angular": "~1.2.16",
+    "angular-route": "~1.2.16",
+    "angular-strap": "~2.0.1",
+    "angular-ui-router": "~0.2.10",
+    "lodash": "~2.4.1",
+    "stringjs": "~1.8.0"
   },
   "devDependencies": {}
 }

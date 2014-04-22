@@ -5,11 +5,11 @@ var await = require('asyncawait/await');
 var fs = require('fs');
 // string.js
 var S = require('string');
-// underscore
-var _ = require('underscore');
+// lodash
+var _ = require('lodash');
 // include db
-var Corpus = require('../db/corpus').Corpus;
-var Article = require('../db/article').Article;
+var Corpus = require('../models').Corpus;
+var Article = require('../models').Article;
 
 // dict of processers, will be filled automatically
 var inputProcessers = {};

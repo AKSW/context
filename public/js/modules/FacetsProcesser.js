@@ -1,11 +1,8 @@
-var _ = require('underscore');
-var S = require('string');
-
 var escapeRegExp = function(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 };
 
-var processData = function(data, filters) {
+var processData = function(data) {
     // articles
     var articles = [];
     // types

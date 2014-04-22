@@ -6,8 +6,8 @@ var await = require('asyncawait/await');
 var Promise = require('bluebird');
 // promisified request
 var request = Promise.promisify(require('request'));
-// underscore
-var _ = require('underscore');
+// lodash
+var _ = require('lodash');
 
 // service url
 var FoxUrl = 'http://139.18.2.164:4444/api';

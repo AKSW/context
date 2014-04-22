@@ -23,7 +23,7 @@ module.exports = function(app) {
     });
 
     // assume 404 since no middleware responded
-    app.use(function(req, res, next) {
+    app.use(function(req, res) {
         res.status(404).render('errors/404', { url: req.originalUrl });
     });
 };

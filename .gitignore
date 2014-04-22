@@ -1,7 +1,6 @@
 node_modules/
-public/bower_components/
+bower_components/
 /config.js
-public/js/app.min.js
-public/css/main.min.css
 public/fonts/
-public/dist/
+views/core/layout.dust
+views/core/layout.cdn.dust

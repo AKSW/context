@@ -1,10 +1,9 @@
 // requires
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    db = require('./db').db,
-    userSchema, User;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var User;
 
-userSchema = new Schema({
+var userSchema = new Schema({
     username: {type: String, unique: true},
     password: String,
     email: String,
@@ -46,4 +45,4 @@ userSchema.statics.registerNewUser = function (user, cb) {
 User = mongoose.model('users', userSchema);
 
 // export
-exports.User = User;
+module.exports = User;

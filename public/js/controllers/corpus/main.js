@@ -1,5 +1,3 @@
-var _ = require('underscore');
-
 // extentions
 var extentions = require('../../data/corpusextentions');
 

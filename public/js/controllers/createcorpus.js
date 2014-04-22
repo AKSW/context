@@ -1,6 +1,5 @@
 var corpusTypes = require('../data/corpusTypes.js');
 var nlpApis = require('../data/nlpApis.js');
-require('seiyria-bootstrap-slider');
 
 module.exports = function CreateCorpusController($scope) {
     // collection of corpus types

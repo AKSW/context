@@ -1,10 +1,8 @@
 // requires
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    db = require('./db').db,
-    corpusSchema, Corpus;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-corpusSchema = new Schema({
+var corpusSchema = new Schema({
     name: String,
     creation_date: {type: Date, default: Date.now},
     nlp_api: {type: String, default: 'DBpedia-Spotlight'},
@@ -15,7 +13,7 @@ corpusSchema = new Schema({
 });
 
 // Model
-Corpus = mongoose.model('corpuses', corpusSchema);
+var Corpus = mongoose.model('corpuses', corpusSchema);
 
 // export
-exports.Corpus = Corpus;
+module.exports = Corpus;

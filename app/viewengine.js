@@ -1,6 +1,5 @@
-var dust = require('dustjs-linkedin'),
-    cons = require('consolidate'),
-    express = require('express');
+var cons = require('consolidate');
+var express = require('express');
 
 module.exports = function(app, dirname) {
     // settings
@@ -15,4 +14,6 @@ module.exports = function(app, dirname) {
 
     // serve static files
     app.use(express.static(dirname + '/public'));
+    // serve bower components as static
+    app.use('/bower_components', express.static(dirname + '/bower_components'));
 };

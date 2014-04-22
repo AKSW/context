@@ -2,7 +2,7 @@
 // config
 var config = require('../../config');
 // db
-var User = require('../../db/user').User;
+var User = require('../../models').User;
 // passport
 var passport = require('passport');
 var passportGoogle = require('passport-google');

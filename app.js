@@ -1,6 +1,7 @@
 // includes
-var express = require('express'),
-    config = require('./config');
+var express = require('express');
+var config = require('./config');
+var logger = require('./logger');
 
 // deploy test
 // make app
@@ -28,14 +29,13 @@ require('./app/customrender')(app);
 require('./app/accesscontrol')(app);
 
 // load controllers
-require('./lib/boot')(app, { verbose: !module.parent });
+require('./lib/boot')(app, { verbose: config.debug || !module.parent });
 
 // load error routes (404. 5xx)
 require('./app/errorhandling')(app);
 
 // if running in single debug mode
 if (!module.parent) {
-    app.use(express.logger('dev'));
     app.listen(config.defaultPort);
-    console.log('\n  listening on port '+config.defaultPort+'\n');
+    logger.info('\n  listening on port '+config.defaultPort+'\n');
 }

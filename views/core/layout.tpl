@@ -48,7 +48,15 @@
     <!-- page body -->
     {+body/}
 
-    <!-- scripts -->
+    <!-- js libraries -->
+    <!-- inject:js -->
+    <!-- js library files will be injected here -->
+    <!-- endinject -->
+
+    <!-- main app script -->
     <script src="/dist/app.min.js"></script>
+
+    <!-- include GA -->
+    {>"helpers/ga.dust"/}
 </body>
 </html>

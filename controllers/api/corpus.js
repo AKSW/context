@@ -1,9 +1,9 @@
-var _ = require('underscore');
-var crypto = require('crypto');
 // includes
+var _ = require('lodash');
+// db
 var Corpus = require('../../modules/corpus');
-var CorpusDB = require('../../db/corpus').Corpus;
-var Article = require('../../db/article').Article;
+var CorpusDB = require('../../models').Corpus;
+var Article = require('../../models').Article;
 
 // export create corpus
 exports.createCorpus = {
