@@ -23,14 +23,14 @@ module.exports = {
                     file: '/bower_components/bootstrap/dist/js/bootstrap.js',
                     cdn: '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js'
                 },
-                {
+                /*{
                     file: '/bower_components/angular-strap/dist/angular-strap.min.js',
                     cdn: '//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.0.0/angular-strap.min.js'
                 },
                 {
                     file: '/bower_components/angular-strap/dist/angular-strap.tpl.min.js',
                     cdn: '//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.0.0/angular-strap.tpl.min.js'
-                },
+                },*/
                 {
                     file: '/bower_components/angular-ui-router/release/angular-ui-router.js',
                     cdn: '//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js'
