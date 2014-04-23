@@ -30,7 +30,7 @@ var handleSaveError = function(err) {
 
 var annotateArtice = function(article, corpus) {
     // get plain text
-    var sourceText = S(article.source).stripTags().s;
+    var sourceText = S(article.title + '. ' + article.source).stripTags().s;
     if(!annotationServices[corpus.nlp_api]) {
         logger.error('error! annotation service not found!');
         return;
