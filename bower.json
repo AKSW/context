@@ -9,6 +9,7 @@
     "angular-route": "~1.2.16",
     "angular-strap": "~2.0.1",
     "angular-ui-router": "~0.2.10",
+    "angular-motion": "~0.3.2",
     "lodash": "~2.4.1",
     "stringjs": "~1.8.0"
   },

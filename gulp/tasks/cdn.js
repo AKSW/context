@@ -42,7 +42,11 @@ module.exports = {
                 {
                     file: '/bower_components/stringjs/lib/string.min.js',
                     cdn: '//cdnjs.cloudflare.com/ajax/libs/string.js/1.8.0/string.min.js'
-                }]
+                },
+                {
+                    file: '/bower_components/angular-animate/angular-animate.js',
+                    cdn: '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.15/angular-animate.min.js'
+                 }]
             }))
             .pipe(rename('layout.cdn.dust'))
             .pipe(gulp.dest('views/core/'));
