@@ -1,4 +1,5 @@
 // includes
+var _ = require('lodash');
 // db
 var Corpus = require('../../modules/corpus');
 var CorpusDB = require('../../models').Corpus;

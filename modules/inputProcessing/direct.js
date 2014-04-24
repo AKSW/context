@@ -1,4 +1,6 @@
 // includes
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 var async = require('asyncawait/async');
 var crypto = require('crypto');
 
@@ -22,6 +24,9 @@ var process = async(function(corpus) {
 
 // module
 var DirectProcessing = function () {
+    // Inherit from EventEmitter
+    EventEmitter.call(this);
+
     // name (also ID of processer used in client)
     this.name = 'directinput';
 
@@ -30,5 +35,8 @@ var DirectProcessing = function () {
 
     return this;
 };
+
+// Inherit from EventEmitter
+util.inherits(DirectProcessing, EventEmitter);
 
 module.exports = new DirectProcessing();

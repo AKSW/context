@@ -1,4 +1,6 @@
 // includes
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -104,6 +106,7 @@ var getNextPage = async(function(username, lastId, corpus) {
 
 // process function
 var process = async(function(corpus) {
+    var self = this;
     // get username
     var username = corpus.input;
     var limit = corpus.input_count;
@@ -129,6 +132,9 @@ var process = async(function(corpus) {
         for(i = 0; i < count; i++){
             results.push(res[i]);
         }
+
+        // report progress
+        self.reportProgress(results.length / limit, corpus._id);
     }
 
     // start processing
@@ -137,13 +143,25 @@ var process = async(function(corpus) {
 
 // module
 var TwitterProcessing = function () {
+    var self = this;
+
     // name (also ID of processer used in client)
     this.name = 'twitter';
 
     // function
     this.process = process;
 
+    this.reportProgress = function (progress, corpusId) {
+        self.emit('progress', {
+            progress: progress,
+            corpus: corpusId
+        });
+    };
+
     return this;
 };
+
+// Inherit from EventEmitter
+util.inherits(TwitterProcessing, EventEmitter);
 
 module.exports = new TwitterProcessing();

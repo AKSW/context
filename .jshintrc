@@ -13,9 +13,7 @@
         "__dirname",
         "exports",
         "process",
-        "_", // lodash
-        "angular", // angular
-        "S" // String.js
+        "angular" // angular
     ],
 
     // Development.

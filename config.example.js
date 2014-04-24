@@ -11,6 +11,8 @@ exports.passwordSalt = 'ThisIsPasswordSalt';
 
 // default app port
 exports.defaultPort = 8080;
+// default app uri (needed for websocket server)
+exports.defaultHost = 'localhost';
 
 // default db
 exports.db = 'mongodb://localhost/context';

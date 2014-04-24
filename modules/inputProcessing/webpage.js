@@ -1,4 +1,6 @@
 // includes
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -36,5 +38,8 @@ var WebpageProcessing = function () {
 
     return this;
 };
+
+// Inherit from EventEmitter
+util.inherits(WebpageProcessing, EventEmitter);
 
 module.exports = new WebpageProcessing();

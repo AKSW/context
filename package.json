@@ -28,6 +28,7 @@
     "postinstall": "./node_modules/.bin/gulp init"
   },
   "dependencies": {
+    "async": "^0.7.0",
     "asyncawait": "^0.6.1",
     "bluebird": "^1.2.2",
     "body-parser": "^1.0.2",
@@ -63,6 +64,7 @@
     "portfinder": "^0.2.1",
     "request": "^2.34.0",
     "string": "^1.8.1",
+    "ws": "^0.4.31",
     "zombie": "^2.0.0-alpha9"
   },
   "engines": {

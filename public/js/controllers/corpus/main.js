@@ -15,11 +15,46 @@ var currentCorpus = {
     }
 };
 
+// progress websocket
+var initProgressWebsocket = function($scope) {
+    var location = document.URL.split('://')[1].replace('/overview', '');
+    var socket = new WebSocket('ws://' + location);
+    socket.onerror = function(err) {
+        console.log(err);
+    };
+    socket.onopen = function () {
+        $scope.$apply(function() {
+            $scope.progress.show = true;
+        });
+    };
+    socket.onmessage = function (event) {
+        var data = JSON.parse(event.data);
+        $scope.$apply(function() {
+            $scope.progress.type = data.type;
+            $scope.progress.progress = data.progress;
+        });
+    };
+    socket.onclose = function () {
+        $scope.$apply(function() {
+            $scope.progress.show = false;
+        });
+    };
+};
+
 module.exports = function MainCorpusController($scope, $location, $state, corpus) {
     // set current corpus data
     currentCorpus = _.extend(currentCorpus, corpus.data);
     // expose corpus to scope
     $scope.currentCorpus = currentCorpus;
+
+    // expose math
+    $scope.Math = Math;
+    // should show progress bar
+    $scope.progress = {
+        show: false,
+        progress: 0,
+        type: ''
+    };
 
     // init extentions
     $scope.extentions = extentions;
@@ -28,6 +63,10 @@ module.exports = function MainCorpusController($scope, $location, $state, corpus
 
     // render first view if needed
     $scope.$on('$viewContentLoaded', function onRender() {
+        // init progress websocket
+        initProgressWebsocket($scope);
+
+        // see if we need to change path
         var len = $location.path().split('/').length;
         // if page is just loaded
         if(len === 3) {

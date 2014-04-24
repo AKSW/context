@@ -1,4 +1,6 @@
 // includes
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -188,5 +190,8 @@ var WordpressProcessing = function () {
 
     return this;
 };
+
+// Inherit from EventEmitter
+util.inherits(WordpressProcessing, EventEmitter);
 
 module.exports = new WordpressProcessing();

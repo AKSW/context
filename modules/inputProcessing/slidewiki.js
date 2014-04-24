@@ -1,4 +1,6 @@
 // includes
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -110,5 +112,8 @@ var SlidewikiProcessing = function () {
 
     return this;
 };
+
+// Inherit from EventEmitter
+util.inherits(SlidewikiProcessing, EventEmitter);
 
 module.exports = new SlidewikiProcessing();

@@ -1,3 +1,10 @@
+<!-- progress -->
+<div class="progress progress-striped active" ng-show="progress.show">
+    <div class="progress-bar"  role="progressbar" aria-valuenow="{{Math.floor(progress.progress * 100)}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: (Math.floor(progress.progress * 100) + '%')}" ng-class="{'progress-bar-info': progress.type == 'input', 'progress-bar-success': progress.type == 'annotation'}">
+        {{Math.floor(progress.progress * 100)}}% processing {{progress.type}}
+    </div>
+</div>
+
 <!-- menu -->
 <ul class="nav nav-tabs" id="corpusTabs">
     <li ng-class="{active: $state.includes('corpus.{{item.name}}')}" ng-repeat="item in extentions">

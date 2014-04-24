@@ -1,4 +1,6 @@
 // includes
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
@@ -124,6 +126,7 @@ var entityToDocument = function(entity, url, corpus) {
 
 // process function
 var process = async(function(corpus) {
+    var self = this;
     // generate unique url for piece
     var url = corpus.input;
     var limit = corpus.input_count;
@@ -145,6 +148,9 @@ var process = async(function(corpus) {
             doc = entityToDocument(res[i], url, corpus);
             results.push(doc);
         }
+
+        // report progress
+        self.reportProgress(results.length, limit);
     }
 
     return results.slice(0, limit);
@@ -152,13 +158,25 @@ var process = async(function(corpus) {
 
 // module
 var BloggerProcessing = function () {
+    var self = this;
+
     // name (also ID of processer used in client)
     this.name = 'blogger';
 
     // function
     this.process = process;
 
+    this.reportProgress = function (progress, corpus) {
+        self.emit('progress', {
+            progress: progress,
+            corpus: corpus
+        });
+    };
+
     return this;
 };
+
+// Inherit from EventEmitter
+util.inherits(BloggerProcessing, EventEmitter);
 
 module.exports = new BloggerProcessing();

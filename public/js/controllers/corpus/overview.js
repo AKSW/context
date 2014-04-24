@@ -1,3 +1,3 @@
-module.exports = function CorpusOverviewController($scope, $routeParams, $location) {
+module.exports = function CorpusOverviewController($scope, $state, $sce) {
     console.log('corpus overview');
 };
