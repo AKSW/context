@@ -46,6 +46,9 @@
     "express": "^4.0.0",
     "express-session": "^1.0.3",
     "feedparser": "^0.16.6",
+    "gulp": "^3.6.2",
+    "gulp-jshint": "^1.5.5",
+    "gulp-watch": "^0.5.4",
     "lodash": "^2.4.1",
     "method-override": "^1.0.0",
     "moment": "^2.5.1",
@@ -59,7 +62,8 @@
     "passport-twitter": "^1.0.2",
     "portfinder": "^0.2.1",
     "request": "^2.34.0",
-    "string": "^1.8.0"
+    "string": "^1.8.1",
+    "zombie": "^2.0.0-alpha9"
   },
   "engines": {
     "node": ">=0.10"
