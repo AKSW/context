@@ -1,5 +1,5 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
+var ProgressReporter = require('../abstract/progressReporter');
 var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
@@ -150,6 +150,7 @@ var entityToDocument = function(entity, url, corpus) {
 
 // process function
 var process = async(function(corpus) {
+    var self = this;
     // generate unique url for piece
     var url = corpus.input;
     var limit = corpus.input_count;
@@ -175,6 +176,9 @@ var process = async(function(corpus) {
 
         // increase page
         lastPage++;
+
+        // report progress
+        self.reportProgress(results.length / limit, corpus._id);
     }
 
     return results.slice(0, limit);
@@ -182,6 +186,8 @@ var process = async(function(corpus) {
 
 // module
 var WordpressProcessing = function () {
+    ProgressReporter.call(this);
+
     // name (also ID of processer used in client)
     this.name = 'wordpress';
 
@@ -191,7 +197,7 @@ var WordpressProcessing = function () {
     return this;
 };
 
-// Inherit from EventEmitter
-util.inherits(WordpressProcessing, EventEmitter);
+// Inherit from ProgressReporter
+util.inherits(WordpressProcessing, ProgressReporter);
 
 module.exports = new WordpressProcessing();

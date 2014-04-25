@@ -1,5 +1,5 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
+var ProgressReporter = require('../abstract/progressReporter');
 var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
@@ -12,7 +12,8 @@ var request = require('request');
 var FeedParser = require('feedparser');
 
 // get limited number of feed entries
-var getFeedEntries = function(corpus) {
+var getFeedEntries = function(corpus, self) {
+    // return promise
     return new Promise(function (resolve, reject) {
         // get vars from corpus
         var url = corpus.input;
@@ -57,6 +58,9 @@ var getFeedEntries = function(corpus) {
                 index++;
             }
 
+            // report progress
+            self.reportProgress(index / limit, corpus._id);
+
             // resolve if done
             if(index >= limit) {
                 return resolve(results);
@@ -89,14 +93,17 @@ var getFeedEntries = function(corpus) {
 
 // process function
 var process = async(function(corpus) {
+    var self = this;
     // get url
-    var results = await(getFeedEntries(corpus));
+    var results = await(getFeedEntries(corpus, self));
 
     return results;
 });
 
 // module
 var FeedProcessing = function () {
+    ProgressReporter.call(this);
+
     // name (also ID of processer used in client)
     this.name = 'feed';
 
@@ -106,7 +113,7 @@ var FeedProcessing = function () {
     return this;
 };
 
-// Inherit from EventEmitter
-util.inherits(FeedProcessing, EventEmitter);
+// Inherit from ProgressReporter
+util.inherits(FeedProcessing, ProgressReporter);
 
 module.exports = new FeedProcessing();

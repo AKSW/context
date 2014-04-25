@@ -1,7 +1,9 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
+var ProgressReporter = require('../abstract/progressReporter');
 var util = require('util');
+// async stuff
 var async = require('asyncawait/async');
+// crypto
 var crypto = require('crypto');
 
 // process function
@@ -24,8 +26,7 @@ var process = async(function(corpus) {
 
 // module
 var DirectProcessing = function () {
-    // Inherit from EventEmitter
-    EventEmitter.call(this);
+    ProgressReporter.call(this);
 
     // name (also ID of processer used in client)
     this.name = 'directinput';
@@ -36,7 +37,7 @@ var DirectProcessing = function () {
     return this;
 };
 
-// Inherit from EventEmitter
-util.inherits(DirectProcessing, EventEmitter);
+// Inherit from ProgressReporter
+util.inherits(DirectProcessing, ProgressReporter);
 
 module.exports = new DirectProcessing();

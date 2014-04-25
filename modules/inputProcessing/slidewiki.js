@@ -1,5 +1,5 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
+var ProgressReporter = require('../abstract/progressReporter');
 var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
@@ -33,7 +33,7 @@ var parseSubPage = async(function(url) {
 });
 
 // process page and return entities
-var parsePage = async(function(body) {
+var parsePage = async(function(body, self, limit, corpus) {
     // parse
     var $ = cheerio.load(body);
 
@@ -57,6 +57,9 @@ var parsePage = async(function(body) {
 
         // push entity to results
         results.push(entity);
+
+        // report progress
+        self.reportProgress(results.length / limit, corpus._id);
     });
 
     return results;
@@ -64,6 +67,7 @@ var parsePage = async(function(body) {
 
 // process function
 var process = async(function(corpus) {
+    var self = this;
     // generate unique url for piece
     var slidewikiId = corpus.input;
     var limit = corpus.input_count;
@@ -77,7 +81,7 @@ var process = async(function(corpus) {
     var body = mainRes[1];
 
     // parse
-    var res = await(parsePage(body));
+    var res = await(parsePage(body, self, limit, corpus));
     if(!res) {
         throw new Error('Slidewiki returned no data!');
     }
@@ -104,6 +108,8 @@ var process = async(function(corpus) {
 
 // module
 var SlidewikiProcessing = function () {
+    ProgressReporter.call(this);
+
     // name (also ID of processer used in client)
     this.name = 'slidewiki';
 
@@ -113,7 +119,7 @@ var SlidewikiProcessing = function () {
     return this;
 };
 
-// Inherit from EventEmitter
-util.inherits(SlidewikiProcessing, EventEmitter);
+// Inherit from ProgressReporter
+util.inherits(SlidewikiProcessing, ProgressReporter);
 
 module.exports = new SlidewikiProcessing();

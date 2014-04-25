@@ -1,5 +1,5 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
+var ProgressReporter = require('../abstract/progressReporter');
 var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
@@ -30,6 +30,8 @@ var process = async(function(corpus) {
 
 // module
 var WebpageProcessing = function () {
+    ProgressReporter.call(this);
+
     // name (also ID of processer used in client)
     this.name = 'webpage';
 
@@ -39,7 +41,7 @@ var WebpageProcessing = function () {
     return this;
 };
 
-// Inherit from EventEmitter
-util.inherits(WebpageProcessing, EventEmitter);
+// Inherit from ProgressReporter
+util.inherits(WebpageProcessing, ProgressReporter);
 
 module.exports = new WebpageProcessing();

@@ -1,5 +1,5 @@
 // includes
-var EventEmitter = require('events').EventEmitter;
+var ProgressReporter = require('../abstract/progressReporter');
 var util = require('util');
 // async-await fetures
 var async = require('asyncawait/async');
@@ -138,12 +138,12 @@ var process = async(function(corpus) {
     }
 
     // start processing
-    return results;
+    return results.slice(0, limit);
 });
 
 // module
 var TwitterProcessing = function () {
-    var self = this;
+    ProgressReporter.call(this);
 
     // name (also ID of processer used in client)
     this.name = 'twitter';
@@ -151,17 +151,10 @@ var TwitterProcessing = function () {
     // function
     this.process = process;
 
-    this.reportProgress = function (progress, corpusId) {
-        self.emit('progress', {
-            progress: progress,
-            corpus: corpusId
-        });
-    };
-
     return this;
 };
 
-// Inherit from EventEmitter
-util.inherits(TwitterProcessing, EventEmitter);
+// Inherit from ProgressReporter
+util.inherits(TwitterProcessing, ProgressReporter);
 
 module.exports = new TwitterProcessing();
