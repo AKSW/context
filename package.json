@@ -92,6 +92,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-uglify": "^0.2.1",
     "gulp-watch": "^0.5.3",
+    "jshint-stylish": "^0.1.5",
     "should": "^3.3.0",
     "zombie": "^2.0.0-alpha31"
   }

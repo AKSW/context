@@ -15,7 +15,6 @@ module.exports = function CreateCorpusController($scope) {
     var $inputCount, $sliderContainer;
     // update view slider
     var updateView = function() {
-        console.log('view loaded!');
         $scope.currentCorpus = $scope.corpusTypes[$scope.corpusSelection.index];
         if($scope.currentCorpus.haveItems) {
             if(!$inputCount) {
