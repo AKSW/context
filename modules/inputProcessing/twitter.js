@@ -13,7 +13,6 @@ var cheerio = require('cheerio');
 // crypto
 var crypto = require('crypto');
 
-
 // process page and return entities
 var parsePage = function(body, username) {
     // parse
@@ -23,7 +22,15 @@ var parsePage = function(body, username) {
     var results = [];
 
     // get all posts
-    var posts = $('li');
+    // assume we're using old profile first
+    var posts = $('li[data-item-type="tweet"]');
+    var isOldProfile = true;
+    // if no result returned, try working as with new profile
+    if(!posts.length) {
+        isOldProfile = false;
+        posts = $('div[data-item-type="tweet"]');
+    }
+    // process posts
     posts.each(function(idx, post) {
         var $post = $(post);
 
@@ -39,15 +46,19 @@ var parsePage = function(body, username) {
         // set id
         entity.id = id;
         // get link
-        entity.link = 'http://twitter.com/' + username + '/statuses/' + $post.attr('data-item-id');
+        entity.link = 'http://twitter.com/' + username + '/statuses/' + id;
 
         // get date
-        var tmpDate = $post.find('.time').find('._timestamp').attr('data-time');
+        var tmpDate = isOldProfile ?
+            $post.find('.time').find('._timestamp').attr('data-time')
+            : $post.find('.ProfileTweet-timestamp').find('.js-short-timestamp').attr('data-time');
         entity.dateString = tmpDate.trim();
         entity.date = new Date(entity.dateString) || '';
 
         // get content
-        entity.content = $post.find('.tweet-text').html();
+        entity.content = isOldProfile ?
+            $post.find('.tweet-text').html()
+            : $post.find('.ProfileTweet-text').html();
         // clean
         entity.content = entity.content.trim();
 
@@ -73,8 +84,6 @@ var getNextPage = async(function(username, lastId, corpus) {
     var body = pageRes[1];
     // get html piece
     body = JSON.parse(body).items_html;
-    // form proper html
-    body = '<html><body>' + body + '</body></html>';
 
     // parse
     var res = parsePage(body, username);
