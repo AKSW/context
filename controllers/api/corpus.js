@@ -1,37 +1,62 @@
 // includes
+// multiparty
+var multiparty = require('multiparty');
+// lodash
 var _ = require('lodash');
+// logger
+var logger = require('../../logger');
 // db
 var Corpus = require('../../modules/corpus');
 var CorpusDB = require('../../models').Corpus;
 var Article = require('../../models').Article;
 
-// export create corpus
-exports.createCorpus = {
-    path: '/api/corpus',
-    method: 'post',
-    returns: function(req, res, next){
-        // get data
-        var corpus = req.body;
+// export routes
+module.exports = function(app) {
+    // export create corpus
+    app.post('/api/corpus', function(req, res, next){
+        // get form
+        var form = new multiparty.Form();
 
-        // append user to corpus
-        corpus = _.extend(corpus, {user: req.user._id});
-
-        // trigger creation
-        Corpus.createCorpus(corpus, function(err, id) {
+        // parse the form
+        form.parse(req, function(err, fields, files) {
             if(err) {
                 return next(err);
             }
 
-            return res.redirect('/corpus/'+id);
-        });
-    }
-};
+            // init corpus with user
+            var corpus = {user: req.user._id};
+            // push field values into it
+            for(var field in fields) {
+                corpus[field] = fields[field][0];
+            }
 
-// export get corpus
-exports.getCorpus = {
-    path: '/api/corpus/:id',
-    method: 'get',
-    returns: function(req, res, next){
+            // if files was sent
+            // push files info into corpus
+            if(files) {
+                corpus.files = [];
+                corpus.input_count = files.input.length;
+                for(var index in files.input) {
+                    var file = files.input[index];
+                    corpus.files.push({
+                        name: file.originalFilename,
+                        path: file.path,
+                    });
+                }
+            }
+
+            // trigger creation
+            Corpus.createCorpus(corpus, function(err, id) {
+                if(err) {
+                    return next(err);
+                }
+
+                return res.redirect('/corpus/'+id);
+            });
+        });
+    });
+
+    // export get corpus
+    app.get('/api/corpus/:id', function(req, res, next){
         // get data
         var corpus = req.params.id;
 
@@ -63,14 +88,10 @@ exports.getCorpus = {
                 return res.send(corpus);
             });
         });
-    }
-};
+    });
 
-// export get corpus
-exports.getCorpusJson = {
-    path: '/api/corpus/:id/facets',
-    method: 'get',
-    returns: function(req, res, next){
+    // export get corpus
+    app.get('/api/corpus/:id/facets', function(req, res, next){
         // get data
         var corpus = req.params.id;
 
@@ -94,7 +115,7 @@ exports.getCorpusJson = {
                 return res.send(corpus);
             });
         });
-    }
+    });
 };
 
 

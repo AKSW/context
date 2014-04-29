@@ -10,6 +10,10 @@ var corpusSchema = new Schema({
     input: String,
     input_type: String,
     input_count: Number,
+    files: [{
+        name: String,
+        path: String,
+    }]
 });
 
 // Model

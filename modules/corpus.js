@@ -80,10 +80,12 @@ var initWebSocket = function(corpus) {
         progressClients[corpus._id].push(ws);
         // add event listeners
         ws.on('close', function() {
-            // remove from array
-            var ind = progressClients[corpus._id].indexOf(ws);
-            if(ind !== -1) {
-                progressClients[corpus._id].splice(ind, 1);
+            if(progressClients[corpus._id]) {
+                // remove from array
+                var ind = progressClients[corpus._id].indexOf(ws);
+                if(ind !== -1) {
+                    progressClients[corpus._id].splice(ind, 1);
+                }
             }
         });
     });

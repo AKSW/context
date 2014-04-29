@@ -1,11 +1,9 @@
 // includes
 var User = require('../../models').User;
 
-// export index
-exports.updateUser = {
-    path: '/api/user/:id',
-    method: 'post',
-    returns: function(req, res, next){
+module.exports = function(app) {
+    // export index
+    app.post('/api/user/:id', function(req, res, next){
         var id = req.params.id;
         if(req.user._id.toString() !== id) {
             return next(new Error('You cannot update someone else profile!'));
@@ -38,5 +36,5 @@ exports.updateUser = {
                 return res.redirect('/profile');
             });
         });
-    }
+    });
 };

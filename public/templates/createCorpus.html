@@ -1,4 +1,4 @@
-<form id="newcorpus_form" action="/api/corpus" method="post" class="well" ng-submit="startAnalysis()">
+<form id="newcorpus_form" action="/api/corpus" method="post" class="well" enctype="multipart/form-data" ng-submit="startAnalysis($event)">
     <fieldset>
         <legend>Insert new corpus data for analysis</legend>
         <div class="form-group">
@@ -18,7 +18,7 @@
             <label class="control-label" for="input_item" id="input_label" ng-bind="currentCorpus.inputDescription"></label>
             <input type="text" class="form-control" placeholder="URL" id="input_item" name="input_item" ng-show="currentCorpus.inputType == 'text'" />
             <textarea name="input_item_area" id="input_item_area" class="form-control" ng-show="currentCorpus.inputType == 'textarea'"></textarea>
-            <input type="file" name="input_item_file" id="input_item_file" class="form-control" ng-show="currentCorpus.inputType == 'file'"/>
+            <input type="file" name="input_item_file" id="input_item_file" class="form-control" ng-show="currentCorpus.inputType == 'file'" multiple/>
         </div>
         <div id="advanced_options">
             <div class="form-group" id="slider_container">
@@ -36,7 +36,6 @@
                 <input type="text" class="form-control" placeholder="Corpus name" id="corpus_name" name="name" ng-minlength="1" required />
             </div>
         </div>
-        <input type="hidden" name="_csrf" value="{{ csrf }}" />
         <button type="submit" id="analyzeBtn" class="btn btn-primary">Start Analysis</button>
     </fieldset>
 </form>

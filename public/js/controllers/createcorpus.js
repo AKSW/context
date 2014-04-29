@@ -43,7 +43,9 @@ module.exports = function CreateCorpusController($scope) {
     $scope.$on('$viewContentLoaded', updateView);
 
     // analysis start function
-    $scope.startAnalysis = function () {
+    $scope.startAnalysis = function (e) {
+        // prevent event
+        e.preventDefault();
         // get fields
         var $inputItem = $('#input_item');
         var $inputItemArea = $('#input_item_area');
@@ -76,6 +78,9 @@ module.exports = function CreateCorpusController($scope) {
             return;
         }
 
+        // append csrf token to form url
+        $newCorpusForm.attr('action', '/api/corpus?_csrf=' + encodeURIComponent($scope.csrf));
+
         // assign count to input field
         var itemCount = $inputCount.slider('getValue');
         $inputCountField.val(itemCount);
@@ -95,6 +100,7 @@ module.exports = function CreateCorpusController($scope) {
             case 'file':
                 $inputItem.remove();
                 $inputItemArea.remove();
+                $inputCountField.remove();
                 $inputItemFile.attr('name', 'input');
                 break;
         }

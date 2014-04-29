@@ -2,11 +2,9 @@
 var Corpus = require('../../models').Corpus;
 var logger = require('../../logger');
 
-// export index
-exports.index = {
-    path: '/',
-    method: 'get',
-    returns: function(req, res, next) {
+module.exports = function(app) {
+    // export index
+    app.get('/', function(req, res, next) {
         if(req.user) {
             Corpus.find({user: req.user._id}, function(err, corpuses) {
                 if(err) {
@@ -29,24 +27,15 @@ exports.index = {
             };
             return res.render('index', data);
         }
-    }
-};
+    });
 
-
-// export profile
-exports.profile = {
-    path: '/profile',
-    method: 'get',
-    returns: function(req, res) {
+    // export profile
+    app.get('/profile', function(req, res) {
         return res.render('profile', {error: req.flash('error'), success: req.flash('success')});
-    }
-};
+    });
 
-// export createCorpus
-exports.createCorpus = {
-    path: '/createCorpus',
-    method: 'get',
-    returns: function(req, res) {
+    // export createCorpus
+    app.get('/createCorpus', function(req, res) {
         return res.render('createCorpus');
-    }
+    });
 };

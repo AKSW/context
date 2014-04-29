@@ -78,10 +78,9 @@ collection.push({
     haveItems: false,
 });
 // upload a doc
-// TODO: implement, then re-enable
 collection.push({
     name: 'doc',
-    description: 'Upload a document',
+    description: 'Upload a document(s)',
     inputType: 'file',
     inputDescription: 'Document',
     haveItems: false,

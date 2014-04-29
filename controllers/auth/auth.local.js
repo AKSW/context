@@ -36,11 +36,10 @@ passport.use(new LocalStrategy(
     }
 ));
 
-// export index
-exports.register = {
-    path: '/auth/register',
-    method: 'post',
-    returns: function(req, res, next){
+module.exports = function(app) {
+
+    // export index
+    app.post('/auth/register', function(req, res, next){
         // check password for match
         if(req.body.password_new !== req.body.password_repeat) {
             req.flash('error', 'Passwords do not match!');
@@ -92,13 +91,9 @@ exports.register = {
                 });
             }
         });
-    }
-};
+    });
 
-exports.login = {
-    path: '/auth/login',
-    method: 'post',
-    returns: function(req, res, next){
+    app.post('/auth/login', function(req, res, next){
         passport.authenticate('local', function(err, user) {
             if (err) {
                 return next(err);
@@ -116,5 +111,5 @@ exports.login = {
                 return res.redirect('/');
             });
         })(req, res, next);
-    }
+    });
 };

@@ -1,10 +1,8 @@
 var captchapng = require('captchapng');
 
-// export captcha image
-exports.captcha = {
-    path: '/api/captcha',
-    method: 'get',
-    returns: function(req, res) {
+module.exports = function(app) {
+    // export captcha image
+    app.get('/api/captcha', function(req, res) {
         var captcha = parseInt(Math.random()*9000+1000);
         var p = new captchapng(100, 50, captcha); // width, height, numeric captcha
         p.color(0, 0, 0, 0);  // First color: background
@@ -18,5 +16,5 @@ exports.captcha = {
         var imgbase64 = new Buffer(img,'base64');
         res.writeHead(200, {'Content-Type': 'image/png'});
         return res.end(imgbase64);
-    }
+    });
 };
