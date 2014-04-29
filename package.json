@@ -47,9 +47,6 @@
     "express": "^4.0.0",
     "express-session": "^1.0.3",
     "feedparser": "^0.16.6",
-    "gulp": "^3.6.2",
-    "gulp-jshint": "^1.5.5",
-    "gulp-watch": "^0.5.4",
     "helmet": "^0.2.1",
     "lodash": "^2.4.1",
     "method-override": "^1.0.0",
@@ -66,8 +63,7 @@
     "portfinder": "^0.2.1",
     "request": "^2.34.0",
     "string": "^1.8.1",
-    "ws": "^0.4.31",
-    "zombie": "^2.0.0-alpha9"
+    "ws": "^0.4.31"
   },
   "engines": {
     "node": ">=0.10"
@@ -93,9 +89,9 @@
     "gulp-open": "^0.2.8",
     "gulp-rename": "^1.2.0",
     "gulp-uglify": "^0.2.1",
-    "gulp-watch": "^0.5.3",
+    "gulp-watch": "^0.5.4",
     "jshint-stylish": "^0.1.5",
     "should": "^3.3.0",
-    "zombie": "^2.0.0-alpha31"
+    "zombie": "^2.0.0-alpha9"
   }
 }
