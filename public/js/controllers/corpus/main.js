@@ -63,8 +63,10 @@ module.exports = function MainCorpusController($scope, $location, $state, corpus
 
     // render first view if needed
     $scope.$on('$viewContentLoaded', function onRender() {
-        // init progress websocket
-        initProgressWebsocket($scope);
+        // init progress websocket if corpus is not processed yet
+        if(!currentCorpus.processed) {
+            initProgressWebsocket($scope);
+        }
 
         // see if we need to change path
         var len = $location.path().split('/').length;

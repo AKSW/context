@@ -179,6 +179,12 @@ var annotateCorpus = function(corpus) {
         // wait for all to finish
         asyncUtil.parallel(toRun, function(res) {
             logger.info('all annotation done', corpus._id, res);
+            // update corpus
+            corpus.update({processed: true}, function(err) {
+                if(err) {
+                    logger.error('error updating corpus!', err);
+                }
+            });
             // close websocket server
             closeWebSocket(corpus);
         });

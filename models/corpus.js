@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var corpusSchema = new Schema({
     name: String,
+    processed: {type: Boolean, default: false},
     creation_date: {type: Date, default: Date.now},
     nlp_api: {type: String, default: 'DBpedia-Spotlight'},
     user: {type: Schema.Types.ObjectId, ref: 'users'},

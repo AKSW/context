@@ -32,7 +32,7 @@ module.exports = function(app) {
 
             // if files was sent
             // push files info into corpus
-            if(files) {
+            if(files.input) {
                 corpus.files = [];
                 corpus.input_count = files.input.length;
                 for(var index in files.input) {
