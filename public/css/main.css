@@ -62,3 +62,11 @@ body {
     font-weight: bold;
     font-size: 150%;
 }
+
+.cell-background {
+    fill: #eee;
+}
+
+text.active {
+    fill: red;
+}

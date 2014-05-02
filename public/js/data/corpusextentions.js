@@ -23,6 +23,14 @@ collection.push({
     template: '/templates/corpusEntityRelations.html',
     js: require('../controllers/corpus/relations.js'),
 });
+// co-occurance
+collection.push({
+    name: 'Co-occurrence matrix',
+    path: '/cooc',
+    controller: 'CorpusCoocController',
+    template: '/templates/corpusCooc.html',
+    js: require('../controllers/corpus/cooc.js'),
+});
 
 // Our module now returns our view
 module.exports = collection;

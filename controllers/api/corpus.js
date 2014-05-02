@@ -122,6 +122,9 @@ module.exports = function(app) {
 
     // relations
     app.get('/api/corpus/:id/relations', getCorpusArticles);
+
+    // co-occurence
+    app.get('/api/corpus/:id/cooc', getCorpusArticles);
 };
 
 

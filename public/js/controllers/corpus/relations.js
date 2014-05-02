@@ -1,5 +1,5 @@
 // includes
-var RelationsProcesser = require('../../modules/relationsProcesser');
+var RelationsProcesser = require('../../modules/RelationsProcesser');
 var d3 = window.d3 || null;
 
 // fade for d3
