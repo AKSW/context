@@ -10,6 +10,33 @@ var Corpus = require('../../modules/corpus');
 var CorpusDB = require('../../models').Corpus;
 var Article = require('../../models').Article;
 
+// functions
+var getCorpusArticles = function(req, res, next) {
+    // get data
+    var corpus = req.params.id;
+
+    // find corpus
+    CorpusDB.findOne({_id: corpus}).exec(function(err, corpus) {
+        if(err) {
+            return next(err);
+        }
+
+        // find articles
+        Article.find({corpuses: corpus._id}, function(err, articles) {
+            if(err) {
+                return next(err);
+            }
+
+            // append counts to corpus
+            corpus = corpus.toObject();
+            corpus.articles = articles;
+
+            // send response
+            return res.send(corpus);
+        });
+    });
+};
+
 // export routes
 module.exports = function(app) {
     // export create corpus
@@ -91,31 +118,10 @@ module.exports = function(app) {
     });
 
     // export get corpus
-    app.get('/api/corpus/:id/facets', function(req, res, next){
-        // get data
-        var corpus = req.params.id;
+    app.get('/api/corpus/:id/facets', getCorpusArticles);
 
-        // find corpus
-        CorpusDB.findOne({_id: corpus}).exec(function(err, corpus) {
-            if(err) {
-                return next(err);
-            }
-
-            // find articles
-            Article.find({corpuses: corpus._id}, function(err, articles) {
-                if(err) {
-                    return next(err);
-                }
-
-                // append counts to corpus
-                corpus = corpus.toObject();
-                corpus.articles = articles;
-
-                // send response
-                return res.send(corpus);
-            });
-        });
-    });
+    // relations
+    app.get('/api/corpus/:id/relations', getCorpusArticles);
 };
 
 

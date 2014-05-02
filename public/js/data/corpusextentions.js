@@ -15,6 +15,14 @@ collection.push({
     template: '/templates/corpusFacets.html',
     js: require('../controllers/corpus/facets.js'),
 });
+// relations
+collection.push({
+    name: 'Entity relations',
+    path: '/relations',
+    controller: 'CorpusRelationsController',
+    template: '/templates/corpusEntityRelations.html',
+    js: require('../controllers/corpus/relations.js'),
+});
 
 // Our module now returns our view
 module.exports = collection;
