@@ -11,6 +11,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # run install script on provision
   config.vm.provision :shell, :path => "vagrant/install.sh"
 
-  # forward port for testing
+  # forward default web port for testing
   config.vm.network "forwarded_port", guest: 8080, host: 8080
+  # forward default websocket port for testing
+  config.vm.network "forwarded_port", guest: 8081, host: 8081
 end

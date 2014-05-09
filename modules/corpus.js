@@ -62,14 +62,15 @@ var closeWebSocket = function(corpus) {
 
 var initWebSocket = function(corpus) {
     // construct url
-    var socketURL = 'ws://' + config.defaultUrl + ':' + config.defaultPort + '/corpus/' + corpus._id;
-    logger.info('Starting progress socket at: ', socketURL);
+    var socketURL = 'ws://' + config.defaultHost + ':' + config.defaultSocketPort + '/corpus/' + corpus._id;
     // close old socket if exists
     closeWebSocket(corpus);
+    // log opening
+    logger.info('Starting progress socket at: ', socketURL);
     // init server
     var wss = new WebSocketServer({
-        host: config.defaultHost,
-        port: config.defaultPort,
+        //host: config.defaultHost,
+        port: config.defaultSocketPort,
         path: '/corpus/' + corpus._id
     });
     // init clients array

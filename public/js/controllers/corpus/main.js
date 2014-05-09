@@ -1,6 +1,9 @@
 // extentions
 var extentions = require('../../data/corpusextentions');
 
+// default socket port
+var defaultPort = '8081';
+
 // corpus object
 var currentCorpus = {
     uri: function() {
@@ -17,7 +20,8 @@ var currentCorpus = {
 
 // progress websocket
 var initProgressWebsocket = function($scope) {
-    var location = document.URL.split('://')[1].replace('/overview', '');
+    var location = document.location.hostname + ':' + defaultPort + document.location.pathname.replace('/overview', '');
+    console.log('connecting to socket', location);
     var socket = new WebSocket('ws://' + location);
     socket.onerror = function(err) {
         console.log(err);
