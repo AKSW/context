@@ -5,3 +5,4 @@ public/fonts/
 views/core/layout.dust
 views/core/layout.cdn.dust
 logs/*
+.vagrant/
