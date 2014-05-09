@@ -18,6 +18,16 @@ Clone & do "npm install"
 For debugging just run "gulp"  
 For release run "gulp build" to compile js and css and then run "npm start" (or "./bin/context")  
 
+### Running via Vagrant
+
+Assuming you have [vagrant](http://www.vagrantup.com/) installed, you can run conTEXT with few simple commands:  
+
+1. Execute `vagrant up` to init & start vagrant environment
+2. Once ready, connect to vagrant box using `vagrant ssh`
+3. Change to workdir with `cd /vagrant`
+4. (optional) Install conTEXT with `npm install`
+5. Run the app with `gulp`
+
 ### Testing
 
 Run "npm test"  
