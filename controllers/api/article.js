@@ -8,7 +8,7 @@ var ArticleDB = require('../../models').Article;
 
 //functions
 var getArticle = function (req, res, next) {
-debugger;
+console.log("Bin im getArticle Funktion");
     var article = req.params.id;
 
     ArticleDB.findOne({_id: article}).exec(function (err, article) {

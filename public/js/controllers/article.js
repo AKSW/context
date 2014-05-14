@@ -5,7 +5,8 @@ var FacetsProcesser = require('../modules/FacetsProcesser');
 var facetsData;
 var types, entities, articles;
 
-module.exports = function ArticleFacetsController($scope, $state, $sce) {
+module.exports = function ArticleFacetsController($scope) {
+    console.log("Ich bin in ArticleFacetsController");
     // init empty facet filters
     $scope.typeFilter = undefined;
     $scope.entityFilter = undefined;

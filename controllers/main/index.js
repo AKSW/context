@@ -36,6 +36,7 @@ module.exports = function(app) {
 
     // export createCorpus
     app.get('/createCorpus', function(req, res) {
+        //debugger;
         return res.render('createCorpus');
     });
 };

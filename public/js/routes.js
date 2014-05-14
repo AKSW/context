@@ -4,7 +4,7 @@ module.exports = function applyRoutes (app) {
         $routeProvider.when('/auth', { controller: 'LoginController', template: '' });
         $routeProvider.when('/register', { controller: 'RegisterController', template: '' });
         $routeProvider.when('/createCorpus', { controller: 'CreateCorpusController', templateUrl: '/templates/createCorpus.html' });
-
+        $routeProvider.when('/article/:id', { controller: 'ArticleFacetsController', templateUrl: '/templates/articleView.html' });
         $locationProvider.html5Mode(true);
     }]);
 };
