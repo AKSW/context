@@ -6,8 +6,8 @@
     {>"menu/mainmenuRight.dust" user=user /}
 {/menu_right}
 {<body}
-    <div class="container">
-        <div id="corpusContainer" ng-init="csrf='{csrf}'">
+    <div class="container" ng-controller="ArticleFacetsController">
+        <div id="corpusContainer" ng-view ng-init="csrf='{csrf}'">
             Articlein article.dust! Loading...
         </div>
 

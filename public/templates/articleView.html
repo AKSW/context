@@ -1,25 +1,11 @@
-<div class="row">
+<div class="row" ng-controller="ArticleFacetsController">
     <div ng-show="!data">Article in articleView.html! Loading...</div>
-
-    <!-- left col -->
-    <div class="col-md-4">
-        <div class="panel panel-default facetPanel" ng-repeat="panel in data">
-            <div class="panel-heading">{{ panel.name }}</div>
-            <div class="panel-body facetBody">
-                <div class="list-group facetList">
-                    <a href="#" class="list-group-item facet" ng-class="{active: itemActive(it)}" ng-repeat="it in panel.values | filter:facetFilter"
-                       ng-click="setFilter(it)">
-                        {{ it.name }}
-                        <span class="badge" ng-show="it.count > 0">{{ it.count }}</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- right col -->
     <div class="col-md-8">
-        <div class="row well facetArticle" ng-repeat="item in data[0].values | filter:facetFilter" ng-bind-html="item.sourceSafe">
+        {{$scope}}
+        {{data}}
+        <div class="row well facetArticle" ng-repeat="item in data[0].values[0]" ng-show="data">
+            {{item.name}}
         </div>
     </div>
 </div>
