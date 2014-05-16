@@ -1,11 +1,9 @@
 <div class="row" ng-controller="ArticleFacetsController">
-    <div ng-show="!data">Article in articleView.html! Loading...</div>
+    <div ng-show="!data">Loading...</div>
     <!-- right col -->
-    <div class="col-md-8">
-        {{$scope}}
-        {{data}}
-        <div class="row well facetArticle" ng-repeat="item in data[0].values[0]" ng-show="data">
-            {{item.name}}
+    <div class="col-md-12">
+        <div class="row well facetArticle" ng-repeat="item in data[0].values" ng-bind-html="item.sourceSafe">
+
         </div>
     </div>
 </div>

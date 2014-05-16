@@ -6,14 +6,9 @@ var facetsData;
 var types, entities, articles;
 var articleId;
 
-module.exports = function ArticleFacetsController($scope, $routeParams, $sce, $state) {
+module.exports = function ArticleFacetsController($scope, $routeParams, $sce) {
 
     articleId = $routeParams.id;
-
-    // init empty facet filters
-    $scope.typeFilter = undefined;
-    $scope.entityFilter = undefined;
-    $scope.articleFilter = undefined;
 
     // ArticleFacetsController is always called twice. One time without an $routeParams. Workaround to avoid errors
     if($routeParams.id !== undefined) {
@@ -22,10 +17,6 @@ module.exports = function ArticleFacetsController($scope, $routeParams, $sce, $s
 
             facetsData = ArticleProcesser.processData(data);
 
-            // types
-            types = facetsData.types;
-            // entities
-            entities = facetsData.entities;
             // articles
             articles = facetsData.articles;
 
@@ -36,12 +27,10 @@ module.exports = function ArticleFacetsController($scope, $routeParams, $sce, $s
             // update data in scope
             $scope.data = [
                 {name: 'Articles', values: articles},
-                {name: 'Types', values: types},
-                {name: 'Entities', values: entities}
             ];
-
+            //console.log($scope);
             // redraw
-            $state.reload();
+            $scope.$apply();
 
         });
     }

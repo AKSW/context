@@ -30,6 +30,7 @@ var processData = function(data) {
         entities: [],
         types: [],
         source: data.source,
+        corpuses: [],
     };
 
     // get article plain text
@@ -52,7 +53,6 @@ var processData = function(data) {
         var sourceIndex = src.indexOf(word, startIndex);
         // if not found, find by string
         if(sourceIndex === -1) {
-            //if(entityName === testEntity) console.log('searching index in array');
             for(var i = 0; i < src.length; i++){
                 var srcWord = src[i];
                 // clean from hrefs
@@ -193,91 +193,18 @@ var processData = function(data) {
                 }
             });
         }
-
-        // get entity data
-        var ind = entityNames.indexOf(entity.name);
-        var newEntity;
-        if(ind !== -1) {
-            newEntity = entities[ind];
-            entities[ind].count += 1;
-            if(entities[ind].articles.indexOf(article.id) === -1) {
-                entities[ind].articles.push(article.id);
-            }
-            if(article.entities.indexOf(newEntity.id) === -1) {
-                article.entities.push(newEntity.id);
-            }
-        } else {
-            newEntity = {
-                id: entity._id,
-                name: entity.name,
-                type: 'entity',
-                count: 1,
-                articles: [article.id],
-                types: []
-            };
-            article.entities.push(newEntity.id);
-        }
-
-        // get types
-        entity.types.forEach(function(type){
-            // get type data
-            var name = type.split(':')[1];
-            var tid = 'type_'+name;
-            var ind = typeNames.indexOf(name);
-            if(ind !== -1) {
-                types[ind].count += 1;
-                types[ind].entities.push(newEntity.id);
-                types[ind].articles.push(article.id);
-                if(newEntity.types.indexOf(tid) === -1) {
-                    newEntity.types.push(tid);
-                }
-                if(article.types.indexOf(tid) === -1) {
-                    article.types.push(tid);
-                }
-            } else {
-                types.push({
-                    id: tid,
-                    name: name,
-                    type: 'type',
-                    count: 1,
-                    entities: [newEntity.id],
-                    articles: [article.id],
-                });
-                if(newEntity.types.indexOf(tid) === -1) {
-                    newEntity.types.push('type_'+name);
-                }
-                if(article.types.indexOf(tid) === -1) {
-                    article.types.push('type_'+name);
-                }
-                typeNames.push(name);
-            }
-        });
-
-        if(ind === -1) {
-            entities.push(newEntity);
-            entityNames.push(newEntity.name);
-        }
     });
 
     // join source back
     data.source = src.join(' ').replace(/span%marked%/g, 'span');
     article.source = data.source;
 
+    article.corpuses = data.corpuses;
+
     // push to array
     articles.push(article);
-
-
-    // sort arrays by count
-    var sortFunction = function(a, b) {
-        return b.count - a.count;
-    };
-    entities = entities.sort(sortFunction);
-    types = types.sort(sortFunction);
-
     return {
         articles: articles,
-        types: types,
-        entities: entities
     };
 };
 
