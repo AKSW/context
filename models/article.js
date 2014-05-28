@@ -16,6 +16,7 @@ var articleSchema = new Schema({
     creation_date: {type: Date, default: Date.now},
     corpuses: [{type: Schema.Types.ObjectId, ref: 'corpuses'}],
     processed: {type: Boolean, default: false},
+    plaintext : String,
 
     // array of entities for annotation
     entities: [{
