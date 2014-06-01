@@ -8,12 +8,32 @@ var utf8 = require('utf8');
 var ArticleDB = require('../../models').Article;
 var CorpusDB = require('../../models').Corpus;
 var UserDB = require('../../models').User;
-var baseUri = "http://127.0.0.1:8080/context";
 var rdfstore = require("rdfstore");
 var config = require('../../config');
-
+var baseUri = config.rdfbackend.baseuri;
+var S = require('string');
 var rdf = require("rdf");
 
+
+function saveAllArticleAsRDF(req, res, next) {
+    var article = req.params.id;
+
+    ArticleDB.find().exec(function (err, articles) {
+        if (err) {
+            return next(err);
+        }
+
+        var nifString =nifprefix();
+        debugger;
+        articles.forEach(function (article) {
+            nifString = nifString + articleProcessor(article);
+        });
+
+        res.setHeader("Content-Type", "text/html; charset=UTF-8");
+        res.send(nifString);
+    });
+
+}
 function saveArticleAsRDF(req, res, next) {
     var article = req.params.id;
 
@@ -24,85 +44,136 @@ function saveArticleAsRDF(req, res, next) {
 
         article = article.toObject();
 
-        var nifarticle;
-        nifarticle = article2nif(article);
+        var nifString = nifprefix();
+        nifString = nifString + articleProcessor(article);
 
 
         res.setHeader("Content-Type", "text/html; charset=UTF-8");
-        res.send(nifarticle);
+        res.send(nifString);
     });
 
 }
-
-function article2nif(articleobject) {
-    if (!articleobject) {
-        console.log("No articleobject in article2nif");
-    }
-    var nifarticle;
-    nifarticle = createTTL(articleobject);
-    save2rdfstore(nifarticle, articleobject._id);
-    return nifarticle;
-
-}
-
 
 function saveCorpusAsRDF(req, res, next) {
     var corpusid = req.params.id;
 
     CorpusDB.findOne({_id: corpusid}).exec(function (err, corpus) {
+        debugger;
         if (err) {
-            console.log(err);
+            return next(new Error('Something gone wrong by finding Courpus!' + err));
+        }
+        else if ( ( corpus=== null) || (corpus.length === 0)){
+            res.send("Corpus not found");
+            return next();
         }
         ArticleDB.find({corpuses: corpus._id}).exec(function (err, articles) {
             if (err) {
-                console.log(err);
+                return next(new Error('Something gone wrong by finding articles'+err));
             }
-            var nifarray;
+            else if ( ( articles=== null) || (articles.length === 0)){
+                res.send("Article  not found");
+                return next();
+            }
+            var nifString = nifprefix();
             articles.forEach(function (article) {
-                nifarray = nifarray + article2nif(article);
+                nifString = nifString + articleProcessor(article);
             });
 
             res.setHeader("Content-Type", "text/html; charset=UTF-8");
-            res.send(nifarray);
+            res.send(nifString);
 
         });
 
     });
 }
 
-var saveUserArticlesAsRDF = async(function (req, res, next) {
-    var user = await(UserDB.findOne({_id: req.params.id}).exec());
-    if (!user) {
-        return console.log('User not found!');
-    }
-    var userCorpuses = await(CorpusDB.find({user: user._id}).exec());
-    if (!userCorpuses || userCorpuses.length === 0) {
-        return console.log('no corpuses found!');
-    }
+function saveUserArticlesAsRDF(req, res, next) {
+    UserDB.findOne({_id: req.params.id}).exec(function (err, user) {
+        if (!user) {
+            res.send(" User not found");
+            return next(new Error('User not found!'));
+        }
+        else if ( ( user=== null) || (user.length === 0)){
+         res.send(" User not found");
+         return next();
+         }
+        CorpusDB.find({user: user._id}).exec(function (err, userCorpuses) {
+            if (!userCorpuses || userCorpuses.length === 0 || userCorpuses === null) {
+                res.send(" There are no Corpus for this user");
+                return next();
+            }
+            var article;
+            var output = nifprefix();
+            for (var i in userCorpuses) {
+                //get all article for corpus i
+                article = await(ArticleDB.find({corpuses: userCorpuses[i]._id}).exec());
 
-    var article;
-    var output = "";
-    for (var i in userCorpuses) {
-        //get all article for corpus i
-        article = await(ArticleDB.find({corpuses: userCorpuses[i]._id}).exec());
+                //process all articles
+                for (var j in article) {
+                    output = output + await(articleProcessor(article[j]));
+                }
 
-        //process all articles
-        for (var j in article) {
-            output = output + await(article2nif(article[j]));
+            }
+            res.setHeader("Content-Type", "text/html; charset=UTF-8");
+            res.send(output);
+
+
+        });
+
+    });
+    /*async(function () {
+
+        var user = await(UserDB.findOne({_id: req.params.id}).exec());
+        console.log(user);
+        if (!user) {
+            res.send(" User not found");
+            return next(new Error('User not found!'));
+        }
+        /*else if ( ( user=== null) || (user.length === 0)){
+            res.send(" User not found");
+            return next();
+        }
+        var userCorpuses = await(CorpusDB.find({user: user._id}).exec());
+        if (!userCorpuses || userCorpuses.length === 0 || userCorpuses === null) {
+            res.send(" Corpus not found");
+            return next();
         }
 
+        var article;
+        var output = nifprefix();
+        for (var i in userCorpuses) {
+            //get all article for corpus i
+            article = await(ArticleDB.find({corpuses: userCorpuses[i]._id}).exec());
+
+            //process all articles
+            for (var j in article) {
+                output = output + await(articleProcessor(article[j]));
+            }
+
+        }
+        res.setHeader("Content-Type", "text/html; charset=UTF-8");
+        res.send(output);
+
+    });*/
+}
+
+function articleProcessor(articleobject) {
+    if (!articleobject) {
+        console.log("No articleobject in articleProcessor");
     }
-    res.setHeader("Content-Type", "text/html; charset=UTF-8");
-    res.send(output);
+    var nifarticle;
+    nifarticle = article2nif(articleobject);
+    save2rdfstore(nifarticle, articleobject._id);
+    return nifarticle;
 
-});
+}
 
-function createTTL(articleObject) {
+function article2nif(articleObject) {
 
     if (!articleObject) {
-        console.log("There is no Article Object!");
+        return next(new Error('There is no article Object!'));
     }
-    var prefix = nifprefix();
+
     var context = nifContext(articleObject);
     var nifentity = [];
 
@@ -110,7 +181,7 @@ function createTTL(articleObject) {
         nifentity[i] = nifEntities(articleObject.entities[i], articleObject);
     }
 
-    var output = prefix;
+    var output = "";
 
     //TODO Refactor this code its shitty
     for (var i in context) {
@@ -125,8 +196,9 @@ function createTTL(articleObject) {
         }
 
     }
+    //TODO maybe check if its a correct turtle Synthax
     var turtleParser = new rdf.TurtleParser();
-    turtleParser.parse(output);
+    turtleParser.parse(nifprefix() + output);
     var nifstring = turtleParser.graph;
     return output;
 }
@@ -159,7 +231,7 @@ function nifContext(articleObject) {
     context.taConfidence = 'itsrdf:taConfidence "' + 0.2 + '"^^xsd:decimal ; ';
     context.title = 'nif:title """' + articleObject.title + '"""^^xsd:string ; ';
     context.sourceUrl = 'nif:sourceUrl <' + articleObject.uri + '> ; ';
-    context.source = 'dcterms:source """' + articleObject.uri + '"""^^xsd:string ';
+    context.source = 'dcterms:source """' + S(articleObject.source).escapeHTML().s + '"""^^xsd:string ';
     context.end = '. ';
 
     return context;
@@ -194,8 +266,12 @@ function nifEntities(entity, articleObject) {
 
 function getTaClassRef(type) {
 //TODO Add the other Services
-    if (type.substring(0, 7) !== "DBpedia:") {
+
+    if (type.substring(0, 8) === "DBpedia:") {
         return "itsrdf:taClassRef <http://dbpedia.org/ontology/" + type.substring(8) + ">;\r\n";
+    }
+    else {
+        return "itsrdf:taClassRef <" + type + ">;\r\n";
     }
 
 }
@@ -209,7 +285,7 @@ function save2rdfstore(ttlString, articleID) {
                 logger.info("Error cleaning the graph URI for graph: " + graphuri);
             }
 
-            store.load("text/turtle", ttlString, graphuri, function (success, results) {
+            store.load("text/turtle", nifprefix() + ttlString, graphuri, function (success, results) {
                 if (!success) {
                     logger.info("Error saving the graphuri" + graphuri + " Error: " + results);
                 }
@@ -222,10 +298,39 @@ function save2rdfstore(ttlString, articleID) {
     });
 }
 
+function delAllArticleAsRDF(req, res, next) {
+    //TODO add some form of verification
+    rdfstore.create(config.rdfbackendSettings, function (store) {
+
+        store.registeredGraphs(function(sucess, graphnames) {
+            if (!sucess) {
+                res.send("Error! "+err);
+                return next(new Error('Error! Something ist gone wrong getting the registered graphs!' + err))
+            };
+            var graphNamesArray=[];
+            var defaultgraph = ["https://github.com/antoniogarrote/rdfstore-js#default_graph"];
+            debugger;
+
+            //put the URI of all named graphs to an array
+            for (var i in graphnames) {
+
+                store.clear(function (success) {
+                    console.log(success);
+                });
+            }
+
+        });
+
+    });
+}
 
 module.exports = function (app) {
+    if (config.rdfbackend.nifexport) {
 // export save Article as Rdf
-    app.get('/api/nifsave/article/:id', saveArticleAsRDF);
-    app.get('/api/nifsave/corpus/:id', saveCorpusAsRDF);
-    app.get('/api/nifsave/user/:id', saveUserArticlesAsRDF);
+        app.get('/api/nifsave/article/all', saveAllArticleAsRDF);
+        app.get('/api/nifsave/article/deleteall', delAllArticleAsRDF);
+        app.get('/api/nifsave/article/:id', saveArticleAsRDF);
+        app.get('/api/nifsave/corpus/:id', saveCorpusAsRDF);
+        app.get('/api/nifsave/user/:id', saveUserArticlesAsRDF);
+    }
 }
