@@ -1,18 +1,24 @@
 var rdfstore = require("rdfstore");
 var logger = require('../logger');
 var rdf = require('rdf');
+var rdfserver = require("../node_modules/rdfstore/server.js").Server;
 var fs = require('fs');
+var config = require('../config');
 
 module.exports = function(app) {
 
-    new rdfstore.Store({persistent: true,
-        engine: 'mongodb',
-        name: 'rdfbackend', // quads in MongoDB will be stored in a DB named myappstore
-        overwrite: false,    // delete all the data already present in the MongoDB server
-        mongoDomain: 'localhost', // location of the MongoDB instance, localhost by default
-        mongoPort: 27017 // port where the MongoDB server is running, 27017 by default
-    }, function mystore (store, ttlString) {
+    new rdfstore.Store(config.rdfbackendSettings, function mystore (store, ttlString) {
         logger.info("Rdf Store initialisation complete");
+        /*var dfgdfg = "SELECT * { ?s ?p ?o }";
+        var defaultgraph = ["https://github.com/antoniogarrote/rdfstore-js#default_graph"];
+        var namedgraphs =["http://127.0.0.1:8080/context/article/537cc523f1aa781c0efdfbbf"];
+        store.execute(dfgdfg, namedgraphs, defaultgraph, function (success, results) {
+            //debugger;
+            console.log(success);
+            console.log(results);
+            console.log(results.length);
+        });
+
         /*
         store.execute("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
             DELETE WHERE { GRAPH <https://github.com/antoniogarrote/rdfstore-js#default_graph> {  <http://127.0.0.1:8080/context/article/537cc523f1aa781c0efdfbc0#char=0,1341> ?p ?o . } \
@@ -21,15 +27,7 @@ module.exports = function(app) {
             console.log(results);
             console.log(success);
 */
-        var gaphuritodelete = "http://127.0.0.1:8080/context/article/537cc523f1aa781c0efdfbc7";
-        store.clear(gaphuritodelete, function (success){
-            console.log(success);
-        });
-        store.graph("http://127.0.0.1:8080/context/article/fgfdgdfgdfg", function (success,data){
-            debugger;
-            console.log(success);
-            console.log(data);
-        });
+
         //var graphUri = "https://github.com/antoniogarrote/rdfstore-js#default_graph";
         //debugger;
         /*store.clear(graphUri, function(graph){
@@ -75,4 +73,6 @@ module.exports = function(app) {
 
     //});
 });
+    //var myserver = rdfserver.start();
+    //console.log(myserver);
 };
