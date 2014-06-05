@@ -4,14 +4,6 @@ var should = require('should');
 // module being tested
 var twitter = require('../../modules/inputProcessing/twitter');
 
-// test data for old profile
-var username = 'Shagrost';
-var corpus = {
-    _id: 'test',
-    input: username,
-    input_count: 100
-};
-
 // test data for new profile
 var usernameNew = 'yamalight';
 var corpusNew = {
@@ -40,16 +32,15 @@ var verifyResults = function(done, res){
         item.should.have.property('source');
         item.source.should.be.a.String;
         item.source.length.should.be.above(0);
+        // check title
+        item.should.have.property('title');
+        item.title.should.be.a.String;
+        item.title.length.should.be.above(0);
     });
     done();
 };
 
 describe('Twitter input processing suit', function () {
-    it('should get 100 results for old profile', function (done) {
-        twitter.process(corpus)
-        .then(verifyResults.bind(this, done));
-    });
-
     it('should get 100 results for new profile', function (done) {
         twitter.process(corpusNew)
         .then(verifyResults.bind(this, done));

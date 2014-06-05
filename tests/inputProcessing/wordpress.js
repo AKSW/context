@@ -5,7 +5,7 @@ var should = require('should');
 var wordpress = require('../../modules/inputProcessing/wordpress');
 
 // test data
-var url = 'http://x443.wordpress.com/';
+var url = 'http://vgresearcher.wordpress.com/';
 var corpus = {
     _id: 'test',
     input: url,
@@ -38,6 +38,7 @@ describe('Wordpress input processing suit', function () {
                 // check title
                 item.should.have.property('title');
                 item.title.should.be.a.String;
+                item.title.length.should.be.above(0);
             });
             done();
         });

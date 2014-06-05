@@ -49,6 +49,7 @@ var getFeedEntries = function(corpus, self) {
                     uri: link,
                     creation_date: pubDate,
                     source: body,
+                    title: title,
                 };
                 results.push(doc);
 

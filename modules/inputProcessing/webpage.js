@@ -23,6 +23,7 @@ var process = async(function(corpus) {
         corpuses: [corpus._id],
         uri: url,
         source: body,
+        title: 'Content of ' + url,
     };
 
     return [doc];

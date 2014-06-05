@@ -46,6 +46,10 @@ describe('Files input processing suit', function () {
                 item.should.have.property('source');
                 item.source.should.be.a.String;
                 item.source.length.should.be.above(0);
+                // check title
+                item.should.have.property('title');
+                item.title.should.be.a.String;
+                item.title.length.should.be.above(0);
             });
             done();
         });
