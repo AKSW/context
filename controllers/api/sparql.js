@@ -37,6 +37,7 @@ function sparqlQuery(req, res, next){
     }
     else{
         outputFormat = "application/rdf+xml";
+        outputFormat = "application/rdf+xml";
     }
 
     rdfstore.create(config.rdfbackendSettings, function (store) {

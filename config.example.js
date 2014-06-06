@@ -18,12 +18,24 @@ exports.defaultHost = 'localhost';
 
 // default db
 exports.db = 'mongodb://localhost/context';
-
+exports.rdfbackendSettings = {persistent:true,
+    engine:'mongodb',
+    name:'rdfbackend', // quads in MongoDB will be stored in a DB named myappstore
+    overwrite:false,    // delete all the data already present in the MongoDB server
+    mongoDomain:'localhost', // location of the MongoDB instance, localhost by default
+    mongoPort:27017 // port where the MongoDB server is running, 27017 by default
+}
 // session config
 exports.sessionDb = {
     url: exports.db
 };
 
+//RDF Backend
+exports.rdfbackend ={
+    nifexport: true,
+    sparqlendpoint: true,
+    baseuri : "http://127.0.0.1:8080/context"
+}
 // facebook app config
 exports.facebook = {
     clientID: 'FACEBOOK_APP_ID',
