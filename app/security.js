@@ -1,21 +1,28 @@
 var helmet = require('helmet');
 var csrf = require('csurf');
+var csrfCheck = csrf();
 var needCSRF;
 
-module.exports = function(app) {
+var noCSRFlist = [
+    '/api/sparql',
+];
 
-    var conditionalCSRF = function (req, res, next) {
-        needCSRF = true; //default behaviour
-        if ((req.method ==="POST") && (req.url ==="/api/sparql")){
+var conditionalCSRF = function (req, res, next) {
+    needCSRF = true; //default behaviour
+    if (req.method === 'POST') {
+        if(noCSRFlist.indexOf(req.url) !== -1) {
             needCSRF = false;
         }
-
-        if (needCSRF == true) {
-            return csrf(req, res, next);
-        } else {
-            return next();
-        }
     }
+
+    if (needCSRF) {
+        return csrfCheck(req, res, next);
+    } else {
+        return next();
+    }
+};
+
+module.exports = function(app) {
     app.use(conditionalCSRF);
 
     // disable powered-by header
