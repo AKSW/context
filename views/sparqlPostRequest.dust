@@ -1,0 +1,34 @@
+{>"core/layout.dust"/}
+{<menu}
+    {>"menu/mainmenu.dust" createCorpus="true" /}
+{/menu}
+{<menu_right}
+    {>"menu/mainmenuRight.dust" user=user /}
+{/menu_right}
+{<body}
+    <div class="container">
+        <div id="posttest">
+            <form name="input" action="/api/sparql/" method="post">
+            <textarea name="query" cols="100" rows="20"  >
+            prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>{~n}
+                   prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>{~n}
+                    prefix owl: <http://www.w3.org/2002/07/owl#>{~n}
+                    prefix xsd: <http://www.w3.org/2001/XMLSchema#>{~n}
+                    prefix nif: <http://persistence.uni-leipzig.org/nlp2rdf/ontologies/nif-core#>{~n}
+                    prefix itsrdf: <http://www.w3.org/2005/11/its/rdf#>{~n}
+                    prefix  dcterms: <http://purl.org/dc/terms/>{~n}
+                    SELECT * ?s ?p ?o
+            </textarea>
+
+    <select name="outputformat" size="1">
+      <option value="rdf">rdf/xml</option>
+      <option value="json">json</option>
+    </select>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+        {>"helpers/sponsors.dust"/}
+    </div>
+    {>"helpers/userecho.dust"/}
+{/body}
