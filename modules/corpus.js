@@ -36,6 +36,7 @@ var progressClients = {};
 //
 
 var closeWebSocket = function(corpus) {
+
     var wss = progressServices[corpus._id];
     logger.info('closing websocket', corpus._id);
     if(wss) {
@@ -61,6 +62,7 @@ var closeWebSocket = function(corpus) {
 };
 
 var initWebSocket = function(corpus) {
+    debugger;
     // construct url
     var socketURL = 'ws://' + config.defaultHost + ':' + config.defaultSocketPort + '/corpus/' + corpus._id;
     // close old socket if exists

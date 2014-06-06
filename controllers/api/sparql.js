@@ -6,12 +6,13 @@ var rdfstore = require("rdfstore");
 var config = require('../../config');
 var querystring = require ('querystring');
 var url = require("url");
+var csrf = require('csurf');
 
 function sparqlQuery(req, res, next){
 
     var sparqlquery;
     var querysplittet;
-    var outputFormat ;
+    var outputFormat ; //TODO implement support for differnet output formats
 
     if (req.method == "GET"){
         querysplittet =req.url.split("query=");
@@ -20,6 +21,7 @@ function sparqlQuery(req, res, next){
     }
     else if (req.method == "POST"){
         querysplittet = req.body['query'];
+        outputFormat = req.body['outputformat'];
         sparqlquery = querysplittet;
     }
     else{
@@ -30,13 +32,20 @@ function sparqlQuery(req, res, next){
         res.redirect(302,"/api/sparql/");
         return next;
     }
+    if(outputFormat =="json"){
+        outputFormat = "application/json";
+    }
+    else{
+        outputFormat = "application/rdf+xml";
+    }
+
     rdfstore.create(config.rdfbackendSettings, function (store) {
 
         //get an Array of Objects of all Graphs
         store.registeredGraphs(function(sucess, graphnames) {
             if (!sucess) {
                 return next(new Error('Error! Something ist gone wrong getting the registered graphs!'))
-            };
+            }
             var graphNamesArray=[];
             var defaultgraph = ["https://github.com/antoniogarrote/rdfstore-js#default_graph"];
 
@@ -49,10 +58,10 @@ function sparqlQuery(req, res, next){
             store.execute(sparqlquery, graphNamesArray, defaultgraph, function (success, results) {
                 if (!success) {
                     return next(new Error('Error! Query the Database! '+results))
-                };
+                }
                 logger.info("SPARLQL Query was successfull. "+results.length+' Triple received');
 
-                buildResponseBindings('application/json',results, res);
+                buildResponseBindings(outputFormat,results, res);
             });
 
         });
@@ -66,6 +75,8 @@ function sparqlQuery(req, res, next){
 /**
  * Builds an SPARQL HTTP protocol response for a collection of bindings
  * returned by the RDF store
+ * Adapted from Server.js in rdfstore
+ * https://github.com/antoniogarrote/rdfstore-js/blob/master/src/js-store/src/server.js
  */
 var buildResponseBindings = function(mediaTypes, bindings, res) {
     var accepts;
@@ -140,6 +151,36 @@ var buildResponseBindings = function(mediaTypes, bindings, res) {
 
 };
 /**
+ * Builds an SPARQL HTTP protocol response for a boolean value
+ * returned by the RDF store
+ * Adapted from Server.js in rdfstore
+ * https://github.com/antoniogarrote/rdfstore-js/blob/master/src/js-store/src/server.js
+ */
+var buildResponseBoolean = function(mediaTypes, boolValue, res) {
+    var accepts;
+
+    if(mediaTypes === 'application/json') {
+        accepts = mediaTypes;
+    }
+    else{
+        accepts = 'application/rdf+xml';
+    }
+
+    if(accepts === 'application/json') {
+
+        res.writeHead(200,{"Content-Type":"application/json"});
+        res.end(new Buffer(JSON.stringify({'head':{},'boolean':boolValue})), 'utf-8');
+
+    } else
+    {
+        var response = '<?xml version="1.0" encoding="UTF-8"?><sparql xmlns="http://www.w3.org/2005/sparql-results#"><head></head><boolean>'+boolValue+'</boolean></sparql>';
+        res.writeHead(200,{"Content-Type":"application/sparql-results+xml"});
+        res.end(new Buffer(response), 'utf-8');
+    }
+};
+
+
+/**
  * Escapes XML chars
  */
 var xmlEncode = function (data) {
@@ -152,6 +193,7 @@ function htmlform(req, res, next){
     res.setHeader("Content-Type", "text/html; charset=UTF-8");
     res.render("sparqlPostRequest.dust");
 }
+
 module.exports = function (app) {
     if (config.rdfbackend.sparqlendpoint){
         // export SPARQL Endpoint

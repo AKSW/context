@@ -5,6 +5,7 @@ var util = require('util');
 var async = require('asyncawait/async');
 // crypto
 var crypto = require('crypto');
+var S = require("string");
 
 // process function
 var process = async(function(corpus) {
@@ -18,7 +19,8 @@ var process = async(function(corpus) {
     var doc = {
         corpuses: [corpus._id],
         uri: url,
-        source: corpus.input
+        source: corpus.input,
+        plaintext: S(corpus.input).stripTags().s //TODO implement this on all input types
     };
 
     return [doc];

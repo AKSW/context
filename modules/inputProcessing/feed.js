@@ -10,6 +10,7 @@ var Promise = require('bluebird');
 var request = require('request');
 // feed parser
 var FeedParser = require('feedparser');
+var S = require("string");
 
 // get limited number of feed entries
 var getFeedEntries = function(corpus, self) {
@@ -49,6 +50,7 @@ var getFeedEntries = function(corpus, self) {
                     uri: link,
                     creation_date: pubDate,
                     source: body,
+                    plaintext: S(body).stripTags().s
                 };
                 results.push(doc);
 
