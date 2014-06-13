@@ -60,25 +60,6 @@ articleSchema.statics.createNew = function (article) {
     });
 };
 
-// Model methods
-articleSchema.methods.shortTitle = function(cb) {
-    var src = this.source;
-    var $ = cheerio.load(src);
-    var tmp = $('.extracted-title');
-    var source = '';
-    if (tmp) {
-        source = $(tmp[0]).text().trim();
-    } else {
-        source = $(src).text().trim();
-    }
-    if (!source) {
-        source = '';
-    }
-
-    return source;
-};
-
-
 // Model
 Article = mongoose.model('articles', articleSchema);
 

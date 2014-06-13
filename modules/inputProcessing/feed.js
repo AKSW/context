@@ -43,7 +43,7 @@ var getFeedEntries = function(corpus, self) {
                 var pubDate = item.pubDate;
                 var description = item.description;
                 // convert to html string
-                var body = '<div class="extracted-title">' + title + '</div> ' + description;
+                var body = description;
                 var doc = {
                     corpuses: [corpus._id],
                     uri: link,

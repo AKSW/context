@@ -18,7 +18,7 @@ var processData = function(data) {
         var title = '';
         try {
             var dom = $(item.source);
-            title = $('extracted-title', dom).text() || dom.text();
+            title = item.title || dom.text();
         } catch(e) {
             title = item.source;
         }
