@@ -1,18 +1,14 @@
 var logger = require('../../logger');
-var async = require('asyncawait/async');
-var await = require('asyncawait/await');
-var utf8 = require('utf8');
 var rdfstore = require("rdfstore");
 var config = require('../../config');
-var querystring = require ('querystring');
 var url = require("url");
-var csrf = require('csurf');
+var S = require('string');
 
 function sparqlQuery(req, res, next){
 
     var sparqlquery;
     var querysplittet;
-    var outputFormat ; //TODO implement support for differnet output formats
+    var outputFormat ;
 
     if (req.method == "GET"){
         querysplittet =req.url.split("query=");
@@ -28,15 +24,20 @@ function sparqlQuery(req, res, next){
         return next(new Error('Error! You have to use GET or POST!'));
     }
 
+    //Redirect to Querywebform if query is empty
     if ((sparqlquery == "undefined")||(sparqlquery === "")){
         res.redirect(302,"/api/sparql/");
         return next;
+    }
+    //checking for illegal Operations DELETE/CLEAR ....
+    if (queryHasIllegalStatements(sparqlquery)){
+        res.send("Illegal Operation. Changing Operations are now allowed");
+        return;
     }
     if(outputFormat =="json"){
         outputFormat = "application/json";
     }
     else{
-        outputFormat = "application/rdf+xml";
         outputFormat = "application/rdf+xml";
     }
 
@@ -58,7 +59,8 @@ function sparqlQuery(req, res, next){
             //Query database
             store.execute(sparqlquery, graphNamesArray, defaultgraph, function (success, results) {
                 if (!success) {
-                    return next(new Error('Error! Query the Database! '+results))
+                    res.send("Error: "+results);
+                    return ;
                 }
                 logger.info("SPARLQL Query was successfull. "+results.length+' Triple received');
 
@@ -185,8 +187,7 @@ var buildResponseBoolean = function(mediaTypes, boolValue, res) {
  * Escapes XML chars
  */
 var xmlEncode = function (data) {
-    return data.replace(/\&/g, '&' + 'amp;').replace(/</g, '&' + 'lt;')
-        .replace(/>/g, '&' + 'gt;').replace(/\'/g, '&' + 'apos;').replace(/\"/g, '&' + 'quot;');
+    return S(data).escapeHTML().s;
 };
 
 
@@ -195,11 +196,21 @@ function htmlform(req, res, next){
     res.render("sparqlPostRequest.dust");
 }
 
+function queryHasIllegalStatements(sparqlquery) {
+    var illegal = false;
+    var illegalStatemens =["delete", "insert", "load","create","drop","clear"];
+    var sparqlquerylowerCase = sparqlquery.toLowerCase();
+    illegalStatemens.forEach(function (statement){
+        if (sparqlquerylowerCase.indexOf(statement,0)!== -1){
+            illegal = true;
+        }
+    });
+    return illegal;
+}
 module.exports = function (app) {
     if (config.rdfbackend.sparqlendpoint){
         // export SPARQL Endpoint
         app.get('/api/sparql/', htmlform);
-        app.get('/api/sparql/sparqlquery', htmlform);
         app.post('/api/sparql/', sparqlQuery);
         app.get('/api/sparql/*', sparqlQuery);
     }

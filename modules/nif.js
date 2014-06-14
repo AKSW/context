@@ -11,7 +11,7 @@ var input;
  * return (String) an nif file
  * */
 function article2nif(articleObject) {
-    debugger;
+
     if ((!articleObject)||(articleObject=="undefined")) {
         return false;
     }
@@ -38,7 +38,7 @@ function article2nif(articleObject) {
         }
 
     }
-    //TODO maybe check if its a correct turtle Synthax
+    //TODO maybe check if it has a correct turtle Synthax
     /*var turtleParser = new rdf.TurtleParser();
      turtleParser.parse(nifprefix() + output);
      var nifstring = turtleParser.graph;*/
@@ -61,19 +61,20 @@ function nifprefix() {
 // Defines nifContext
 function nifContext(articleObject) {
     var context = new Object();
-    var unormform = unorm.nfc(articleObject.plaintext);
-    var length = unormform.length;
-    context.uri = '<' + baseUri + '/article/' + articleObject._id + '#char=0,' + length + '> ';
+    var plaintext = S(articleObject.title).stripTags().s+ '. ' + S(articleObject.source).stripTags().s; //Titles are added to source Code before sending to NLP Service
+    var unormform = unorm.nfc(plaintext);
+    var endIndex = unormform.length;
+    context.uri = '<' + baseUri + '/article/' + articleObject._id + '#char=0,' + endIndex + '> ';
     context.nifExpressions = 'a nif:String , nif:Context , nif:RFC5147String ; ';
     context.nifString = 'nif:isString ' + '"""' + unormform + '"""^^xsd:string; ';
     context.beginindex = 'nif:beginIndex "0"^^xsd:nonNegativeInteger; ';
-    context.endIndex = 'nif:endIndex "' + length + '"^^xsd:nonNegativeInteger; ';
+    context.endIndex = 'nif:endIndex "' + endIndex + '"^^xsd:nonNegativeInteger; ';
     context.identifier = 'dcterms:identifier "' + articleObject._id + '"^^xsd:string ; ';
     context.created = 'dcterms:created "' + articleObject.creation_date.toISOString() + '"^^xsd:dateTime ; ';
     context.taConfidence = 'itsrdf:taConfidence "' + 0.2 + '"^^xsd:decimal ; ';
     context.title = 'nif:title """' + articleObject.title + '"""^^xsd:string ; ';
     context.sourceUrl = 'nif:sourceUrl <' + articleObject.uri + '> ; ';
-    context.source = 'dcterms:source """' + S(articleObject.source).escapeHTML().s + '"""^^xsd:string ';
+    context.source = 'dcterms:source """' + S(articleObject.title).escapeHTML().s + '. '+S(articleObject.source).escapeHTML().s + '"""^^xsd:string ';
     context.end = '. ';
 
     return context;
@@ -83,16 +84,17 @@ function nifContext(articleObject) {
 function nifEntities(entity, articleObject) {
 
     var nifentity = new Object();
-    unormform = unorm.nfc(entity.name);  //converting to UFT8 NFC to be comptabile with NIF
-    utfFormNfcPlaintext = unorm.nfc(articleObject.plaintext);  //converting to UFT8 NFC to be comptabile with NIF
-    var beginindex = utfFormNfcPlaintext.indexOf(entity.name,parseInt(entity.offset, 10)-5) + 1 ;   //The Offset is not equal to NIF calculation rules so we are recalculating the index
-    var endindex = beginindex + unormform.length;
+    var unormform = unorm.nfc(entity.name);  //converting to UFT8 NFC to be comptabile with NIF
+    var plaintext = S(articleObject.title).stripTags().s+ '. ' + S(articleObject.source).stripTags().s;  //Titles are added to source Code before sending to NLP Service. TO be sure that the bein/end calculation works properly
+    var utfFormNfcPlaintext = unorm.nfc(plaintext);  //converting to UFT8 NFC to be comptabile with NIF
+    var beginindex = utfFormNfcPlaintext.indexOf(unormform,parseInt(entity.offset, 10)-10)+1 ;   //The Offset is not equal to NIF calculation rules so we are recalculating the index. Beginning 5 characters before to not mis the entry
+    var endindex = beginindex + unormform.length ;
 
     nifentity.uri = '<' + baseUri + '/article/' + articleObject._id + '#char=' + beginindex + ',' + endindex + '>';
     nifentity.nifExpressions = 'a nif:String , nif:RFC5147String ;';
     nifentity.word = "a nif:Word;";
     nifentity.referenceContext = 'nif:referenceContext <' + baseUri + '/article/' + articleObject._id + '#char=0' + ',' + utfFormNfcPlaintext.length + '>; ';
-    nifentity.anchorOf = 'nif:anchorOf """' + entity.name + '"""^^xsd:string ;';
+    nifentity.anchorOf = 'nif:anchorOf """' + unormform + '"""^^xsd:string ;';
     nifentity.beginindex = 'nif:beginIndex "' + beginindex + '"^^xsd:nonNegativeInteger; ';
     nifentity.endIndex = 'nif:endIndex "' + endindex + '"^^xsd:nonNegativeInteger; ';
     //nifentity.wasConvertedFrom = 'nif:wasConvertedFrom <"'+ 'http://FIXME.com/' +'> '; //TODO add proper was convertedfrom tag
