@@ -17,6 +17,7 @@ var articleSchema = new Schema({
     corpuses: [{type: Schema.Types.ObjectId, ref: 'corpuses'}],
     processed: {type: Boolean, default: false},
     plaintext : String,
+    language : String,
 
     // array of entities for annotation
     entities: [{
