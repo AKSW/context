@@ -85,6 +85,13 @@ collection.push({
     inputDescription: 'Document',
     haveItems: false,
 });
-
+//Turtle File
+collection.push({
+    name: 'turtle',
+    description: 'Upload a turtle document(s)',
+    inputType: 'file',
+    inputDescription: 'Turtle File',
+    haveItems: false,
+});
 // Our module now returns our view
 module.exports = collection;
