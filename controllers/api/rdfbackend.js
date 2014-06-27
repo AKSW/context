@@ -9,9 +9,23 @@ var baseUri = config.rdfbackend.baseuri;
 var nifcreator = require ("../../modules/nif.js");
 var nifprefix = nifcreator.nifprefix;
 var mongodb = require("mongodb");
-var async = require('async');
+//var async = require('async');
+var asyncawait = require('asyncawait/async');
+var await = require('asyncawait/await');
+var Promise = require('bluebird');
 
-function saveAllArticleAsRDF(req, res, next) {
+var CorpusesArray= []; //Array of all CorpusObjects
+var UsersArray =[]; // Array of all UserObjects
+
+
+var initialise = asyncawait(function () {
+    CorpusesArray = await(getAllUsers());
+    UsersArray = await(getAllCorpuses());
+});
+
+
+/*function saveAllArticleAsRDF(req, res, next) {
+
     var requestId = req.params.id;
     if(!isValidMongodbID(requestId)){
         res.send("Not a valid ID");
@@ -36,7 +50,27 @@ function saveAllArticleAsRDF(req, res, next) {
         sendTTL(req, res, nifString);
     });
 
-}
+}*/
+var saveAllArticleAsRDF = asyncawait(function (req, res, next) {
+    var requestId = req.params.id;
+    initialise();
+    if(!isValidMongodbID(requestId)){
+        res.send("Not a valid ID");
+        return next(new Error('Not a valid MongoDB ID! ID:'+requestId));
+    }
+
+
+    var articles = await(getAllArticle());
+
+    var nifString = nifprefix;
+    articles.forEach(function (article) {
+        nifString = nifString + articleProcessor(article);
+    });
+
+    sendTTL(req, res, nifString);
+});
+
+
 function saveArticleAsRDF(req, res, next) {
     var requestId = req.params.id;
     if(!isValidMongodbID(requestId)){
@@ -140,6 +174,10 @@ function articleProcessor(articleobject) {
     if ((articleobject == null)||(articleobject == "undefined")) {
         return false;
     }
+
+    articleobject = addCorpusObjectToArticle(articleobject);
+    articleobject = addUserObjectToArticleCorpus(articleobject);
+    debugger;
     var nifarticle;
     nifarticle = nifcreator.articleTonif(articleobject);
 
@@ -176,39 +214,16 @@ function save2rdfstore(ttlString, articleID) {
     });
 }
 
+//Creates a new instance of rdfstore with option overwrite = true. Which drops the whole Collection
 function delAllArticleAsRDF(req, res, next) {
-    //TODO add some form of verification
+
     var overwriteconf = config.rdfbackendSettings;
     overwriteconf.overwrite = true;
     rdfstore.create(overwriteconf, function (store){
         res.send("Delete succesfully");
     });
-
-    /*rdfstore.create(config.rdfbackendSettings, function (store) {
-        store.registeredGraphs(function(sucess, graphnames) {
-                if (!sucess) {
-                    res.send("Error! "+err);
-                    return next(new Error('Error! Something ist gone wrong getting the registered graphs!' + err))
-                };
-                var graphNamesArray=[];
-                var defaultgraph = ["https://github.com/antoniogarrote/rdfstore-js#default_graph"];
-                debugger;
-
-                //put the URI of all named graphs to an array
-                for (var i in graphnames) {
-
-                    store.clear(i, function (success) {
-                        if(!success){
-                            logger.info("Clearing RDF sotre failed");
-                        };
-                    });
-                }
-                res.send("Cleaning Process Complete");
-
-            });*/
-
-    //});
 }
+
 function delCorpusAsRDF(req, res, next){
     //TODO Implement this
     var requestId = req.params.id;
@@ -322,12 +337,192 @@ function delArticles(articleArray) {
                 if (err) logger.info("Error! + " + err);
             });
     });
-    }
+}
 
+var getUser =function(id){
+
+    return new Promise(function (resolve, reject) {
+        //if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
+        UserDB.findOne({_id: id}).exec(function (err, user) {
+            debugger;
+            if (err) {
+                reject(new Error('Something gone wrong by finding User'+err));
+            }
+            else if ((user === "undefined")|| ( user === null) || (user.length === 0)) {
+                reject(new Error('User not found'));
+            }
+            else{
+                resolve(user);
+            }
+        });
+    });
+}
+
+var getAllUsers =function(){
+    return new Promise(function (resolve, reject) {
+        UserDB.find().exec(function (err, users) {
+            if (err) {
+                reject(new Error('Something gone wrong by finding User'+err));
+            }
+            else if ((users === "undefined")|| ( users === null) || (users.length === 0)) {
+                reject(new Error('User not found'));
+            }
+            else{
+                //UsersArray = users;
+                resolve(users);
+            }
+        });
+    });
+}
+
+function getCorpus(id){
+
+    return new Promise(function (resolve, reject) {
+        if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
+
+        CorpusDB.findOne({_id: id}).exec(function (err, corpus) {
+            if (err) {
+                reject(new Error('Something gone wrong by finding User'+err));
+            }
+            else if ((corpus === "undefined")|| ( corpus === null) || (corpus.length === 0)) {
+                reject(new Error('Corpus not Found'));
+            }
+            else{
+                resolve(corpus);
+            }
+        });
+    });
+}
+
+function getUserCorpuses(userid){
+
+    return new Promise(function (resolve, reject) {
+        if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
+
+        CorpusDB.find({user: userid}).exec(function (err, userCorpuses) {
+            if (err) {
+                reject(new Error('Something gone wrong by finding User Corpuses'+err));
+            }
+            else if ((userCorpuses === "undefined")|| ( userCorpuses === null) || (userCorpuses.length === 0)) {
+                reject(new Error('Corpus not Found'));
+            }
+            else{
+                resolve(userCorpuses);
+            }
+        });
+    });
+}
+
+function getAllCorpuses(){
+    return new Promise(function (resolve, reject) {
+
+        CorpusDB.find().exec(function (err, corpus) {
+            if (err) {
+                reject(new Error('Something gone wrong by finding User'+err));
+            }
+            else if ((corpus === "undefined")|| ( corpus === null) || (corpus.length === 0)) {
+                reject(new Error('Corpus not Found'));
+            }
+            else{
+                //CorpusesArray = corpus;
+                resolve(corpus);
+            }
+        });
+    });
+}
+
+function getCorpusArticles(corpusId){
+    return new Promise(function (resolve, reject) {
+        if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
+
+        ArticleDB.find({corpuses: corpusId}).exec(function (err, articles) {
+            if (err) {
+                reject(new Error('Something gone wrong by finding User Corpuses'+err));
+            }
+            else if ((articles === "undefined")|| ( articles === null) || (articles.length === 0)) {
+                reject(new Error('Corpus not Found'));
+            }
+            else{
+                resolve(articles);
+            }
+        });
+    });
+}
+
+function getArticle(id){
+    return new Promise(function (resolve, reject) {
+        if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
+
+        ArticleDB.findOne({_id: id}).exec(function (err, article) {
+            if (err) {
+                reject(new Error('Something gone wrong by finding Article'+err));
+            }
+            else if ((article === "undefined")|| ( article === null) || (article.length === 0)) {
+                reject(new Error('Article not Found'));
+            }
+            else{
+                resolve(article);
+            }
+        });
+    });
+}
+
+function getAllArticle(){
+    return new Promise(function (resolve, reject) {
+        ArticleDB.find().exec(function (err, articles) {
+            if (err) {
+                reject(new Error('Something gone wrong by finding Article'+err));
+            }
+            else if ((articles === "undefined")|| ( articles === null) || (articles.length === 0)) {
+                reject(new Error('Article not Found'));
+            }
+            else{
+                resolve(articles);
+            }
+        });
+    });
+}
+
+function addCorpusObjectToArticle(articleObject){
+    var CorpusObjects =[];
+
+    for (var j=0; j<articleObject.corpuses.length;j++){
+        for (var i=0; i<CorpusesArray.length; i++){
+            if (CorpusesArray[i]._id.id == articleObject.corpuses[j].id){
+                CorpusObjects.push(CorpusesArray[i]);
+                break;
+            }
+        }
+    }
+    articleObject.corpusObject = CorpusObjects;
+
+    return articleObject;
+}
+
+function addUserObjectToArticleCorpus(articleObject){
+    for (var i=0; i<articleObject.corpusObject.length; i++){
+        for (var j=0; j<UsersArray.length; j++){
+
+            if (UsersArray[j]._id.id == articleObject.corpusObject[i].user.id) {
+                articleObject.corpusObject[i].userObject = UsersArray[j];}
+        }
+    }
+    return articleObject;
+}
 
 function isValidMongodbID(id){
     return mongodb.ObjectID.isValid(id);
 }
+
+var miniTest = asyncawait( function(req, res, data){
+    console.log("Bin im MiniTest!");
+    var corpuses = await( getAllCorpuses());
+    await( getAllUsers());
+    //console.log(corpuses);
+    //   res.send(corpuses);
+    console.log(addCorpusObjectToArticle("53a49f01cf5dd21815bbd76a"));
+
+});
 
 function sendTTL(req, res, data){
     res.setHeader("Content-Type", "text/turtle; charset=UTF-8");
@@ -352,6 +547,6 @@ module.exports = function (app) {
         app.get('/api/nif/user/:id', saveUserArticlesAsRDF);
         app.get('/api/nif/user/del/:id', delUserArticlesAsRDF);
 
-
+        app.get('/api/nif/minitest', miniTest);
     }
 }
