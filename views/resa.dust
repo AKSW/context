@@ -1,0 +1,14 @@
+{>"core/layout.dust"/}
+{<menu}
+    {>"menu/mainmenu.dust" /}
+{/menu}
+{<title}
+  conTEXT: Real-time Semantic Analysis (ReSA)
+{/title}
+{<body}
+    <div class="container">
+      Real-time Semantic Analysis
+
+    </div>
+
+{/body}
