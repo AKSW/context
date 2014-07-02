@@ -9,7 +9,7 @@ var baseUri = config.rdfbackend.baseuri;
 var nifcreator = require ("../../modules/nif.js");
 var nifprefix = nifcreator.nifprefix;
 var mongodb = require("mongodb");
-//var async = require('async');
+var async = require('async');
 var asyncawait = require('asyncawait/async');
 var await = require('asyncawait/await');
 var Promise = require('bluebird');
@@ -19,49 +19,22 @@ var UsersArray =[]; // Array of all UserObjects
 
 
 var initialise = asyncawait(function () {
-    CorpusesArray = await(getAllUsers());
-    UsersArray = await(getAllCorpuses());
+    return new Promise(function (resolve, reject) {
+        CorpusesArray = await(getAllCorpuses());
+        UsersArray = await(getAllUsers());
+        resolve (true);
+    });
 });
 
-
-/*function saveAllArticleAsRDF(req, res, next) {
-
-    var requestId = req.params.id;
-    if(!isValidMongodbID(requestId)){
-        res.send("Not a valid ID");
-        return next(new Error('Not a valid MongoDB ID! ID:'+requestId));
-    }
-
-    ArticleDB.find().exec(function (err, articles) {
-        if (err) {
-            return next(err);
-        }
-        //Check if there are any article
-        if (articles.length === 0){
-            res.send("No Article found");
-            return next;
-        }
-
-        var nifString = nifprefix;
-        articles.forEach(function (article) {
-            nifString = nifString + articleProcessor(article);
-        });
-
-        sendTTL(req, res, nifString);
-    });
-
-}*/
 var saveAllArticleAsRDF = asyncawait(function (req, res, next) {
     var requestId = req.params.id;
-    initialise();
+    await(initialise());
     if(!isValidMongodbID(requestId)){
         res.send("Not a valid ID");
         return next(new Error('Not a valid MongoDB ID! ID:'+requestId));
     }
 
-
     var articles = await(getAllArticle());
-
     var nifString = nifprefix;
     articles.forEach(function (article) {
         nifString = nifString + articleProcessor(article);
@@ -71,7 +44,7 @@ var saveAllArticleAsRDF = asyncawait(function (req, res, next) {
 });
 
 
-function saveArticleAsRDF(req, res, next) {
+/*function saveArticleAsRDF(req, res, next) {
     var requestId = req.params.id;
     if(!isValidMongodbID(requestId)){
         res.send("Not a valid ID");
@@ -96,79 +69,66 @@ function saveArticleAsRDF(req, res, next) {
         sendTTL(req, res, nifString);
     });
 
-}
-
-function saveCorpusAsRDF(req, res, next) {
+}*/
+var saveArticleAsRDF = asyncawait(function (req, res, next) {
     var requestId = req.params.id;
     if(!isValidMongodbID(requestId)){
         res.send("Not a valid ID");
         return next(new Error('Not a valid MongoDB ID! ID:'+requestId));
     }
-    CorpusDB.findOne({_id: requestId}).exec(function (err, corpus) {
+    await(initialise());
+    var article = await(getArticle(requestId));
+    //Check if there are any article
+    if ((article === null) || (article == "undefined")){
+        res.send("No Article found");
+        return next;
+    }
 
-        if (err) {
-            return next(new Error('Something gone wrong by finding Courpus!' + err));
-        }
-        else if ( ( corpus=== null) || (corpus.length === 0)){
-            res.send("Corpus not found");
-            return next();
-        }
-        ArticleDB.find({corpuses: corpus._id}).exec(function (err, articles) {
-            if (err) {
-                return next(new Error('Something gone wrong by finding articles'+err));
-            }
-            else if ( ( articles=== null) || (articles.length === 0)){
-                res.send("Article  not found");
-                return next();
-            }
-            var nifString = nifprefix;
-            articles.forEach(function (article) {
-                nifString = nifString + articleProcessor(article);
-            });
+    article = article.toObject();
+    var nifString = nifprefix;
+    nifString = nifString + articleProcessor(article);
+    sendTTL(req, res, nifString);
 
-            sendTTL(req, res, nifString);
+});
 
-        });
-
+var saveCorpusAsRDF= asyncawait(function (req, res, next) {
+    var requestId = req.params.id;
+    if(!isValidMongodbID(requestId)){
+        res.send("Not a valid ID");
+        return next(new Error('Not a valid MongoDB ID! ID:'+requestId));
+    }
+    await(initialise());
+    var articles = await(getCorpus(requestId).then(getCorpusArticles));
+    var nifString = nifprefix;
+    articles.forEach(function (article) {
+        nifString = nifString + articleProcessor(article);
     });
-}
+    sendTTL(req, res, nifString);
+});
 
-function saveUserArticlesAsRDF(req, res, next) {
+var saveUserArticlesAsRDF = asyncawait(function (req, res, next) {
     var requestId = req.params.id;
 
     if(!isValidMongodbID(requestId)){
         res.send("Not a valid ID");
         return next(new Error('Not a valid MongoDB ID! ID:'+requestId));
     }
-    UserDB.findOne({_id: requestId}).exec(function (err, user) {
-        if (err) {
-            return next(new Error('Something gone wrong by finding User'+err));
-        }
-        if ((user === "undefined")|| ( user === null) || (user.length === 0)) {
-            res.send(" User not found");
-            return next();
-        }
-        CorpusDB.find({user: user._id}).exec(function (err, userCorpuses) {
-            if (!userCorpuses || userCorpuses.length === 0 || userCorpuses === null) {
-                res.send(" There are no Corpus for this user");
-                return next();
-            }
-            var article;
-            var nifString = nifprefix;
-            for (var i in userCorpuses) {
-                //get all article for corpus i
-                article = ArticleDB.find({corpuses: userCorpuses[i]._id}).exec(function (err, article) {
-                    //process all articles
-                    for (var j in article) {
-                        nifString = nifString + articleProcessor(article[j]);
-                    }
-                    sendTTL(req, res, nifString);
-                });
-            }
-        });
+    await(initialise());
+    var corpuses = await(getUser(requestId).then(getUserCorpuses));
 
-    });
-}
+    var articles;
+    var nifString = nifprefix;
+
+
+    for (var i=0;i<corpuses.length; i++){
+        articles = await(getCorpusArticles(corpuses[i]));
+        for (var j in articles) {
+            nifString = nifString + articleProcessor(articles[j]);
+        }
+
+    }
+    sendTTL(req, res, nifString);
+});
 
 function articleProcessor(articleobject) {
     if ((articleobject == null)||(articleobject == "undefined")) {
@@ -177,7 +137,7 @@ function articleProcessor(articleobject) {
 
     articleobject = addCorpusObjectToArticle(articleobject);
     articleobject = addUserObjectToArticleCorpus(articleobject);
-    debugger;
+
     var nifarticle;
     nifarticle = nifcreator.articleTonif(articleobject);
 
@@ -224,33 +184,18 @@ function delAllArticleAsRDF(req, res, next) {
     });
 }
 
-function delCorpusAsRDF(req, res, next){
-    //TODO Implement this
+var delCorpusAsRDF = asyncawait(function (req, res, next){
     var requestId = req.params.id;
-    CorpusDB.findOne({_id: requestId}).exec(function (err, corpus) {
 
-        if (err) {
-            return next(new Error('Something gone wrong by finding Courpus!' + err));
-        }
-        else if ( ( corpus=== null) || (corpus.length === 0)){
-            res.send("Corpus not found");
-            return next();
-        }
-        ArticleDB.find({corpuses: corpus._id}).exec(function (err, articles) {
-            if (err) {
-                return next(new Error('Something gone wrong by finding articles'+err));
-            }
-            else if ( ( articles=== null) || (articles.length === 0)){
-                res.send("Article  not found");
-                return next();
-            }
+    if(!isValidMongodbID(requestId)){
+        res.send("Not a valid ID");
+        return next(new Error('Not a valid MongoDB ID! ID:'+requestId));
+    }
+    var articles = await(getCorpusArticles(requestId));
+    delArticles(articles);
 
-            delArticles(articles);
-        });
-
-    });
-
-}
+    res.send("Article  Deleting startet");
+});
 
 function delUserArticlesAsRDF(req, res, next){
     var requestId = req.params.id;
@@ -344,7 +289,7 @@ var getUser =function(id){
     return new Promise(function (resolve, reject) {
         //if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
         UserDB.findOne({_id: id}).exec(function (err, user) {
-            debugger;
+
             if (err) {
                 reject(new Error('Something gone wrong by finding User'+err));
             }
@@ -394,10 +339,14 @@ function getCorpus(id){
     });
 }
 
-function getUserCorpuses(userid){
+function getUserCorpuses(user){
+    var userid;
 
+    if (typeof user == "string") userid = user;
+    else {
+        userid = user._id;
+    }
     return new Promise(function (resolve, reject) {
-        if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
 
         CorpusDB.find({user: userid}).exec(function (err, userCorpuses) {
             if (err) {
@@ -431,9 +380,14 @@ function getAllCorpuses(){
     });
 }
 
-function getCorpusArticles(corpusId){
+function getCorpusArticles(corpus){
+    var corpusId;
+    if (typeof corpus == "string") corpusId = corpus;
+    else {
+        corpusId = corpus._id;
+    }
+
     return new Promise(function (resolve, reject) {
-        if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
 
         ArticleDB.find({corpuses: corpusId}).exec(function (err, articles) {
             if (err) {
@@ -514,15 +468,6 @@ function isValidMongodbID(id){
     return mongodb.ObjectID.isValid(id);
 }
 
-var miniTest = asyncawait( function(req, res, data){
-    console.log("Bin im MiniTest!");
-    var corpuses = await( getAllCorpuses());
-    await( getAllUsers());
-    //console.log(corpuses);
-    //   res.send(corpuses);
-    console.log(addCorpusObjectToArticle("53a49f01cf5dd21815bbd76a"));
-
-});
 
 function sendTTL(req, res, data){
     res.setHeader("Content-Type", "text/turtle; charset=UTF-8");
@@ -547,6 +492,5 @@ module.exports = function (app) {
         app.get('/api/nif/user/:id', saveUserArticlesAsRDF);
         app.get('/api/nif/user/del/:id', delUserArticlesAsRDF);
 
-        app.get('/api/nif/minitest', miniTest);
     }
 }
