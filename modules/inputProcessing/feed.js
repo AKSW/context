@@ -10,7 +10,6 @@ var Promise = require('bluebird');
 var request = require('request');
 // feed parser
 var FeedParser = require('feedparser');
-var S = require("string");
 
 // get limited number of feed entries
 var getFeedEntries = function(corpus, self) {
@@ -44,13 +43,14 @@ var getFeedEntries = function(corpus, self) {
                 var pubDate = item.pubDate;
                 var description = item.description;
                 // convert to html string
-                var body = '<div class="extracted-title">' + title + '</div> ' + description;
+                var body = description;
                 var doc = {
                     corpuses: [corpus._id],
                     uri: link,
                     creation_date: pubDate,
                     source: body,
-                    plaintext: S(body).stripTags().s
+                    title: title,
+                    language: corpus.language,
                 };
                 results.push(doc);
 

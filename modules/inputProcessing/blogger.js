@@ -120,6 +120,7 @@ var entityToDocument = function(entity, url, corpus) {
         uri: entity.link,
         source: entity.content,
         title: entity.title,
+        language: corpus.language,
     };
     return doc;
 };

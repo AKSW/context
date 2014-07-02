@@ -61,6 +61,8 @@ var parsePage = function(body, username) {
             : $post.find('.ProfileTweet-text').html();
         // clean
         entity.content = entity.content.trim();
+        // generate title
+        entity.title = entity.content.slice(0, 30);
 
         // push entity to results
         results.push(entity);
@@ -106,6 +108,8 @@ var getNextPage = async(function(username, lastId, corpus) {
             creation_date: entity.date,
             uri: entity.link,
             source: entity.content,
+            title: entity.title,
+            language: corpus.language,
         };
         results.push(doc);
     }

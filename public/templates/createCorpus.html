@@ -26,11 +26,17 @@
                 <input id="input_count" class="form-control" data-slider-id="input_count" type="text" name="input_count" />
             </div>
             <div class="form-group">
-                <label class="control-label" for="nlp_api">NLP API</label>
-                <select id="nlp_api" name="nlp_api" class="form-control">
-                    <option ng-repeat="item in nlpApis" value="{{ item.id }}">{{ item.name }}</option>
-                </select>
-            </div>
+            <label class="control-label" for="nlp_api">NLP API</label>
+            <select id="nlp_api" name="nlp_api" class="form-control">
+                <option ng-repeat="item in nlpApis" value="{{ item.id }}">{{ item.name }}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="language">Corpus Language</label>
+            <select id="language" name="language" class="form-control">
+                <option ng-repeat="item in corpusLanguages" value="{{ item.id }}">{{ item.name }}</option>
+            </select>
+        </div>
             <div class="form-group" id="c_name_field">
                 <label class="control-label" for="corpus_name">Save as</label>
                 <input type="text" class="form-control" placeholder="Corpus name" id="corpus_name" name="name" ng-minlength="1" required />

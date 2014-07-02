@@ -14,7 +14,8 @@ var corpusSchema = new Schema({
     files: [{
         name: String,
         path: String,
-    }]
+    }],
+    language: String,
 });
 
 // Model

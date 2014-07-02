@@ -42,7 +42,9 @@ var process = async(function(corpus) {
         results.push({
             corpuses: [corpus._id],
             uri: url,
-            source: data
+            source: data,
+            title: file.name,
+            language: corpus.language,
         });
     }
 

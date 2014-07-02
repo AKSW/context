@@ -98,7 +98,8 @@ var process = async(function(corpus) {
             corpuses: [corpus._id],
             uri: entity.link,
             source: entity.content,
-            title: entity.title
+            title: entity.title,
+            language: corpus.language,
         };
         results.push(doc);
     }

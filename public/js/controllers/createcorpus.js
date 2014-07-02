@@ -1,12 +1,13 @@
 var corpusTypes = require('../data/corpusTypes.js');
 var nlpApis = require('../data/nlpApis.js');
+var corpusLanguages = require('../data/corpusLanguages.js');
 
 module.exports = function CreateCorpusController($scope) {
     // collection of corpus types
     $scope.corpusTypes = corpusTypes;
     // collection of nlp apis
     $scope.nlpApis = nlpApis;
-
+    $scope.corpusLanguages = corpusLanguages;
     // current corpus
     $scope.corpusSelection = {index: 0};
     $scope.currentCorpus = $scope.corpusTypes[0];
