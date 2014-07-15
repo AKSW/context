@@ -1,0 +1,22 @@
+<div class="navbar-form navbar-left">
+  <div class="form-group">
+    <input id="keyword" class="form-control" type="text" placeholder="Keyword to monitor" ng-model="keyword">
+    <button id="process_btn" class="btn btn-success" title="Start" ng-click="startAnalysis($event)">
+    <i class="glyphicon glyphicon-play"></i>
+    </button>
+    <button id="reset_btn" class="btn btn-default" title="Reset" ng-click="stopAnalysis($event)">
+    <i class="glyphicon glyphicon-stop"></i>
+    </button>
+  </div>
+</div>
+<div class="container">
+    <br/>
+    (#<b>{{keyword}}</b>) | Number of tweets: <b>{{tweets_number}}</b>
+    <br/>
+    <br/>
+    <div class="content">
+        <ul>
+            <li class="tweet-enter" ng-repeat="tweet in tweets  | orderBy:id:reverse">{{tweet.text}} - {{tweet.date}}</li>
+        </ul>
+    </div>
+</div>
