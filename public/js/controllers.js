@@ -3,4 +3,5 @@ module.exports = function applyControllers (app) {
     app.controller('RegisterController', ['$scope', require('./controllers/register.js')]);
     app.controller('ProfileController', ['$scope', require('./controllers/profile.js')]);
     app.controller('CreateCorpusController', ['$scope', require('./controllers/createcorpus.js')]);
+    app.controller('ResaController', ['$scope','$http', require('./controllers/resa.js')]);
 };

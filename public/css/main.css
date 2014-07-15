@@ -70,3 +70,13 @@ body {
 text.active {
     fill: red;
 }
+
+/* Angular animate */
+.tweet-enter.ng-enter {
+    -webkit-transition:0.5s linear all;
+    transition:0.5s linear all;
+    background-color: yellow;
+}
+.tweet-enter.ng-enter-active {
+    background-color: white;
+}
