@@ -4,9 +4,12 @@
     <button id="process_btn" class="btn btn-success" title="Start" ng-click="startAnalysis($event)">
     <i class="glyphicon glyphicon-play"></i>
     </button>
-    <button id="reset_btn" class="btn btn-default" title="Reset" ng-click="stopAnalysis($event)">
+    <button id="stop_btn" class="btn btn-warning" title="Stop" ng-click="stopAnalysis($event)">
     <i class="glyphicon glyphicon-stop"></i>
     </button>
+      <button id="reset_btn" class="btn btn-default" title="Reset" ng-click="resetView($event)">
+          <i class="glyphicon glyphicon-repeat"></i>
+      </button>
   </div>
 </div>
 <div class="container">
@@ -20,7 +23,7 @@
             </div>
             <div class="col-xs-6 col-md-4">
                 <h4>
-                    Live Twitter Stream
+                    Live Twitter Stream:
                     <span id="hashtag" class="twitter-hashtag"> #{{keyword}}</span> ({{tweets_number}})
                 </h4>
                 <div id="tweets" class="well">

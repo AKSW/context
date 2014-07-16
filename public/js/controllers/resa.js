@@ -31,6 +31,12 @@ module.exports = function ResaController($scope,$http,$sce) {
             $scope.error = error;
         });
     }
+    $scope.resetView = function (e) {
+        // prevent event
+        e.preventDefault();
+        $scope.tweets=[];
+        $scope.tweets_number=0;
+    }
     var getEntityType=function(types){
         if(!types.length){
             return 'Misc';
