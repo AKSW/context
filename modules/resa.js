@@ -99,7 +99,6 @@ var reportAnalysisResult = function(tweet,result) {
     if(result.entities !=undefined){
         _.forEach(result.entities, function(entity){
             entities.push({name:entity.name, uri:entity.uri, types:entity.types,offset:entity.offset});
-            logger.info(entity.uri);
         })
     }
     var output=  {

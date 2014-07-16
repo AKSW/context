@@ -13,7 +13,8 @@
     "lodash": "~2.4.1",
     "stringjs": "~1.8.0",
     "d3": "~3.4.6",
-    "angular-animate": "~1.2.20"
+    "angular-animate": "~1.2.20",
+    "angular-sanitize": "~1.2.20"
   },
   "devDependencies": {}
 }

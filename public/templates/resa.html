@@ -11,12 +11,25 @@
 </div>
 <div class="container">
     <br/>
-    (#<b>{{keyword}}</b>) | Number of tweets: <b>{{tweets_number}}</b>
     <br/>
     <br/>
     <div class="content">
-        <ul>
-            <li class="tweet-enter" ng-repeat="tweet in tweets  | orderBy:id:reverse">{{tweet.text}} - {{tweet.date}}</li>
-        </ul>
+        <div class="row">
+            <div id="main_content" class="col-xs-12 col-md-8">
+
+            </div>
+            <div class="col-xs-6 col-md-4">
+                <h4>
+                    Live Twitter Stream
+                    <span id="hashtag" class="twitter-hashtag"> #{{keyword}}</span> ({{tweets_number}})
+                </h4>
+                <div id="tweets" class="well">
+                   <div class="tweet tweet-enter" ng-repeat="tweet in tweets  | orderBy:id:reverse">
+                       <div class="tweet-date">{{tweet.date}}</div>
+                       <div ng-bind-html="tweet.text"></div>
+                   </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,5 +1,6 @@
+var _ = require('lodash');
 var defaultPort = '8081';
-module.exports = function ResaController($scope,$http) {
+module.exports = function ResaController($scope,$http,$sce) {
     $scope.tweets=[];
     $scope.tweets_number=0;
     // analysis start function
@@ -30,6 +31,30 @@ module.exports = function ResaController($scope,$http) {
             $scope.error = error;
         });
     }
+    var getEntityType=function(types){
+        if(!types.length){
+            return 'Misc';
+        }
+        var tmp,out='';
+        _.forEach(types, function(v) {
+            tmp=v.split(':');
+            if(tmp[1]=='Place' || tmp[1]=='Person' || tmp[1]=='Organisation'){
+                out= tmp[1];
+            }
+        })
+        if(out){
+            return out;
+        }else{
+            return 'Misc';
+        }
+
+    }
+    var prepareTweetText=function(text,entities){
+        _.forEach(entities, function(e) {
+            text = text.replace(e.name, '&nbsp;<span resource="' + e.uri + '" class="r_entity r_' + getEntityType(e.types).toLowerCase() + '" typeOf="' + e.types + '">' + e.name + '</span>&nbsp;');
+        });
+        return text;
+    }
     var initStreamWebsocket = function($scope) {
         var location = document.location.hostname + ':' + defaultPort + document.location.pathname;
         console.log('connecting to socket', location);
@@ -43,7 +68,8 @@ module.exports = function ResaController($scope,$http) {
         socket.onmessage = function (event) {
             var data = JSON.parse(event.data);
             $scope.$apply(function() {
-                console.log(data);
+                //console.log(data);
+                data.text=prepareTweetText(data.text,data.entities);
                 $scope.tweets.push(data);
                 $scope.tweets_number++;
             });
