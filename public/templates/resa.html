@@ -27,7 +27,7 @@
                     <span id="hashtag" class="twitter-hashtag"> #{{keyword}}</span> ({{tweets_number}})
                 </h4>
                 <div id="tweets" class="well">
-                   <div class="tweet tweet-enter" ng-repeat="tweet in tweets  | orderBy:id:reverse">
+                   <div class="tweet tweet-enter animated bounceIn" ng-repeat="tweet in tweets  | orderBy:id:reverse">
                        <div class="tweet-date">{{tweet.date}}</div>
                        <div ng-bind-html="tweet.text"></div>
                    </div>
