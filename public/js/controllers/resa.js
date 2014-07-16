@@ -70,7 +70,7 @@ module.exports = function ResaController($scope,$http,$sce) {
             $scope.$apply(function() {
                 //console.log(data);
                 data.text=prepareTweetText(data.text,data.entities);
-                $scope.tweets.push(data);
+                $scope.tweets.unshift(data);
                 $scope.tweets_number++;
             });
         };
