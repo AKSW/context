@@ -1,8 +1,20 @@
+//change it for using other NLP service
+var default_nlp_api="DBpedia-Spotlight";
 // logger
 var logger = require('../logger');
 // config
 var config = require('../config');
-
+// async-await features
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+// async.js
+var asyncUtil = require('async');
+// filesystem stuff
+var fs = require('fs');
+// string.js
+var S = require('string');
+// lodash
+var _ = require('lodash');
 //twitter API
 var twitter = require('ntwitter');
 var twit = new twitter({
@@ -17,6 +29,8 @@ var stop_streaming=0;
 var WebSocketServer = require('ws').Server;
 var progressService;
 var progressClients = [];
+var annotationServices = {};
+
 //
 // private functions
 //
@@ -80,8 +94,20 @@ var initWebSocket = function() {
 };
 
 
-var reportNewTweet = function(tweet) {
-    //logger.info('reporting new tweet');
+var reportAnalysisResult = function(tweet,result) {
+   var entities=[];
+    if(result.entities !=undefined){
+        _.forEach(result.entities, function(entity){
+            entities.push({name:entity.name, uri:entity.uri, types:entity.types,offset:entity.offset});
+            logger.info(entity.uri);
+        })
+    }
+    var output=  {
+        id: tweet.id,
+        text: tweet.text,
+        date: tweet.created_at,
+        entities:entities
+    }
 
     // get clients
     var clients = progressClients;
@@ -89,14 +115,29 @@ var reportNewTweet = function(tweet) {
     if(clients) {
         // send data to all
         clients.forEach(function(ws) {
-            ws.send(JSON.stringify({
-                id: tweet.id,
-                text: tweet.text,
-                date: tweet.created_at
-            }));
+            ws.send(JSON.stringify(output));
         });
     }
 };
+
+var annotate= function(nlp_api, tweet){
+    if(!annotationServices[nlp_api]) {
+        logger.error('error! annotation service not found!', corpus);
+        return;
+    }
+    // start input processing
+    annotationServices[nlp_api]
+        .process(tweet.text)
+        .then(function(result) {
+            //logger.info(result);
+            reportAnalysisResult(tweet,result);
+        })
+        .catch(function(err) {
+            logger.error('error getting annotation from service', err);
+            return callback(false);
+        });
+
+}
 
 //
 // public functions
@@ -113,7 +154,7 @@ var startAnalysis = function(keyword) {
             if(stop_streaming){
                 stream.destroy();
             }
-            reportNewTweet(tweet);
+            annotate(default_nlp_api, tweet);
             //logger.info(tweet.text);
         });
 
@@ -127,6 +168,11 @@ var stopAnalysis = function() {
 
 // main module object
 var ResaModule = function () {
+    // autoload annotation modules
+    fs.readdirSync(__dirname + '/annotationServices').forEach(function(moduleName){
+        var obj = require('./annotationServices/' + moduleName);
+        annotationServices[obj.name] = obj;
+    });
     this.startAnalysis = startAnalysis;
     this.stopAnalysis = stopAnalysis;
 };

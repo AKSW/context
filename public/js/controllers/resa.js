@@ -43,6 +43,7 @@ module.exports = function ResaController($scope,$http) {
         socket.onmessage = function (event) {
             var data = JSON.parse(event.data);
             $scope.$apply(function() {
+                console.log(data);
                 $scope.tweets.push(data);
                 $scope.tweets_number++;
             });
