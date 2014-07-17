@@ -1,10 +1,10 @@
 <div class="navbar-form navbar-left">
   <div class="form-group">
     <input id="keyword" class="form-control" type="text" placeholder="Keyword to monitor" ng-model="keyword">
-    <button id="process_btn" class="btn btn-success" title="Start" ng-click="startAnalysis($event)">
+    <button ng-show="toggle_start" id="process_btn" class="btn btn-success" title="Start" ng-click="startAnalysis($event)">
     <i class="glyphicon glyphicon-play"></i>
     </button>
-    <button id="stop_btn" class="btn btn-warning" title="Stop" ng-click="stopAnalysis($event)">
+    <button ng-show="toggle_stop" id="stop_btn" class="btn btn-warning" title="Stop" ng-click="stopAnalysis($event)">
     <i class="glyphicon glyphicon-stop"></i>
     </button>
       <button id="reset_btn" class="btn btn-default" title="Reset" ng-click="resetView($event)">
