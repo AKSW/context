@@ -1,5 +1,9 @@
 var _ = require('lodash');
 var defaultPort = '8081';
+//use jqlite instead of jquery
+//$element === angular.element() === jQuery() === $()
+//angular.element.find('.tweet');
+var watchList = [];
 module.exports = function ResaController($scope,$http,$sce) {
     $scope.tweets=[];
     $scope.tweets_number=0;
@@ -34,6 +38,7 @@ module.exports = function ResaController($scope,$http,$sce) {
     $scope.resetView = function (e) {
         // prevent event
         e.preventDefault();
+        watchList = [];
         $scope.tweets=[];
         $scope.tweets_number=0;
     }
@@ -58,8 +63,18 @@ module.exports = function ResaController($scope,$http,$sce) {
     var prepareTweetText=function(text,entities){
         _.forEach(entities, function(e) {
             text = text.replace(e.name, '&nbsp;<span resource="' + e.uri + '" class="r_entity r_' + getEntityType(e.types).toLowerCase() + '" typeOf="' + e.types + '">' + e.name + '</span>&nbsp;');
+            updateWatchlist(e);
         });
         return text;
+    }
+    var updateWatchlist=function(entity){
+        if(entity.name!= $scope.keyword){
+            if(watchList[entity.name]==undefined){
+                watchList[entity.name]={count:1, type:getEntityType(entity.types), uri:entity.uri};
+            }else{
+                watchList[entity.name].count++;
+            }
+        }
     }
     var initStreamWebsocket = function($scope) {
         var location = document.location.hostname + ':' + defaultPort + document.location.pathname;
@@ -78,6 +93,7 @@ module.exports = function ResaController($scope,$http,$sce) {
                 data.text=prepareTweetText(data.text,data.entities);
                 $scope.tweets.unshift(data);
                 $scope.tweets_number++;
+                //console.log(watchList);
             });
         };
         socket.onclose = function () {
