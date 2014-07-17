@@ -7,6 +7,7 @@ var watchList = [];
 module.exports = function ResaController($scope,$http,$sce) {
     $scope.tweets=[];
     $scope.tweets_number=0;
+    $scope.entities_number=0;
     // analysis start function
     $scope.startAnalysis = function (e) {
         // prevent event
@@ -71,6 +72,7 @@ module.exports = function ResaController($scope,$http,$sce) {
         if(entity.name!= $scope.keyword){
             if(watchList[entity.name]==undefined){
                 watchList[entity.name]={count:1, type:getEntityType(entity.types), uri:entity.uri};
+                $scope.entities_number++;
             }else{
                 watchList[entity.name].count++;
             }

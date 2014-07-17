@@ -10,6 +10,7 @@
       <button id="reset_btn" class="btn btn-default" title="Reset" ng-click="resetView($event)">
           <i class="glyphicon glyphicon-repeat"></i>
       </button>
+      &nbsp; <small> Incoming Tweets: <b>{{tweets_number}}</b> | Extracted Entities: <b>{{entities_number}}</b></small>
   </div>
 </div>
 <div class="container">
@@ -19,12 +20,19 @@
     <div class="content">
         <div class="row">
             <div id="main_content" class="col-xs-12 col-md-8">
-
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#bubblecloud" data-toggle="tab">Bubble Cloud</a>
+                    </li>
+                    <li>
+                        <a href="#other" data-toggle="tab">Other Views</a>
+                    </li>
+                </ul>
             </div>
             <div class="col-xs-6 col-md-4">
                 <h4>
                     Live Twitter Stream:
-                    <span id="hashtag" class="twitter-hashtag"> #{{keyword}}</span> ({{tweets_number}})
+                    <span id="hashtag" class="twitter-hashtag"> #{{keyword}}</span>
                 </h4>
                 <div id="tweets" class="well">
                    <div class="tweet tweet-enter animated bounceIn" ng-repeat="tweet in tweets  | orderBy:id:reverse">
