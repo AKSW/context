@@ -1,4 +1,4 @@
-# conTEXT
+# conTEXT: ReSA (Real-time Semantic Analysis)
 
 Based on [Powder.js](https://github.com/yamalight/generator-powder)
 
@@ -15,8 +15,9 @@ Clone & do "npm install"
 
 ### Running
 
-For debugging just run "gulp"  
-For release run "gulp build" to compile js and css and then run "npm start" (or "./bin/context")  
+For debugging just run "gulp" or "gulp | bunyan"
+For release run "gulp build" to compile js and css and then run "npm start" (or "./bin/context")
+Then you need to go to '/resa' to see the real-time twitter analysis
 
 ### Running via Vagrant
 
