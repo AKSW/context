@@ -21,18 +21,16 @@
         <div class="row">
             <div id="main_content" class="col-xs-12 col-md-8">
                 <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a href="#bubblecloud" data-toggle="tab">Bubble Cloud</a>
+                    <li ng-class="{active: currentTab == 'bubblecloud'}">
+                        <a ng-click="showTab('bubblecloud')">Bubble Cloud</a>
                     </li>
-                    <li>
-                        <a href="#other" data-toggle="tab">Other Views</a>
+                    <li ng-class="{active: currentTab == 'other'}">
+                        <a ng-click="showTab('other')">Other Views</a>
                     </li>
                 </ul>
                 <div id="content" class="tab-content">
-                    <div id="bubblecloud" class="tab-pane active">
-
-                    </div>
-                    <div id="other" class="tab-pane"></div>
+                    <div id="bubblecloud" class="tab-pane" ng-class="{active: currentTab == 'bubblecloud'}"></div>
+                    <div id="other" class="tab-pane" ng-class="{active: currentTab == 'other'}"></div>
                 </div>
             </div>
             <div class="col-xs-6 col-md-4">

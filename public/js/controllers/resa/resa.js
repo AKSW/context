@@ -34,7 +34,10 @@ module.exports = function ResaController($scope, $http, $sce) {
             $scope.error = error;
         });
     }
-
+    $scope.currentTab = 'bubblecloud';
+    $scope.showTab=function(tabName){
+        $scope.currentTab = tabName;
+    }
     $scope.stopAnalysis = function (e) {
         // prevent event
         e.preventDefault();
