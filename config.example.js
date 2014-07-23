@@ -34,6 +34,7 @@ exports.sessionDb = {
 exports.rdfbackend ={
     nifexport: true,
     sparqlendpoint: true,
+    sparqlUpdateOperations: false,
     baseuri : "http://127.0.0.1:8080/context"
 }
 // facebook app config

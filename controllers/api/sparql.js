@@ -198,6 +198,7 @@ function htmlform(req, res, next){
 
 function queryHasIllegalStatements(sparqlquery) {
     var illegal = false;
+    if (config.rdfbackendSettings.sparqlUpdateOperations === true) return false;
     var illegalStatemens =["delete", "insert", "load","create","drop","clear"];
     var sparqlquerylowerCase = sparqlquery.toLowerCase();
     illegalStatemens.forEach(function (statement){
@@ -213,6 +214,10 @@ module.exports = function (app) {
         app.get('/api/sparql/', htmlform);
         app.post('/api/sparql/', sparqlQuery);
         app.get('/api/sparql/*', sparqlQuery);
+        app.get('/sparql/', htmlform);
+        app.post('/sparql/', sparqlQuery);
+        app.get('/sparql/*', sparqlQuery);
+
     }
 
 }
