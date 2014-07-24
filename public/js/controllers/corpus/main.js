@@ -35,7 +35,13 @@ var initProgressWebsocket = function($scope) {
         var data = JSON.parse(event.data);
         $scope.$apply(function() {
             $scope.progress.type = data.type;
-            $scope.progress.progress = data.progress;
+            if(data.type=='complete'){
+                //when job is completed update the counters
+                $scope.currentCorpus.articlesCount=data.articlesCount;
+                $scope.currentCorpus.entitiesCount=data.entitiesCount;
+            }else{
+                $scope.progress.progress = data.progress;
+            }
         });
     };
     socket.onclose = function () {

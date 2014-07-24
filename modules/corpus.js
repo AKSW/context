@@ -114,6 +114,37 @@ var reportProgress = function(corpusId, type, progress) {
     }
 };
 
+//report the final result of annotation
+var reportFinal=function(corpus, callback){
+    logger.info('reporting final progress info', corpus.id);
+    Article.find({corpuses: corpus._id}, function(err, articles) {
+        if(err) {
+            return 0;
+        }
+        var articlesCount = articles.length;
+        var entitiesCount = 0;
+
+        // count entities
+        articles.forEach(function(article) {
+            entitiesCount += article.entities.length;
+        });
+        // get clients
+        var clients = progressClients[corpus.id];
+        // if any
+        if(clients) {
+            // send data to all
+            clients.forEach(function(ws) {
+                ws.send(JSON.stringify({
+                    type: 'complete',
+                    articlesCount: articlesCount,
+                    entitiesCount:entitiesCount
+                }));
+            });
+        }
+        callback(corpus);
+    });
+}
+
 //
 // Annotation logic
 //
@@ -187,7 +218,7 @@ var annotateCorpus = function(corpus) {
                 }
             });
             // close websocket server
-            closeWebSocket(corpus);
+            reportFinal(corpus, closeWebSocket);
         });
     });
 };
