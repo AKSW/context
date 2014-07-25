@@ -59,6 +59,7 @@ function sparqlQuery(req, res, next){
             //Query database
             store.execute(sparqlquery, graphNamesArray, defaultgraph, function (success, results) {
                 if (!success) {
+                    res.statusCode =400;
                     res.send("Error: "+results);
                     return ;
                 }
