@@ -142,7 +142,7 @@ function articleProcessor(articleobject) {
     nifarticle = nifcreator.articleTonif(articleobject);
 
     if ((nifarticle) && (nifarticle != "undefined")){
-        save2rdfstore(nifarticle, articleobject._id);
+        if(config.rdfbackend.nifsave === true )save2rdfstore(nifarticle, articleobject._id);
         return nifarticle;
     }
     else {
