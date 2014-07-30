@@ -104,7 +104,7 @@ var buildResponseBindings = function(mediaTypes, bindings, res) {
         for(var p in varNames) {
             head['variables'].push({'name':p});
         }
-        res.writeHead(200,{"Content-Type":"application/json; charset=UTF-8"});
+        res.writeHead(200,{"Content-Type":"application/sparql-results+json; charset=UTF-8"});
 
         res.end(new Buffer(JSON.stringify({'head':head,'results':bindings},null, '\t')), 'utf-8');
     } else {
