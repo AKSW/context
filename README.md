@@ -31,3 +31,7 @@ Assuming you have [vagrant](http://www.vagrantup.com/) installed, you can run co
 ### Testing
 
 Run "npm test"  
+
+### License
+
+MIT
