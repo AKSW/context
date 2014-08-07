@@ -2,6 +2,7 @@
   "name": "conTEXT",
   "version": "1.0.0",
   "description": "conTEXT - Lightweight Text Analytics using Linked Data",
+  "license" : "MIT",
   "contributors": [
     {
       "name": "Tim Ermilov",
