@@ -18,6 +18,10 @@ var CorpusesArray= []; //Array of all CorpusObjects
 var UsersArray =[]; // Array of all UserObjects
 
 
+/**
+ * Initialising by getting all Corpuses and Users from Database
+ *
+ */
 var initialise = asyncawait(function () {
     return new Promise(function (resolve, reject) {
         CorpusesArray = await(getAllCorpuses());
@@ -26,6 +30,10 @@ var initialise = asyncawait(function () {
     });
 });
 
+/**
+ * Saves all articles as NIF Document saves it to Triplesotre and sends it to user
+ *
+ */
 var saveAllArticleAsRDF = asyncawait(function (req, res, next) {
     var requestId = req.params.id;
     await(initialise());
@@ -44,32 +52,11 @@ var saveAllArticleAsRDF = asyncawait(function (req, res, next) {
 });
 
 
-/*function saveArticleAsRDF(req, res, next) {
-    var requestId = req.params.id;
-    if(!isValidMongodbID(requestId)){
-        res.send("Not a valid ID");
-        return next(new Error('Not a valid MongoDB ID! ID:'+requestId));
-    }
-
-    ArticleDB.findOne({_id: req.params.id}).exec(function (err, article) {
-        if (err) {
-            return next(err);
-        }
-
-        //Check if there are any article
-        if ((article === null) || (article == "undefined")){
-            res.send("No Article found");
-            return next;
-        }
-
-        article = article.toObject();
-
-        var nifString = nifprefix;
-        nifString = nifString + articleProcessor(article);
-        sendTTL(req, res, nifString);
-    });
-
-}*/
+/**
+ * Receiving  Article  from MongoDB for a given articles._id
+ * creates a nif file and saves it to triplestore and sends it to client
+ *
+ */
 var saveArticleAsRDF = asyncawait(function (req, res, next) {
     var requestId = req.params.id;
     if(!isValidMongodbID(requestId)){
@@ -91,6 +78,11 @@ var saveArticleAsRDF = asyncawait(function (req, res, next) {
 
 });
 
+/**
+ * Receiving all Articles  from MongoDB for a given corpuses._id
+ * creates a nif file and saves it to triplestore and sends it to client
+ *
+ */
 var saveCorpusAsRDF= asyncawait(function (req, res, next) {
     var requestId = req.params.id;
     if(!isValidMongodbID(requestId)){
@@ -106,6 +98,11 @@ var saveCorpusAsRDF= asyncawait(function (req, res, next) {
     sendTTL(req, res, nifString);
 });
 
+/**
+ * Receiving all Articles and Corpus Object from MongoDB for a given user._id
+ * creates a nif file and saves it to triplestore and sends it to client
+  *
+ */
 var saveUserArticlesAsRDF = asyncawait(function (req, res, next) {
     var requestId = req.params.id;
 
@@ -130,6 +127,11 @@ var saveUserArticlesAsRDF = asyncawait(function (req, res, next) {
     sendTTL(req, res, nifString);
 });
 
+/**
+ * Creating NIF Document from the given article Object and save it to triplestore
+ * @param {Object}articleobject article Object which is received from MongoDB
+ *
+ */
 function articleProcessor(articleobject) {
     if ((articleobject == null)||(articleobject == "undefined")) {
         return false;
@@ -150,7 +152,12 @@ function articleProcessor(articleobject) {
     }
 }
 
-
+/**
+ * Saves the TurtleString to Triplestore Database
+ * @param {String}ttlString MUST be a valid Turtledocument
+ * @param {String}articleID article ID from articles._id for the current article which is going to be saved. Is used to create a named node to save the article
+ *
+ */
 function save2rdfstore(ttlString, articleID) {
     rdfstore.create(config.rdfbackendSettings, function (store) {
         var graphuri = baseUri + "/article/" + articleID;
@@ -174,7 +181,10 @@ function save2rdfstore(ttlString, articleID) {
     });
 }
 
-//Creates a new instance of rdfstore with option overwrite = true. Which drops the whole Collection
+/**
+ * Deletes all triples from triplestore by creating a new instance of rdfstore with option overwrite = true. Which drops the whole Collection
+ *
+ */
 function delAllArticleAsRDF(req, res, next) {
 
     var overwriteconf = config.rdfbackendSettings;
@@ -184,6 +194,10 @@ function delAllArticleAsRDF(req, res, next) {
     });
 }
 
+/**
+ * Deletes all triples for a given corpus from Triplestore
+ * @param req req.params.id should contain the ObjectID of user which article triples should be deleted
+ */
 var delCorpusAsRDF = asyncawait(function (req, res, next){
     var requestId = req.params.id;
 
@@ -197,6 +211,10 @@ var delCorpusAsRDF = asyncawait(function (req, res, next){
     res.send("Article  Deleting startet");
 });
 
+/**
+ * Deletes all triples for a given User from Triplestore
+ * @param req req.params.id should contain the ObjectID of user which article triples should be deleted
+ */
 function delUserArticlesAsRDF(req, res, next){
     var requestId = req.params.id;
 
@@ -232,6 +250,10 @@ function delUserArticlesAsRDF(req, res, next){
     res.send("Deleteprocess startet");
 
 }
+/**
+ * Deletes all triples for one Article from Triplestore
+ * @param req req.params.id should contain the ObjectID of Article which triples should be deleted
+ */
 
 function delArticle(req, res, next) {
     var requestId = req.params.id;
@@ -260,6 +282,11 @@ function delArticle(req, res, next) {
     });
 }
 
+
+/**
+ * Deletes triples for Multiple Articles
+ * @param {Object[]} articleArray Array of Article Objects from MongoDB. The ID should be in form array.indexNumber._id
+ */
 function delArticles(articleArray) {
 
     var graphuri = baseUri + "/article/";
@@ -284,6 +311,10 @@ function delArticles(articleArray) {
     });
 }
 
+/**
+ * Gets user Object for a given userId
+ * @param {String}id should contain the ObjectID of user from users._id
+ */
 var getUser =function(id){
 
     return new Promise(function (resolve, reject) {
@@ -303,6 +334,9 @@ var getUser =function(id){
     });
 }
 
+/**
+ * Gets user Object for all registered Users
+ */
 var getAllUsers =function(){
     return new Promise(function (resolve, reject) {
         UserDB.find().exec(function (err, users) {
@@ -320,6 +354,10 @@ var getAllUsers =function(){
     });
 }
 
+/**
+ * Gets corpus Object for a given corpusID
+ * @param {String}id should contain the ObjectID of corpus from corpuses._id
+ */
 function getCorpus(id){
 
     return new Promise(function (resolve, reject) {
@@ -339,6 +377,10 @@ function getCorpus(id){
     });
 }
 
+/**
+ * Gets all corpus Objects for a given userID
+ * @param {String / Object}user should be a ObjectID of a user from users._id or a user Object which contains user ObjectID in user._id
+ */
 function getUserCorpuses(user){
     var userid;
 
@@ -362,6 +404,9 @@ function getUserCorpuses(user){
     });
 }
 
+/**
+ * Gets corpus Object for all Corpuses
+ */
 function getAllCorpuses(){
     return new Promise(function (resolve, reject) {
 
@@ -373,13 +418,16 @@ function getAllCorpuses(){
                 reject(new Error('Corpus not Found'));
             }
             else{
-                //CorpusesArray = corpus;
                 resolve(corpus);
             }
         });
     });
 }
 
+/**
+ * Gets all Article Object for a given Corpus
+ * @param {String / Object} corpus should be a ObjectID of a corpus from corpuses._id or a corpus Object which contains corpus ObjectID in corpus._id
+ */
 function getCorpusArticles(corpus){
     var corpusId;
     if (typeof corpus == "string") corpusId = corpus;
@@ -403,6 +451,10 @@ function getCorpusArticles(corpus){
     });
 }
 
+/**
+ * Gets Article for a given ArticleID
+ * @param {String} id should contain the ObjectID of article from articles._id
+ */
 function getArticle(id){
     return new Promise(function (resolve, reject) {
         if(!isValidMongodbID(id)) reject(new Error('invalid MongoDB ID: '+id));
@@ -421,6 +473,9 @@ function getArticle(id){
     });
 }
 
+/**
+ * Get all Articles from Database
+ */
 function getAllArticle(){
     return new Promise(function (resolve, reject) {
         ArticleDB.find().exec(function (err, articles) {
@@ -437,6 +492,10 @@ function getAllArticle(){
     });
 }
 
+/**
+ * Adds the data from corpus Object which is saved in a global variable
+ * @param {Object}articleObject Article Object received from articles collection
+ */
 function addCorpusObjectToArticle(articleObject){
     var CorpusObjects =[];
 
@@ -453,6 +512,10 @@ function addCorpusObjectToArticle(articleObject){
     return articleObject;
 }
 
+/**
+ * Adds the data from user Object which is saved in a global variable
+ * @param {Object}articleObject Article Object received from articles collection
+ */
 function addUserObjectToArticleCorpus(articleObject){
     for (var i=0; i<articleObject.corpusObject.length; i++){
         for (var j=0; j<UsersArray.length; j++){
@@ -464,18 +527,28 @@ function addUserObjectToArticleCorpus(articleObject){
     return articleObject;
 }
 
+/**
+ * Check if a valid MongoDB ObjectID
+ * @param {String}id String to check if it is a MongoDBID
+ * @returns {boolean} true if it is a Valid MongoDB ID
+ */
 function isValidMongodbID(id){
     return mongodb.ObjectID.isValid(id);
 }
 
-
+/**
+ * Send the created TTL File to Client
+ * @param {String}data String which contains the NIF Document
+ */
 function sendTTL(req, res, data){
     res.setHeader("Content-Type", "text/turtle; charset=UTF-8");
-    res.setHeader("Content-Transfer-Encoding: binary"); // to preserve linebreaks (\n instead of \r\n)
-    if ((req.params.id == null) || (req.params.id ==="undefined")) req.params.id = "context";
+    res.setHeader("Content-Transfer-Encoding: binary"); // Need to send as Binary to preserve linebreaks (\n instead of \r\n)
+    if ((req.params.id == null) || (req.params.id ==="undefined")) req.params.id = "context"; //if there is no request _id (saveall call) rename output filename to context
     res.attachment(req.params.id+'.ttl'); //Sets the Content-Disposition header field to requestId.ttl
     res.send(data);
 }
+
+//Defined Paths
 module.exports = function (app) {
 
     if (config.rdfbackend.nifexport) { //check if NIF Export is enabled
