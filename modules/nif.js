@@ -5,13 +5,13 @@ var baseUri = config.rdfbackend.baseuri;
 var S = require('string');
 var input;
 var k=0;
-/*
+
+/**
+ * Initialising by getting all Corpuses and Users from Database
+ *     @param {Object}articleObject = an Article Object from the database from the articles collection + maybe annotated with corpuses and users entrys
  *
- * @param articleObject = an Article Object from the database with articleSchema
- *
- * return (String) an nif file
- * */
-function article2nif(articleObject) {
+ *     return (String) a nif Document
+ */ function article2nif(articleObject) {
 
     if ((!articleObject)||(articleObject=="undefined")) {
         return false;
@@ -26,11 +26,12 @@ function article2nif(articleObject) {
 
     var output = "";
 
-    //TODO Refactor this code its shitty
+    // Convert NifContext array to String
     for (var i in context) {
         output = output + context[i] + "\n";
     }
 
+    // Convert nifentity array to String
     for (var j in nifentity) {
 
         for (var k in nifentity[j]) {
@@ -39,10 +40,7 @@ function article2nif(articleObject) {
         }
 
     }
-    //TODO maybe check if it has a correct turtle Synthax
-    /*var turtleParser = new rdf.TurtleParser();
-     turtleParser.parse(nifprefix() + output);
-     var nifstring = turtleParser.graph;*/
+    //return NIF Document
     return output;
 }
 
@@ -106,6 +104,7 @@ function nifEntities(entity, articleObject) {
 
     var plaintext = title+ '. ' + source;  //Titles are added to source Code before sending to NLP Service. TO be sure that the bein/end calculation works properly
     var utfFormNfcPlaintext = unorm.nfc(plaintext);  //converting to UFT8 NFC to be comptabile with NIF
+    debugger;
     var beginindex = utfFormNfcPlaintext.indexOf(unormform,parseInt(entity.offset, 10)-10)+1 ;   //The Offset is not equal to NIF calculation rules so we are recalculating the index. Beginning 5 characters before to not mis the entry
     var endindex = beginindex + unormform.length ;
 
@@ -134,7 +133,7 @@ function getTaClassRef(entity){
     var output ="";
     for (var i=0; i<entity.types.length; i++){
         output +=getTaClassRefType(entity.types[i]);
-        if (i != entity.types.length -1) output +="\n"; //dont add linebreak to the last element
+        if (i < entity.types.length -1) output +="\n"; //dont add linebreak to the last element
     }
     return output;
 
