@@ -1,0 +1,93 @@
+{
+  "name": "conTEXT",
+  "version": "1.0.0",
+  "description": "conTEXT - Lightweight Text Analytics using Linked Data",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Tim Ermilov",
+      "email": "yamalight@gmail.com"
+    },
+    {
+      "name": "Ali Khalili",
+      "email": "hyperir@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AKSW/context.git"
+  },
+  "keywords": [
+    "text",
+    "analytics",
+    "linked data",
+    "nlp"
+  ],
+  "scripts": {
+    "start": "./bin/context",
+    "test": "./node_modules/.bin/gulp test"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "asyncawait": "^0.7.2",
+    "bluebird": "^2.3.2",
+    "body-parser": "^1.0.2",
+    "bunyan": "^1.0.1",
+    "captchapng": "0.0.1",
+    "cheerio": "^0.17.0",
+    "colors": "^0.6.2",
+    "connect": "^3.1.1",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^0.4.0",
+    "consolidate": "^0.10.0",
+    "cookie-parser": "^1.0.1",
+    "csurf": "^1.1.0",
+    "dustjs-helpers": "^1.2.0",
+    "dustjs-linkedin": "^2.2.8",
+    "express": "^4.0.0",
+    "express-session": "^1.0.3",
+    "feedparser": "^0.19.1",
+    "helmet": "^0.4.1",
+    "lodash": "^2.4.1",
+    "method-override": "^2.1.3",
+    "moment": "^2.5.1",
+    "mongoose": "^3.8.8",
+    "multiparty": "^3.2.4",
+    "optimist": "^0.6.1",
+    "passport": "^0.2.0",
+    "passport-facebook": "^1.0.2",
+    "passport-google": "^0.3.0",
+    "passport-linkedin": "^0.1.3",
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.2",
+    "portfinder": "^0.2.1",
+    "request": "^2.34.0",
+    "string": "^1.8.1",
+    "ws": "^0.4.31"
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "devDependencies": {
+    "browserify": "^5.10.1",
+    "gulp": "^3.6.0",
+    "gulp-bower": "0.0.6",
+    "gulp-concat": "^2.2.0",
+    "gulp-exit": "0.0.2",
+    "gulp-if": "^1.0.0",
+    "gulp-jscs": "^1.1.0",
+    "gulp-jshint": "^1.5.3",
+    "gulp-minify-css": "^0.3.1",
+    "gulp-mocha": "^1.0.0",
+    "gulp-nodemon": "^1.0.2",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^0.3.2",
+    "gulp-watch": "^0.6.9",
+    "jshint-stylish": "^0.4.0",
+    "main-bower-files": "^2.0.0",
+    "should": "^4.0.4",
+    "uglifyify": "^2.5.0",
+    "vinyl-source-stream": "^0.1.1",
+    "zombie": "^2.0.0-alpha31"
+  }
+}
