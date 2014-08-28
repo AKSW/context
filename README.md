@@ -7,11 +7,12 @@ Based on [Powder.js](https://github.com/yamalight/generator-powder)
 Latest Node.js + NPM  
 Latest MongoDB  
 Bower (get by running "npm install -g bower")  
-Gulp (if you want to run "gulp" from CLI, not from npm)  
+Gulp (get by running "npm install -g gulp")  
 
 ### Installing
 
 Clone & do "npm install"  
+Change config.js to your needs  
 
 ### Running
 
