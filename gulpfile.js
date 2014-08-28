@@ -8,11 +8,11 @@ var gulp = require('./gulp')([
     'config',
     'jshint',
     'mocha',
-    'inject',
-    'cdn',
+    'jscs',
+    'vendor',
 ]);
 
 gulp.task('init', ['bower', 'bootstrap', 'config']);
-gulp.task('build', ['browserify', 'inject', 'minifycss', 'cdn']);
-gulp.task('test', ['jshint', 'mocha']);
+gulp.task('build', ['browserify', 'vendor', 'minifycss']);
+gulp.task('test', ['jshint', 'mocha', 'jscs']);
 gulp.task('default', ['build', 'watch', 'serve']);

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "jquery": "~2.1.0",
-    "bootstrap": "~3.1.1",
+    "bootstrap": "~3.2.0",
     "seiyria-bootstrap-slider": "~1.9.5",
     "angular": "~1.2.16",
     "angular-route": "~1.2.16",

@@ -9,5 +9,5 @@ module.exports = {
             .pipe(rename('config.js'))
             .pipe(gulp.dest('./'))
             .pipe(exit());
-    }
+    },
 };

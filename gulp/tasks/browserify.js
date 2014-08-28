@@ -1,20 +1,16 @@
 var gulp = require('gulp');
-var browserify = require('gulp-browserify');
-var livereload = require('gulp-livereload');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var gulpif = require('gulp-if');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 
 module.exports = function() {
-    var config = require('../../config');
+    var bundler = browserify().add('./public/js/app.js');
 
-    return gulp.src('./public/js/app.js')
-        .pipe(browserify({
-            debug: config.debug,
-            ignore: 'app.min.js',
-        }))
-        .pipe(gulpif(!config.debug, uglify({mangle: false})))
-        .pipe(rename('app.min.js'))
-        .pipe(gulp.dest('./public/dist/'))
-        .pipe(livereload());
+    // uglifify
+    bundler.transform({mangle: false}, 'uglifyify');
+
+    return bundler.bundle()
+        // Pass desired output filename to vinyl-source-stream
+        .pipe(source('app.min.js'))
+        // Start piping stream to tasks!
+        .pipe(gulp.dest('./public/dist/'));
 };

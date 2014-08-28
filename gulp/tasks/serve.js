@@ -1,13 +1,15 @@
 var nodemon = require('gulp-nodemon');
 
-module.exports = function(){
-    var config = require('../../config');
-    var logger = require('../../logger');
+module.exports = {
+    deps: ['build'],
+    work: function() {
+        var config = require('../../config');
+        var logger = require('../../logger');
 
-    // start nodemon
-    return nodemon({
+        // start nodemon
+        return nodemon({
             script: './app.js',
-            verbose: true
+            verbose: true,
         })
         // listen for events
         .on('start', function () {
@@ -20,4 +22,5 @@ module.exports = function(){
         .on('restart', function (files) {
             logger.info('App restarted due to: ', files);
         });
+    },
 };
