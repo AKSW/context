@@ -21,7 +21,7 @@ var registerNewUser = function(profile, done) {
 
     // register
     User.registerNewUser(user, function(err, userData) {
-        if(err) {
+        if (err) {
             return done(err);
         }
 
@@ -32,7 +32,7 @@ var registerNewUser = function(profile, done) {
 // make passport policy
 var TwitterStrategy = passportTwitter.Strategy;
 passport.use(new TwitterStrategy(config.twitter,
-    function (token, tokenSecret, profile, done) {
+    function(token, tokenSecret, profile, done) {
         var username = profile.username;
         var twId = profile.id;
         var query = {

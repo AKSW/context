@@ -33,7 +33,7 @@ var getFeedEntries = function(corpus, self) {
         })
         .on('readable', function() {
             var stream = this;
-            var meta = this.meta;
+            // var meta = this.meta;
             var item = stream.read();
 
             while (item && index < limit) {
@@ -63,7 +63,7 @@ var getFeedEntries = function(corpus, self) {
             self.reportProgress(index / limit, corpus._id);
 
             // resolve if done
-            if(index >= limit) {
+            if (index >= limit) {
                 return resolve(results);
             }
         })

@@ -1,16 +1,17 @@
+var unauthNotAllowedRoutes = ['/hub'];
+
 module.exports = function(app) {
     // check for auth in every request
-    app.all('*', function(req,res,next) {
-        var unauthNotAllowedRoutes = ['/hub'],
-            url = req.url.split('?')[0];
+    app.all('*', function(req, res, next) {
+        var url = req.url.split('?')[0];
 
         // if route is allowed w/o reg
-        if(unauthNotAllowedRoutes.indexOf(url) === -1) {
+        if (unauthNotAllowedRoutes.indexOf(url) === -1) {
             return next();
         }
 
         // if authed - continue
-        if(req.user) {
+        if (req.user) {
             return next();
         } else {
             return res.redirect('/');

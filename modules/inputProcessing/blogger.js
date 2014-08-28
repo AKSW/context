@@ -34,8 +34,8 @@ var parsePage = function(body) {
         var $publishDate = $('.publishdate', $(post));
         var $entryContent = $('.entry-content', $(post));
         var $postBody = $('.post-body', $(post));
-        var $moreLink = $entryContent.find('.more-link');
-        var $postSummary = $('.postSummary', $(post));
+        // var $moreLink = $entryContent.find('.more-link');
+        // var $postSummary = $('.postSummary', $(post));
         var $noResults = $(post).hasClass('no-results') ||
                          $(post).hasClass('not-found') ||
                          $(post).hasClass('error404');
@@ -85,7 +85,7 @@ var getNextPage = async(function(url, date) {
     // form url
     var pageUrl = url + '/search?max-results=20';
     // append date if needed
-    if(date) {
+    if (date) {
         pageUrl += '&updated-max=' + date;
     }
 
@@ -95,7 +95,7 @@ var getNextPage = async(function(url, date) {
 
     // parse
     var res = parsePage(body);
-    if(!res) {
+    if (!res) {
         logger.error('error loading blogger page');
         throw new Error('Error loadin blogger page!');
     }
@@ -106,12 +106,12 @@ var getNextPage = async(function(url, date) {
 // convert entity to doc
 var entityToDocument = function(entity, url, corpus) {
     // if no link is given, generate a new unique one
-    if(entity.link === 'no-link') {
+    if (entity.link === 'no-link') {
         // hash input
         var md5sum = crypto.createHash('md5');
         md5sum.update(entity.content + Date.now().toString());
         // generate unique url for piece
-        entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
+        entity.link = url + 'generated_uri/' + md5sum.digest('hex') + '/' + Date.now();
     }
     var doc = {
         corpuses: [corpus._id],
@@ -134,17 +134,17 @@ var process = async(function(corpus) {
     var results = [];
 
     // process pages while there are less results than needed
-    while(results.length < limit) {
+    while (results.length < limit) {
         // get last item date
-        var lastDate = results.length > 0 ? results[results.length-1].dateString : null;
+        var lastDate = results.length > 0 ? results[results.length - 1].dateString : null;
 
         // get next page
         var res = await(getNextPage(url, lastDate));
 
         // get count
         var count = res.length;
-        var i, doc;
-        for(i = 0; i < count; i++){
+        var doc;
+        for (var i = 0; i < count; i++) {
             doc = entityToDocument(res[i], url, corpus);
             results.push(doc);
         }

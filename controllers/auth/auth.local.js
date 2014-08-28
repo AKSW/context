@@ -12,8 +12,10 @@ var crypto = require('crypto');
 // make passport policy
 var LocalStrategy = passportLocal.Strategy;
 passport.use(new LocalStrategy(
-    function (username, password, done) {
-        User.findOne({username: username}, function(err, user) {
+    function(username, password, done) {
+        User.findOne({
+            username: username
+        }, function(err, user) {
             if (err) {
                 return done(err);
             }
@@ -39,16 +41,16 @@ passport.use(new LocalStrategy(
 module.exports = function(app) {
 
     // export index
-    app.post('/auth/register', function(req, res, next){
+    app.post('/auth/register', function(req, res, next) {
         // check password for match
-        if(req.body.password_new !== req.body.password_repeat) {
+        if (req.body.password_new !== req.body.password_repeat) {
             req.flash('error', 'Passwords do not match!');
             req.flash('oldData', req.body);
             return res.redirect('/register');
         }
 
         // check captcha
-        if(parseInt(req.body.captcha) !== req.session.captcha) {
+        if (parseInt(req.body.captcha) !== req.session.captcha) {
             req.flash('error', 'Wrong captcha input!');
             req.flash('oldData', req.body);
             return res.redirect('/register');
@@ -69,19 +71,21 @@ module.exports = function(app) {
         };
 
         // check if user exists
-        User.findOne({username: newUser.username}, function(err, user) {
+        User.findOne({
+            username: newUser.username
+        }, function(err, user) {
             if (err) {
                 return next(err);
             }
 
-            if(user){
+            if (user) {
                 req.flash('error', 'User already exists!');
                 req.flash('oldData', req.body);
                 return res.redirect('/register');
             } else {
                 // create new user
                 var userModel = new User(newUser);
-                userModel.save(function(err){
+                userModel.save(function(err) {
                     if (err) {
                         return next(err);
                     } else {
@@ -93,7 +97,7 @@ module.exports = function(app) {
         });
     });
 
-    app.post('/auth/login', function(req, res, next){
+    app.post('/auth/login', function(req, res, next) {
         passport.authenticate('local', function(err, user) {
             if (err) {
                 return next(err);

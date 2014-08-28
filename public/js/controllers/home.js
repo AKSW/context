@@ -4,7 +4,7 @@ module.exports = function HomeController($scope) {
     // on corpus select event
     $scope.corpusSelect = function() {
         // do not do anything if it's dummy entry
-        if($scope.corpus === '0') {
+        if ($scope.corpus === '0') {
             return;
         }
         // redirect to corpus

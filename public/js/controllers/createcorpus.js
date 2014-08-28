@@ -8,16 +8,19 @@ module.exports = function CreateCorpusController($scope) {
     $scope.nlpApis = nlpApis;
 
     // current corpus
-    $scope.corpusSelection = {index: 0};
+    $scope.corpusSelection = {
+        index: 0
+    };
     $scope.currentCorpus = $scope.corpusTypes[0];
 
     // input slider reference
-    var $inputCount, $sliderContainer;
+    var $inputCount;
+    var $sliderContainer;
     // update view slider
     var updateView = function() {
         $scope.currentCorpus = $scope.corpusTypes[$scope.corpusSelection.index];
-        if($scope.currentCorpus.haveItems) {
-            if(!$inputCount) {
+        if ($scope.currentCorpus.haveItems) {
+            if (!$inputCount) {
                 $sliderContainer = $('#slider_container');
                 $inputCount = $('#input_count');
             } else {
@@ -43,7 +46,7 @@ module.exports = function CreateCorpusController($scope) {
     $scope.$on('$viewContentLoaded', updateView);
 
     // analysis start function
-    $scope.startAnalysis = function (e) {
+    $scope.startAnalysis = function(e) {
         // prevent event
         e.preventDefault();
         // get fields
@@ -61,7 +64,7 @@ module.exports = function CreateCorpusController($scope) {
         var input = null;
         var corpusType = $scope.currentCorpus.name;
         var inputType = $scope.currentCorpus.inputType;
-        switch(inputType) {
+        switch (inputType) {
             case 'text':
                 input = $inputItem.val().trim();
                 break;
@@ -79,14 +82,15 @@ module.exports = function CreateCorpusController($scope) {
         }
 
         // append csrf token to form url
-        $newCorpusForm.attr('action', '/api/corpus?_csrf=' + encodeURIComponent($scope.csrf));
+        $newCorpusForm.attr('action', '/api/corpus?_csrf=' + encodeURIComponent(
+            $scope.csrf));
 
         // assign count to input field
         var itemCount = $inputCount.slider('getValue');
         $inputCountField.val(itemCount);
 
         // remove unneeded inputs & rename last one
-        switch(inputType) {
+        switch (inputType) {
             case 'text':
                 $inputItem.attr('name', 'input');
                 $inputItemArea.remove();

@@ -21,7 +21,7 @@ var registerNewUser = function(profile, done) {
 
     // register
     User.registerNewUser(user, function(err, userData) {
-        if(err) {
+        if (err) {
             return done(err);
         }
 
@@ -32,7 +32,7 @@ var registerNewUser = function(profile, done) {
 // make passport policy
 var LinkedinStrategy = passportLinkedin.Strategy;
 passport.use(new LinkedinStrategy(config.linkedin,
-    function (token, tokenSecret, profile, done) {
+    function(token, tokenSecret, profile, done) {
         var username = profile.displayName;
         var lnId = profile.id;
         var query = {

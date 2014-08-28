@@ -5,9 +5,11 @@ var logger = require('../../logger');
 module.exports = function(app) {
     // export index
     app.get('/', function(req, res, next) {
-        if(req.user) {
-            Corpus.find({user: req.user._id}, function(err, corpuses) {
-                if(err) {
+        if (req.user) {
+            Corpus.find({
+                user: req.user._id
+            }, function(err, corpuses) {
+                if (err) {
                     logger.error('error getting user corpuses', err);
                     return next(err);
                 }
@@ -31,7 +33,10 @@ module.exports = function(app) {
 
     // export profile
     app.get('/profile', function(req, res) {
-        return res.render('profile', {error: req.flash('error'), success: req.flash('success')});
+        return res.render('profile', {
+            error: req.flash('error'),
+            success: req.flash('success')
+        });
     });
 
     // export createCorpus

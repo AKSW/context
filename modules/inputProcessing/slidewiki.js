@@ -11,7 +11,7 @@ var request = Promise.promisify(require('request'));
 // dom stuff
 var cheerio = require('cheerio');
 // crypto
-var crypto = require('crypto');
+// var crypto = require('crypto');
 
 // subpage parser
 var parseSubPage = async(function(url) {
@@ -48,7 +48,8 @@ var parsePage = async(function(body, self, limit, corpus) {
         // init entity
         var entity = {};
         // get link
-        entity.link = 'http://slidewiki.org/' + $post.find('a').attr('href');
+        entity.link = 'http://slidewiki.org/' + $post.find('a').attr(
+            'href');
         // process subpage
         var data = await(parseSubPage(entity.link));
         // set data
@@ -82,7 +83,7 @@ var process = async(function(corpus) {
 
     // parse
     var res = await(parsePage(body, self, limit, corpus));
-    if(!res) {
+    if (!res) {
         throw new Error('Slidewiki returned no data!');
     }
     // get count
@@ -91,7 +92,7 @@ var process = async(function(corpus) {
     // save posts to db
     var i = 0;
     var entity;
-    for(i = 0; i < count; i++){
+    for (i = 0; i < count; i++) {
         entity = res[i];
         // convert to html string
         var doc = {
@@ -107,7 +108,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var SlidewikiProcessing = function () {
+var SlidewikiProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)

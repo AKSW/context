@@ -4,7 +4,7 @@
 
     "excludeFiles": [],
 
-    "maximumLineLength": 120,
+    "maximumLineLength": 200,
 
     "requireParenthesesAroundIIFE": true,
     "requireBlocksOnNewline": true,
@@ -12,6 +12,7 @@
     "requireDotNotation": true,
     "requireSpaceAfterLineComment": true,
     "requireCommaBeforeLineBreak": true,
+    "requireCamelCaseOrUpperCaseIdentifiers": null,
 
     "validateLineBreaks": "LF",
     "validateIndentation": 4,

@@ -29,7 +29,9 @@ require('./app/customrender')(app);
 require('./app/accesscontrol')(app);
 
 // load controllers
-require('./lib/boot')(app, { verbose: config.debug || !module.parent });
+require('./lib/boot')(app, {
+    verbose: config.debug || !module.parent
+});
 
 // load error routes (404. 5xx)
 require('./app/errorhandling')(app);
@@ -37,5 +39,5 @@ require('./app/errorhandling')(app);
 // if running in single debug mode
 if (!module.parent) {
     app.listen(config.defaultPort);
-    logger.info('\n  listening on port '+config.defaultPort+'\n');
+    logger.info('\n  listening on port ' + config.defaultPort + '\n');
 }

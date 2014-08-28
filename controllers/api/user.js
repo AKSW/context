@@ -3,9 +3,9 @@ var User = require('../../models').User;
 
 module.exports = function(app) {
     // export index
-    app.post('/api/user/:id', function(req, res, next){
+    app.post('/api/user/:id', function(req, res, next) {
         var id = req.params.id;
-        if(req.user._id.toString() !== id) {
+        if (req.user._id.toString() !== id) {
             return next(new Error('You cannot update someone else profile!'));
         }
 
@@ -17,18 +17,22 @@ module.exports = function(app) {
         };
 
         // check if username exists
-        User.findOne({username: user.username}, function(err, exuser) {
+        User.findOne({
+            username: user.username
+        }, function(err, exuser) {
             if (err) {
                 return next(err);
             }
 
-            if(exuser && exuser._id.toString() !== id) {
+            if (exuser && exuser._id.toString() !== id) {
                 req.flash('error', 'Username already taken!');
                 return res.redirect('/profile');
             }
 
-            User.update({_id: id}, user, function(err) {
-                if(err) {
+            User.update({
+                _id: id
+            }, user, function(err) {
+                if (err) {
                     return next(err);
                 }
 

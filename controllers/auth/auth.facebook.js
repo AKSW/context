@@ -21,7 +21,7 @@ var registerNewUser = function(profile, done) {
 
     // register
     User.registerNewUser(user, function(err, userData) {
-        if(err) {
+        if (err) {
             return done(err);
         }
 
@@ -32,7 +32,7 @@ var registerNewUser = function(profile, done) {
 // make passport policy
 var FacebookStrategy = passportFacebook.Strategy;
 passport.use(new FacebookStrategy(config.facebook,
-    function (accessToken, refreshToken, profile, done) {
+    function(accessToken, refreshToken, profile, done) {
         var username = profile.username;
         var fbId = profile.id;
         var query = {
