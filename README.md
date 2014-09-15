@@ -34,6 +34,7 @@ Assuming you have [vagrant](http://www.vagrantup.com/) installed, you can run co
 
 Assuming you have [docker](https://www.docker.io/) installed, you can run conTEXT with few simple commands:  
 
+0. (Optional) If you just checked out the repository and have not run `npm install` be sure to copy `config.example.js` to `config.js` manually.
 1. Get MongoDB running either on docker host machine or in separate docker container.
 2. (Optional) If you wish to run MongoDB in a separate docker container first pull it using `docker pull dockerfile/mongodb`.  
 Then run it as a daemon with persistent local folder using:  
