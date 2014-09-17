@@ -36,6 +36,10 @@ var progressClients = {};
 //
 
 var closeWebSocket = function(corpus) {
+    if (!config.useSockets) {
+        return;
+    }
+
     var wss = progressServices[corpus._id];
     logger.info('closing websocket', corpus._id);
     if (wss) {
@@ -61,6 +65,10 @@ var closeWebSocket = function(corpus) {
 };
 
 var initWebSocket = function(corpus) {
+    if (!config.useSockets) {
+        return;
+    }
+
     // construct url
     var socketURL = 'ws://' + config.defaultHost + ':' + config.defaultSocketPort +
         '/corpus/' + corpus._id;
@@ -96,6 +104,10 @@ var initWebSocket = function(corpus) {
 };
 
 var reportProgress = function(corpusId, type, progress) {
+    if (!config.useSockets) {
+        return;
+    }
+
     logger.info('reporting progress info', corpusId, type, progress);
     // normalize progress
     if (progress > 1.0) {

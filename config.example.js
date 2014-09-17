@@ -13,6 +13,7 @@ exports.passwordSalt = 'ThisIsPasswordSalt';
 exports.defaultPort = 8080;
 // default websockets port
 exports.defaultSocketPort = 8081;
+exports.useSockets = true;
 // default app uri (needed for websocket server)
 exports.defaultHost = 'localhost';
 
