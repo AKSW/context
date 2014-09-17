@@ -27,7 +27,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var DirectProcessing = function () {
+var DirectProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)

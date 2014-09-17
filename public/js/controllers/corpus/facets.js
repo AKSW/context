@@ -58,8 +58,7 @@ module.exports = function CorpusFacetsController($scope, $state, $sce) {
         switch (item.type) {
             case 'article':
                 if ($scope.entityFilter !== undefined) {
-                    filterEntity = item.entities.indexOf($scope.entityFilter) !== -
-                        1;
+                    filterEntity = item.entities.indexOf($scope.entityFilter) !== -1;
                 } else {
                     filterEntity = true;
                 }
@@ -71,8 +70,7 @@ module.exports = function CorpusFacetsController($scope, $state, $sce) {
                 return filterEntity && filterType;
             case 'entity':
                 if ($scope.articleFilter !== undefined) {
-                    filterArticle = item.articles.indexOf($scope.articleFilter) !== -
-                        1;
+                    filterArticle = item.articles.indexOf($scope.articleFilter) !== -1;
                 } else {
                     filterArticle = true;
                 }
@@ -84,14 +82,12 @@ module.exports = function CorpusFacetsController($scope, $state, $sce) {
                 return filterArticle && filterType;
             case 'type':
                 if ($scope.articleFilter !== undefined) {
-                    filterArticle = item.articles.indexOf($scope.articleFilter) !== -
-                        1;
+                    filterArticle = item.articles.indexOf($scope.articleFilter) !== -1;
                 } else {
                     filterArticle = true;
                 }
                 if ($scope.entityFilter !== undefined) {
-                    filterEntity = item.entities.indexOf($scope.entityFilter) !== -
-                        1;
+                    filterEntity = item.entities.indexOf($scope.entityFilter) !== -1;
                 } else {
                     filterEntity = true;
                 }

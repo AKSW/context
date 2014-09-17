@@ -185,7 +185,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var WordpressProcessing = function () {
+var WordpressProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)

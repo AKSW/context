@@ -30,7 +30,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var WebpageProcessing = function () {
+var WebpageProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)

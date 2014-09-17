@@ -51,7 +51,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var FilesProcessing = function () {
+var FilesProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)

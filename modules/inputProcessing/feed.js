@@ -14,7 +14,7 @@ var FeedParser = require('feedparser');
 // get limited number of feed entries
 var getFeedEntries = function(corpus, self) {
     // return promise
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
         // get vars from corpus
         var url = corpus.input;
         var limit = corpus.input_count;
@@ -75,12 +75,12 @@ var getFeedEntries = function(corpus, self) {
         // get data
         var req = request(url);
         // Some feeds do not respond without user-agent and accept headers.
-        req.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36')
-           .setHeader('accept', 'text/html,application/xhtml+xml');
+        req.setHeader('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36');
+        req.setHeader('accept', 'text/html,application/xhtml+xml');
         // add event listeners
         req.on('error', function(err) {
             reject(err);
-        }).on('response', function (res) {
+        }).on('response', function(res) {
             var stream = this;
 
             if (res.statusCode !== 200) {
@@ -102,7 +102,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var FeedProcessing = function () {
+var FeedProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)
