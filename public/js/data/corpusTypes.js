@@ -10,7 +10,7 @@ collection.push({
     haveItems: true,
     itemsMin: 50,
     itemsMax: 600,
-    itemsDefault: 50,
+    itemsDefault: 50
 });
 // wordpress
 collection.push({
@@ -21,8 +21,8 @@ collection.push({
     inputPlaceholder: 'URL of the blog',
     haveItems: true,
     itemsMin: 50,
-    itemsMax: 400,
-    itemsDefault: 400,
+    itemsMax: 1000,
+    itemsDefault: 500
 });
 // blogger
 collection.push({
@@ -34,7 +34,7 @@ collection.push({
     haveItems: true,
     itemsMin: 50,
     itemsMax: 400,
-    itemsDefault: 400,
+    itemsDefault: 400
 });
 // public twitter
 collection.push({
@@ -45,8 +45,8 @@ collection.push({
     inputPlaceholder: 'Username',
     haveItems: true,
     itemsMin: 200,
-    itemsMax: 1500,
-    itemsDefault: 1000,
+    itemsMax: 5000,
+    itemsDefault: 1000
 });
 // slidewiki
 collection.push({
@@ -58,7 +58,7 @@ collection.push({
     haveItems: true,
     itemsMin: 50,
     itemsMax: 1000,
-    itemsDefault: 400,
+    itemsDefault: 400
 });
 // webpage
 collection.push({
@@ -67,7 +67,7 @@ collection.push({
     inputType: 'text',
     inputDescription: 'WebPage URL',
     inputPlaceholder: 'URL',
-    haveItems: false,
+    haveItems: false
 });
 // direct input
 collection.push({
@@ -75,7 +75,7 @@ collection.push({
     description: 'Direct input',
     inputType: 'textarea',
     inputDescription: 'Your text/html',
-    haveItems: false,
+    haveItems: false
 });
 // upload a doc
 collection.push({
@@ -83,7 +83,7 @@ collection.push({
     description: 'Upload a document(s)',
     inputType: 'file',
     inputDescription: 'Document',
-    haveItems: false,
+    haveItems: false
 });
 
 // Our module now returns our view

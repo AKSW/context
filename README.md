@@ -5,9 +5,10 @@ Based on [Powder.js](https://github.com/yamalight/generator-powder)
 ### Requirements
 
 Latest Node.js + NPM  
-Latest MongoDB  
+Latest MongoDB
+Latest Elasticsearch (http://www.elasticsearch.org)
 Bower (get by running "npm install -g bower")  
-Gulp (get by running "npm install -g gulp")  
+Gulp (get by running "npm install -g gulp")
 
 ### Installing
 
@@ -15,9 +16,11 @@ Clone & do "npm install"
 Change config.js to your needs  
 
 ### Running
-
+Run elasticsearch
 For debugging just run "gulp"  
 For release run "gulp build" to compile js and css and then run "npm start" (or "./bin/context")  
+
+### TODO: integrate elasticsearch in vagrant and docker
 
 ### Running via Vagrant
 

@@ -5,10 +5,12 @@ var Promise = require('bluebird');
 
 // db requires
 var mongoose = require('mongoose');
+var mongolastic = require('mongolastic');
+
 var Schema = mongoose.Schema;
 var Article;
 
-var articleSchema = new Schema({
+var articleSchema = new Schema({  //TODO: optimize es mapping
     uri: {
         type: String,
         unique: true
@@ -25,7 +27,8 @@ var articleSchema = new Schema({
     },
     corpuses: [{
         type: Schema.Types.ObjectId,
-        ref: 'corpuses'
+        ref: 'corpuses',
+        elastic: {popfields: '_id'}    //TODO: map only corpus ids
     }],
     processed: {
         type: Boolean,
@@ -38,8 +41,8 @@ var articleSchema = new Schema({
         types: [String],
         uri: String,
         offset: Number,
-        precision: Number,
-    }],
+        precision: Number
+    }]
 });
 
 // custom create method with additional checks
@@ -81,8 +84,17 @@ articleSchema.statics.createNew = function(article) {
     });
 };
 
+
+//add mongolastic plugin into mongoose
+articleSchema.plugin(mongolastic.plugin,{modelname: 'articles'});
+
 // Model
 Article = mongoose.model('articles', articleSchema);
+
+//sync mongodb entries with elasticsearch index,
+Article.sync(function(err,numSynced){
+    console.log('elasticsearch: ' + numSynced + ' article(s) synced');
+})
 
 // export
 module.exports = Article;

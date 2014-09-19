@@ -1,42 +1,69 @@
 // includes
 // multiparty
 var multiparty = require('multiparty');
+// lodash
+var _ = require('lodash');
 // logger
-// var logger = require('../../logger');
+var logger = require('../../logger');
+//mongolastic
+var mongolastic = require('mongolastic');
+//FacetProcesser //TODO: move file on server-side
+var FacetProcesser=require('../../public/js/modules/FacetsProcesser');
 // db
+
 var Corpus = require('../../modules/corpus');
 var CorpusDB = require('../../models').Corpus;
 var Article = require('../../models').Article;
 
+
 // functions
 var getCorpusArticles = function(req, res, next) {
-    // get data
     var corpus = req.params.id;
-
-    // find corpus
-    CorpusDB.findOne({
-        _id: corpus
-    }).exec(function(err, corpus) {
-        if (err) {
+    var articles=[];
+    //define query
+    var query = {
+        'size':5000, //TODO: define a constant in config.js | max numbers of articles to get
+        '_sourceInclude':['_id','title','article','entities','source'],
+        'body': {
+            'query': {
+                //'term': {'corpuses._id':corpus}
+                'filtered': {
+                    'filter': {'term': {'corpuses._id': corpus}}
+                }
+            }
+        }
+    };
+    //execute query
+    Article.search(query,function(err,result){
+        if(err) {
             return next(err);
         }
-
-        // find articles
-        Article.find({
-            corpuses: corpus._id
-        }, function(err, articles) {
-            if (err) {
-                return next(err);
-            }
-
-            // append counts to corpus
-            corpus = corpus.toObject();
-            corpus.articles = articles;
-
-            // send response
-            return res.send(corpus);
+        //get articles
+        result.hits.hits.forEach(function (hit){
+            articles.push(hit._source);
         });
+        // append counts to corpus
+        //corpus = corpus.toObject();
+        corpus={};
+        corpus.articles = articles;
+
+        //TODO:measure the time for processing data using facetProcesser
+        var data = FacetProcesser.processData(corpus);
+
+        corpus.articles = data.articles;
+        corpus.entities = data.entities;
+        corpus.types = data.types;
+
+        //TODO:slice data server-side for lazy loading
+        // send response
+        return res.send(corpus);
+
+
+
     });
+
+
+
 };
 
 // export routes
@@ -70,7 +97,7 @@ module.exports = function(app) {
                     var file = files.input[index];
                     corpus.files.push({
                         name: file.originalFilename,
-                        path: file.path,
+                        path: file.path
                     });
                 }
             }
@@ -123,6 +150,47 @@ module.exports = function(app) {
                 return res.send(corpus);
             });
         });
+    });
+
+    //Search //TODO:integrate auto suggestion functionality
+    app.get('/api/corpus/:id/search/:keyword', function(req, res, next) {
+        // get data
+        var corpus = req.params.id;
+        var keyWord = req.params.keyword;
+        var articles = [];
+        //define query
+        var searchQuery = {
+            'size': 2000,
+            '_sourceInclude': ['_id',  'source'],
+            'body': {
+                'query': {
+
+                    //'term': {'corpuses._id':corpus}
+                    'filtered': {
+                        'query' : {
+                            'term': { "source" : keyWord }
+                        },
+                        'filter': {'term': {'corpuses._id': corpus}}
+                    }
+                }
+            }
+        };
+
+
+        //Execute query
+        Article.search(searchQuery, function (err, result) {
+            if (err) {
+                return next(err);
+            }
+            result.hits.hits.forEach(function (hit) {
+                articles.push(hit._source);
+            });
+
+
+            return res.send(articles);
+
+        });
+
     });
 
     // export get corpus

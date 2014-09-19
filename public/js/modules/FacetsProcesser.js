@@ -1,3 +1,7 @@
+var S = require('../../../node_modules/string/lib/string.min');
+var _= require('../../../node_modules/lodash/dist/lodash.min');
+
+
 var escapeRegExp = function(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 };
@@ -30,7 +34,7 @@ var processData = function(data) {
             count: 0,
             entities: [],
             types: [],
-            source: item.source,
+            source: item.source
         };
 
         // get article plain text
@@ -278,7 +282,7 @@ var processData = function(data) {
                         type: 'type',
                         count: 1,
                         entities: [newEntity.id],
-                        articles: [article.id],
+                        articles: [article.id]
                     });
                     if (newEntity.types.indexOf(tid) === -1) {
                         newEntity.types.push('type_' + name);
