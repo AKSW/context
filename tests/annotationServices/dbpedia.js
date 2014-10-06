@@ -14,7 +14,7 @@ The Himalayas abut or cross six countries: Bhutan, India, Nepal, China, Afghanis
 describe('DBPedia annotation suit', function () {
     it('should get at least 29 entities', function (done) {
         dbpedia.process(testData)
-        .then(function(res){
+        .then(function(res) {
             // check properties
             res.should.have.property('annotation');
             res.should.have.property('entities');

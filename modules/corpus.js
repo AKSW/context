@@ -132,6 +132,7 @@ var reportProgress = function(corpusId, type, progress) {
 //
 
 var annotateArticle = function(article, corpus, callback) {
+    logger.info('annotating article: ', article);
     // define handler function that will call callback once done
     var handleSaveError = function(err) {
         if (err) {
@@ -297,6 +298,8 @@ var CorpusModule = function() {
 
     // expose create function
     this.createCorpus = createCorpus;
+    // export annotate corpus
+    this.annotateCorpus = annotateCorpus;
 };
 
 // export

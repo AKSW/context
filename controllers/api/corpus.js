@@ -125,6 +125,25 @@ module.exports = function(app) {
         });
     });
 
+    // export re-annotate corpus
+    app.get('/api/corpus/:id/reannotate', function(req, res, next) {
+        // get data
+        var corpus = req.params.id;
+
+        // find corpus
+        CorpusDB
+        .findOne({_id: corpus})
+        .exec(function(err, corpus) {
+            if(err) {
+                return next(err);
+            }
+            // trigger re-annotate
+            Corpus.annotateCorpus(corpus);
+            // respond ok
+            return res.send(200);
+        });
+    });
+
     // export get corpus
     app.get('/api/corpus/:id/facets', getCorpusArticles);
 
