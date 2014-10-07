@@ -37,6 +37,16 @@ var processData = function(corpus) {
     // count average
     entitiesAvg = Math.floor(entitiesTotal / corpus.articles.length);
 
+    // filter out entities
+    var filteredEntities = {};
+    for (var ekey in entities) {
+        var entity = entities[ekey];
+        if (entity.count > entitiesAvg) {
+            filteredEntities[ekey] = entity;
+        }
+    }
+    entities = filteredEntities;
+
     // prepare vars for final data
     var relations = [];
     var scores = [];
