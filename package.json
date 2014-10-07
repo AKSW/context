@@ -24,7 +24,7 @@
     "nlp"
   ],
   "scripts": {
-    "start": "./bin/context",
+    "start": "./node_modules/.bin/gulp",
     "test": "./node_modules/.bin/gulp test",
     "postinstall": "./node_modules/.bin/gulp init"
   },
