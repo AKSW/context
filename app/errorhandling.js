@@ -7,12 +7,12 @@ module.exports = function(app) {
     // properties, use instanceof etc.
     app.use(function(err, req, res, next) {
         // treat as 404
-        if (~err.message.indexOf('not found')) {
+        if (err.message.indexOf('not found') !== -1) {
             return next();
         }
 
         // deauth
-        if(~err.message.indexOf('401')) {
+        if (err.message.indexOf('401') !== -1) {
             res.redirect('/auth');
             return;
         }
@@ -26,6 +26,8 @@ module.exports = function(app) {
 
     // assume 404 since no middleware responded
     app.use(function(req, res) {
-        res.status(404).render('errors/404', { url: req.originalUrl });
+        res.status(404).render('errors/404', {
+            url: req.originalUrl
+        });
     });
 };

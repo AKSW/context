@@ -49,9 +49,7 @@
     {+body/}
 
     <!-- js libraries -->
-    <!-- inject:js -->
-    <!-- js library files will be injected here -->
-    <!-- endinject -->
+    <script src="/dist/vendor.min.js"></script>
 
     <!-- main app script -->
     <script src="/dist/app.min.js"></script>

@@ -8,7 +8,7 @@ module.exports = function(app) {
     app.disable('x-powered-by');
     // use helmet middleware
     app.use(helmet.xframe());
-    app.use(helmet.iexss());
-    app.use(helmet.contentTypeOptions());
-    app.use(helmet.cacheControl());
+    app.use(helmet.xssFilter());
+    app.use(helmet.nosniff());
+    app.use(helmet.nocache());
 };

@@ -39,7 +39,7 @@ var parsePage = async(function(body) {
 
     // get all posts
     var posts = $('.post');
-    var toProcess = posts.length;
+    // var toProcess = posts.length;
     posts.each(function(idx, post) {
         var $entityTitile = $('.entry-title', $(post));
         var $postHeading = $('.postHeading', $(post));
@@ -78,7 +78,7 @@ var parsePage = async(function(body) {
         if ($moreLink.length || $postSummary.length) {
             var contentUrl = $moreLink.attr('href') || $postSummary.attr('href');
             var data = await(getPostContent(contentUrl));
-            //assign data
+            // assign data
             entity.content = data;
             // clean
             entity.content = entity.content.trim().replace(/\t/g, '');
@@ -110,7 +110,7 @@ var parsePage = async(function(body) {
 
 var getNextPage = async(function(url, page) {
     // form url
-    var pageUrl = url + '/page/'+page+'/';
+    var pageUrl = url + '/page/' + page + '/';
 
     // get resp
     var resp = await(request(pageUrl));
@@ -118,7 +118,7 @@ var getNextPage = async(function(url, page) {
 
     // parse
     var res = await(parsePage(body));
-    if(!res) {
+    if (!res) {
         logger.error('error loading wp page');
         throw new Error('Error loading wordpress page!');
     }
@@ -130,12 +130,12 @@ var getNextPage = async(function(url, page) {
 // convert entity to doc
 var entityToDocument = function(entity, url, corpus) {
     // if no link is given, generate a new unique one
-    if(entity.link === 'no-link') {
+    if (entity.link === 'no-link') {
         // hash input
         var md5sum = crypto.createHash('md5');
         md5sum.update(entity.content + Date.now().toString());
         // generate unique url for piece
-        entity.link = url+'generated_uri/'+md5sum.digest('hex')+'/'+Date.now();
+        entity.link = url + 'generated_uri/' + md5sum.digest('hex') + '/' + Date.now();
     }
     var doc = {
         corpuses: [corpus._id],
@@ -162,14 +162,14 @@ var process = async(function(corpus) {
     var lastPage = 1;
 
     // process pages while there are less results than needed
-    while(results.length < limit) {
+    while (results.length < limit) {
         // get next page
         var res = await(getNextPage(url, lastPage));
 
         // get count
         var count = res.length;
-        var i, entity, doc;
-        for(i = 0; i < count; i++){
+        var doc;
+        for (var i = 0; i < count; i++) {
             doc = entityToDocument(res[i], url, corpus);
             results.push(doc);
         }
@@ -185,7 +185,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var WordpressProcessing = function () {
+var WordpressProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)

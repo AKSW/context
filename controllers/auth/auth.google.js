@@ -22,7 +22,7 @@ var registerNewUser = function(profile, id, done) {
 
     // register
     User.registerNewUser(user, function(err, userData) {
-        if(err) {
+        if (err) {
             return done(err);
         }
 
@@ -33,7 +33,7 @@ var registerNewUser = function(profile, id, done) {
 // make passport policy
 var GoogleStrategy = passportGoogle.Strategy;
 passport.use(new GoogleStrategy(config.google,
-    function (identifier, profile, done) {
+    function(identifier, profile, done) {
         var username = profile.displayName;
         var glId = identifier.split('=')[1];
         var query = {

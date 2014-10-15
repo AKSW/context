@@ -9,7 +9,7 @@ module.exports = function(app) {
     // parse request bodies (req.body)
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
-        extended: true
+        extended: true,
     }));
 
     // support _method (PUT in forms etc)

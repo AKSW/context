@@ -1,4 +1,4 @@
-var diceMetric = function (x, y, xy) {
+var diceMetric = function(x, y, xy) {
     return 2 * xy / (x + y);
 };
 
@@ -11,7 +11,9 @@ var processData = function(corpus) {
     // entities array
     var entities = {};
     // find min, max, avg of entities
-    var entitiesMin, entitiesMax, entitiesAvg;
+    var entitiesMin;
+    var entitiesMax;
+    var entitiesAvg;
     var entitiesTotal = 0;
     // go through all articles
     corpus.articles.forEach(function(article) {
@@ -22,7 +24,7 @@ var processData = function(corpus) {
         entitiesMax = _.max([entitiesMin, count]);
         // add entities to all array
         article.entities.forEach(function(entity) {
-            if(entities[entity.uri]) {
+            if (entities[entity.uri]) {
                 entities[entity.uri].count++;
                 entities[entity.uri].articles.push(article._id);
             } else {
@@ -35,6 +37,16 @@ var processData = function(corpus) {
     // count average
     entitiesAvg = Math.floor(entitiesTotal / corpus.articles.length);
 
+    // filter out entities
+    var filteredEntities = {};
+    for (var ekey in entities) {
+        var entity = entities[ekey];
+        if (entity.count > entitiesAvg) {
+            filteredEntities[ekey] = entity;
+        }
+    }
+    entities = filteredEntities;
+
     // prepare vars for final data
     var relations = [];
     var scores = [];
@@ -46,14 +58,14 @@ var processData = function(corpus) {
     var tmp4 = [];
 
     // process
-    for(var ekey in entities) {
+    for (var ekey in entities) {
         var entity = entities[ekey];
         // prepare row data
         var row = [];
         var score = [];
 
         // go through entities again
-        for(var ekey2 in entities) {
+        for (var ekey2 in entities) {
             var entityDouble = entities[ekey2];
             if (entity.uri === entityDouble.uri) {
                 row.push(0);
@@ -68,7 +80,7 @@ var processData = function(corpus) {
                     row.push(tmp[reverseKey]);
                     score.push(tmp4[reverseKey]);
                 } else {
-                    //give me the number of articles that have both  $i ['uri'] and $j ['uri'] entities
+                    // give me the number of articles that have both  $i ['uri'] and $j ['uri'] entities
                     var commonCount = getCommonArticles(entity, entityDouble);
                     tmp[key] = commonCount;
                     row.push(tmp[key]);
@@ -99,7 +111,7 @@ var processData = function(corpus) {
     // get scores
     scores.forEach(function(score) {
         score.forEach(function(num) {
-            if(num > 0) {
+            if (num > 0) {
                 sortedScores.push(num[0]);
                 threshold += num;
             }
@@ -111,10 +123,10 @@ var processData = function(corpus) {
     var center = Math.floor(sortedScores.length / 2);
     var threshold = sortedScores[center];
 
-    //remove noises
-    scores.forEach(function(row, index){
-        row.forEach(function(score, subindex){
-            if(score < threshold) {
+    // remove noises
+    scores.forEach(function(row, index) {
+        row.forEach(function(score, subindex) {
+            if (score < threshold) {
                 relations[index][subindex] = 0;
             }
         });

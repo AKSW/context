@@ -36,9 +36,13 @@ var progressClients = {};
 //
 
 var closeWebSocket = function(corpus) {
+    if (!config.useSockets) {
+        return;
+    }
+
     var wss = progressServices[corpus._id];
     logger.info('closing websocket', corpus._id);
-    if(wss) {
+    if (wss) {
         // close all connections
         wss.close();
         // dispose of the object
@@ -51,7 +55,7 @@ var closeWebSocket = function(corpus) {
     // clean clients
     var clients = progressClients[corpus._id];
     // close all if exist
-    if(clients) {
+    if (clients) {
         clients.forEach(function(client) {
             client.close();
         });
@@ -61,15 +65,20 @@ var closeWebSocket = function(corpus) {
 };
 
 var initWebSocket = function(corpus) {
+    if (!config.useSockets) {
+        return;
+    }
+
     // construct url
-    var socketURL = 'ws://' + config.defaultHost + ':' + config.defaultSocketPort + '/corpus/' + corpus._id;
+    var socketURL = 'ws://' + config.defaultHost + ':' + config.defaultSocketPort +
+        '/corpus/' + corpus._id;
     // close old socket if exists
     closeWebSocket(corpus);
     // log opening
     logger.info('Starting progress socket at: ', socketURL);
     // init server
     var wss = new WebSocketServer({
-        //host: config.defaultHost,
+        // host: config.defaultHost,
         port: config.defaultSocketPort,
         path: '/corpus/' + corpus._id
     });
@@ -81,10 +90,10 @@ var initWebSocket = function(corpus) {
         progressClients[corpus._id].push(ws);
         // add event listeners
         ws.on('close', function() {
-            if(progressClients[corpus._id]) {
+            if (progressClients[corpus._id]) {
                 // remove from array
                 var ind = progressClients[corpus._id].indexOf(ws);
-                if(ind !== -1) {
+                if (ind !== -1) {
                     progressClients[corpus._id].splice(ind, 1);
                 }
             }
@@ -95,15 +104,19 @@ var initWebSocket = function(corpus) {
 };
 
 var reportProgress = function(corpusId, type, progress) {
+    if (!config.useSockets) {
+        return;
+    }
+
     logger.info('reporting progress info', corpusId, type, progress);
     // normalize progress
-    if(progress > 1.0) {
+    if (progress > 1.0) {
         progress = 1.0;
     }
     // get clients
     var clients = progressClients[corpusId];
     // if any
-    if(clients) {
+    if (clients) {
         // send data to all
         clients.forEach(function(ws) {
             ws.send(JSON.stringify({
@@ -150,9 +163,10 @@ var reportFinal=function(corpus, callback){
 //
 
 var annotateArticle = function(article, corpus, callback) {
+    logger.info('annotating article: ', article);
     // define handler function that will call callback once done
     var handleSaveError = function(err) {
-        if(err) {
+        if (err) {
             logger.error('error updating article', article, err);
             return callback(false);
         }
@@ -161,33 +175,43 @@ var annotateArticle = function(article, corpus, callback) {
 
     // get plain text
     var sourceText = S(article.title + '. ' + article.source).stripTags().s;
-    if(!annotationServices[corpus.nlp_api]) {
+    if (!annotationServices[corpus.nlp_api]) {
         logger.error('error! annotation service not found!', corpus);
         return;
     }
     // check if source is valid
-    if(sourceText && sourceText.length > 0) {
+    if (sourceText && sourceText.length > 0) {
         // start input processing
         annotationServices[corpus.nlp_api]
-        .process(sourceText)
-        .then(function(result) {
-            var data = _.extend(result, {processed: true});
-            article.update(data, handleSaveError);
-        })
-        .catch(function(err) {
+            .process(sourceText)
+            .then(function(result) {
+                var data = _.extend(result, {
+                    processed: true
+                });
+                article.update(data, handleSaveError);
+            })
+            .
+        catch (function(err) {
             logger.error('error getting annotation from service', err);
             return callback(false);
         });
     } else {
-        article.update({processed: true, annotation: ''}, handleSaveError);
+        article.update({
+            processed: true,
+            annotation: ''
+        }, handleSaveError);
     }
 };
 
 var annotateCorpus = function(corpus) {
     // find all not processed articles for current corpus
-    Article.find({corpuses: corpus._id, processed: false}, function(err, articles) {
-        if(err) {
-            return logger.error('error getting articles for annotation', err);
+    Article.find({
+        corpuses: corpus._id,
+        processed: false
+    }, function(err, articles) {
+        if (err) {
+            return logger.error('error getting articles for annotation',
+                err);
         }
 
         // log
@@ -197,12 +221,13 @@ var annotateCorpus = function(corpus) {
         var annotated = 0;
 
         // process
-        articles.forEach(function(item){
+        articles.forEach(function(item) {
             // add to parallel execution queue
             toRun.push(function(callback) {
                 annotateArticle(item, corpus, function(res) {
                     annotated++;
-                    reportProgress(corpus._id, 'annotation', annotated / articles.length);
+                    reportProgress(corpus._id, 'annotation',
+                        annotated / articles.length);
                     callback(res);
                 });
             });
@@ -212,8 +237,10 @@ var annotateCorpus = function(corpus) {
         asyncUtil.parallel(toRun, function(res) {
             logger.info('all annotation done', corpus._id, res);
             // update corpus
-            corpus.update({processed: true}, function(err) {
-                if(err) {
+            corpus.update({
+                processed: true
+            }, function(err) {
+                if (err) {
                     logger.error('error updating corpus!', err);
                 }
             });
@@ -225,20 +252,22 @@ var annotateCorpus = function(corpus) {
 
 var processCorpus = function(corpus) {
     logger.info('starting to process input from corpus', corpus._id);
-    if(inputProcessers[corpus.input_type]) {
+    if (inputProcessers[corpus.input_type]) {
         // start input processing
         inputProcessers[corpus.input_type]
-        .process(corpus)
-        .then(async(function(res) {
-            var i, len = res.length, item;
-            for(i = 0; i < len; i++){
-                item = res[i];
-                var resp = await(Article.createNew(item));
-            }
+            .process(corpus)
+            .then(async(function(res) {
+                var len = res.length;
+                var item;
+                for (var i = 0; i < len; i++) {
+                    item = res[i];
+                    await(Article.createNew(item));
+                }
 
-            annotateCorpus(corpus);
-        }))
-        .catch(function(err) {
+                annotateCorpus(corpus);
+            }))
+            .
+        catch (function(err) {
             logger.error('error processing corpus input!', corpus, err);
         });
     } else {
@@ -263,7 +292,7 @@ var createCorpus = function(corpus, cb) {
     // step 1: save corpus to db
     var newCorpus = new Corpus(corpus);
     newCorpus.save(function(err) {
-        if(err) {
+        if (err) {
             logger.error('error saving new corpus', err);
             return cb(err, null);
         }
@@ -280,9 +309,9 @@ var createCorpus = function(corpus, cb) {
 };
 
 // main module object
-var CorpusModule = function () {
+var CorpusModule = function() {
     // autoload input parsing modules
-    fs.readdirSync(__dirname + '/inputProcessing').forEach(function(moduleName){
+    fs.readdirSync(__dirname + '/inputProcessing').forEach(function(moduleName) {
         // get service
         var obj = require('./inputProcessing/' + moduleName);
         // assign progress event listener
@@ -292,13 +321,16 @@ var CorpusModule = function () {
     });
 
     // autoload annotation modules
-    fs.readdirSync(__dirname + '/annotationServices').forEach(function(moduleName){
+    fs.readdirSync(__dirname + '/annotationServices').forEach(function(
+        moduleName) {
         var obj = require('./annotationServices/' + moduleName);
         annotationServices[obj.name] = obj;
     });
 
     // expose create function
     this.createCorpus = createCorpus;
+    // export annotate corpus
+    this.annotateCorpus = annotateCorpus;
 };
 
 // export

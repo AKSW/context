@@ -14,21 +14,24 @@ var logger = require('../../logger');
 // service url
 var FoxUrl = 'http://139.18.2.164:4444/api';
 
-var FoxTypes = {
+/*var FoxTypes = {
     'http://ns.aksw.org/scms/annotations/PERSON': 'DBpedia:Person',
     'http://ns.aksw.org/scms/annotations/LOCATION': 'DBpedia:Place',
     'http://ns.aksw.org/scms/annotations/ORGANIZATION': 'DBpedia:Organization',
     'http://www.w3.org/2000/10/annotation-ns#Annotation': 'DBpedia:Misc',
-};
+};*/
 
 // default headers
-var defaultHeaders = {'content-type': 'application/x-www-form-urlencoded', 'accept': 'application/json'};
+var defaultHeaders = {
+    'content-type': 'application/x-www-form-urlencoded',
+    accept: 'application/json'
+};
 
 // default form data
 var defaultData = {
     type: 'text',
-    foxlight: true,
-    output: 'JSONLD',
+    // foxlight: true,
+    output: 'JSON-LD',
     task: 'NER'
 };
 
@@ -42,9 +45,13 @@ var defaultOptions = {
 // process function
 var process = async(function(sourceText) {
     // form data
-    var data = _.extend(defaultData, {input: sourceText});
+    var data = _.extend(defaultData, {
+        input: sourceText
+    });
     // form request options
-    var options = _.extend(defaultOptions, {form: data});
+    var options = _.extend(defaultOptions, {
+        form: data
+    });
 
     // get data
     var resp = await(request(options));
@@ -59,23 +66,25 @@ var process = async(function(sourceText) {
     // parse json
     var out = '';
     try {
+        var jsonBody = JSON.parse(body);
+        var output = jsonBody.output;
         // get decoded output
-        out = decodeURIComponent(JSON.parse(body)[0].output);
+        out = decodeURIComponent(output);
         // parse json
-        out = JSON.parse(out);
+        out = JSON.parse(out)['@graph'];
     } catch (e) {
         logger.error('error parsing', body);
     }
 
     // process resources
     out.forEach(function(resource) {
-        if(resource['http://www.w3.org/2000/10/annotation-ns#body']) {
+        if (resource['ann:body']) {
             // create new entity
             var entity = {
                 types: [resource['@type'][0]],
-                name: resource['http://www.w3.org/2000/10/annotation-ns#body'][0]['@value'],
-                uri: resource['http://ns.aksw.org/scms/means'][0]['@id'],
-                offset: parseInt(resource['http://ns.aksw.org/scms/beginIndex'][0]['@value'], 10),
+                name: resource['ann:body'],
+                uri: resource['@id'],
+                offset: parseInt(resource.beginIndex, 10),
                 precision: -1, // TODO: does FOX provides it?
             };
 
@@ -88,7 +97,7 @@ var process = async(function(sourceText) {
 });
 
 // module
-var FOXAnnotation = function () {
+var FOXAnnotation = function() {
     // name (also ID of processer used in client)
     this.name = 'FOX';
 

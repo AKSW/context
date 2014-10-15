@@ -5,7 +5,7 @@ var extentions = require('../data/corpusextentions');
 var corpusModule = angular.module('CorpusModule', ['ui.router']);
 
 // config routes
-corpusModule.config(function ($stateProvider, $urlRouterProvider) {
+corpusModule.config(function($stateProvider, $urlRouterProvider) {
     // main view
     $stateProvider.state('corpus', {
         url: '/corpus/:id',
@@ -30,7 +30,7 @@ corpusModule.config(function ($stateProvider, $urlRouterProvider) {
 
 // register controllers
 extentions.forEach(function(ex) {
-    corpusModule.controller(ex.controller, ['$scope', '$state', '$sce', ex.js]);
+    corpusModule.controller(ex.controller, ['$scope', '$state', '$sce', '$http', ex.js]);
 });
 
 // export

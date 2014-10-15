@@ -13,22 +13,22 @@ var fs = require('fs');
 // promisified readfile
 var readFile = Promise.promisify(fs.readFile);
 // logger
-var logger = require('../../logger');
+// var logger = require('../../logger');
 
 // process function
 var process = async(function(corpus) {
     // generate unique url for piece
-    var urlBase = 'upload-file:///'+corpus._id.toString()+'/';
+    var urlBase = 'upload-file:///' + corpus._id.toString() + '/';
 
     // init results
     var results = [];
 
     // get files
     var files = corpus.files;
-    var i, file;
+    var file;
 
     // process files
-    for(i = 0; i < files.length; i++) {
+    for (var i = 0; i < files.length; i++) {
         file = files[i];
         var data = await(readFile(file.path, 'utf8'));
 
@@ -36,7 +36,7 @@ var process = async(function(corpus) {
         var md5sum = crypto.createHash('md5');
         md5sum.update(file.name);
         // generate unique url for piece
-        var url = urlBase+md5sum.digest('hex')+'/'+Date.now();
+        var url = urlBase + md5sum.digest('hex') + '/' + Date.now();
 
         // push to results
         results.push({
@@ -51,7 +51,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var FilesProcessing = function () {
+var FilesProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)

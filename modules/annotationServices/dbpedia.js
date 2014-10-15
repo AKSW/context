@@ -15,7 +15,10 @@ var logger = require('../../logger');
 var SpotlightUrl = 'http://context.aksw.org/spotlight_clone.php';
 
 // default headers
-var defaultHeaders = {'content-type': 'application/x-www-form-urlencoded', 'accept': 'application/json'};
+var defaultHeaders = {
+    'content-type': 'application/x-www-form-urlencoded',
+    accept: 'application/json'
+};
 
 // default form data
 var defaultData = {
@@ -33,9 +36,13 @@ var defaultOptions = {
 // process function
 var process = async(function(sourceText) {
     // form data
-    var data = _.extend(defaultData, {text: sourceText});
+    var data = _.extend(defaultData, {
+        text: sourceText
+    });
     // form request options
-    var options = _.extend(defaultOptions, {form: data});
+    var options = _.extend(defaultOptions, {
+        form: data
+    });
 
     // get data
     var resp = await(request(options));
@@ -55,7 +62,7 @@ var process = async(function(sourceText) {
     }
 
     // process resources
-    if(body.Resources) {
+    if (body.Resources) {
         body.Resources.forEach(function(resource) {
             // create new entity
             var entity = {
@@ -67,7 +74,7 @@ var process = async(function(sourceText) {
 
             // get entity types
             var types = [];
-            if(resource['@types'] && resource['@types'] !== '') {
+            if (resource['@types'] && resource['@types'] !== '') {
                 // split coma separated types
                 var tmpTypes = resource['@types'].split(',');
                 // only pick types with DBpedia prefix
@@ -90,7 +97,7 @@ var process = async(function(sourceText) {
 });
 
 // module
-var DBPediaAnnotation = function () {
+var DBPediaAnnotation = function() {
     // name (also ID of processer used in client)
     this.name = 'DBpedia-Spotlight';
 

@@ -7,11 +7,12 @@ Based on [Powder.js](https://github.com/yamalight/generator-powder)
 Latest Node.js + NPM  
 Latest MongoDB  
 Bower (get by running "npm install -g bower")  
-Gulp (if you want to run "gulp" from CLI, not from npm)  
+Gulp (get by running "npm install -g gulp")  
 
 ### Installing
 
 Clone & do "npm install"  
+Change config.js to your needs  
 
 ### Running
 
@@ -28,7 +29,27 @@ Assuming you have [vagrant](http://www.vagrantup.com/) installed, you can run co
 3. Change to workdir with `cd /vagrant`
 4. (optional) Install conTEXT with `npm install`
 5. Run the app with `gulp`
+7. Open vagrant host on port 8080 in browser and see conTEXT running
+
+### Runnin via Docker
+
+Assuming you have [docker](https://www.docker.io/) installed, you can run conTEXT with few simple commands:  
+
+0. (Optional) If you just checked out the repository and have not run `npm install` be sure to copy `config.example.js` to `config.js` manually.
+1. Get MongoDB running either on docker host machine or in separate docker container.
+2. (Optional) If you wish to run MongoDB in a separate docker container first pull it using `docker pull dockerfile/mongodb`.  
+Then run it as a daemon with persistent local folder using:  
+`docker run -d --name mongodb -v /data/db:/data/db dockerfile/mongodb`.  
+You will as well need to replace the database connection line in config.js with following:  
+`exports.db = 'mongodb://' + process.env.MONGODB_PORT_28017_TCP_ADDR + '/context';`
+3. Execute `docker build -t context .` to build new docker image
+4. Once ready, start up the docker container using `docker run -d -p 8080:8080 context` (you will need to add `--link mongodb:mongodb` if you want to link it with your MongoDB container)
+7. Open docker host on port 8080 in browser and see conTEXT running
 
 ### Testing
 
 Run "npm test"  
+
+### License
+
+MIT

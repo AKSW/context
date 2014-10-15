@@ -19,7 +19,7 @@
 
     <!-- right col -->
     <div class="col-md-8">
-        <div class="row well facetArticle" ng-repeat="item in data[0].values | filter:facetFilter" ng-bind-html="item.sourceSafe">
+        <div class="row well facetArticle" ng-repeat="item in data[0].values | filter:facetFilter | limitTo: 25" ng-bind-html="item.sourceSafe">
         </div>
     </div>
 </div>

@@ -13,7 +13,7 @@ var process = async(function(corpus) {
     md5sum.update(corpus.input);
     var hash = md5sum.digest('hex');
     // generate unique url for piece
-    var url = 'direct-input://'+corpus._id.toString()+'/'+hash+'/'+Date.now();
+    var url = 'direct-input://' + corpus._id.toString() + '/' + hash + '/' + Date.now();
 
     // convert to html string
     var doc = {
@@ -27,7 +27,7 @@ var process = async(function(corpus) {
 });
 
 // module
-var DirectProcessing = function () {
+var DirectProcessing = function() {
     ProgressReporter.call(this);
 
     // name (also ID of processer used in client)
