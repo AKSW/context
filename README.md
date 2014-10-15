@@ -1,4 +1,4 @@
-# conTEXT: ReSA (Real-time Semantic Analysis)
+# conTEXT with ReSA (Real-time Semantic Analysis)
 
 Based on [Powder.js](https://github.com/yamalight/generator-powder)
 
