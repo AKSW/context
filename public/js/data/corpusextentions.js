@@ -5,7 +5,7 @@ collection.push({
     path: '/overview',
     controller: 'CorpusOverviewController',
     template: '/templates/corpusOverview.html',
-    js: require('../controllers/corpus/overview.js'),
+    js: require('../controllers/corpus/overview.js')
 });
 // facets
 collection.push({
@@ -13,7 +13,7 @@ collection.push({
     path: '/facets',
     controller: 'CorpusFacetsController',
     template: '/templates/corpusFacets.html',
-    js: require('../controllers/corpus/facets.js'),
+    js: require('../controllers/corpus/facets.js')
 });
 // relations
 collection.push({
@@ -21,7 +21,7 @@ collection.push({
     path: '/relations',
     controller: 'CorpusRelationsController',
     template: '/templates/corpusEntityRelations.html',
-    js: require('../controllers/corpus/relations.js'),
+    js: require('../controllers/corpus/relations.js')
 });
 // co-occurance
 collection.push({
@@ -29,7 +29,15 @@ collection.push({
     path: '/cooc',
     controller: 'CorpusCoocController',
     template: '/templates/corpusCooc.html',
-    js: require('../controllers/corpus/cooc.js'),
+    js: require('../controllers/corpus/cooc.js')
+});
+// co-occurance
+collection.push({
+    name: 'Tag cloud',
+    path: '/tags',
+    controller: 'CorpusTagsController',
+    template: '/templates/corpusTags.html',
+    js: require('../controllers/corpus/tags.js')
 });
 
 // Our module now returns our view

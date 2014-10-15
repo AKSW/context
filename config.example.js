@@ -42,6 +42,8 @@ exports.google = {
 exports.twitter = {
     consumerKey: 'TWITTER_CONSUMER_KEY',
     consumerSecret: 'TWITTER_CONSUMER_SECRET',
+    accessTokenKey: 'TWITTER_ACCESS_TOKEN_KEY',
+    accessTokenSecret: 'TWITTER_TOKEN_SECRET',
     callbackURL: 'http://localhost:8080/auth/twitter/callback'
 };
 

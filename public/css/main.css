@@ -3,39 +3,39 @@ body {
 }
 
 .logo-nav {
-    max-height: 90%;
+  max-height: 130%;
 }
 
 .auth-panel {
-    padding-top: 20px;
+ padding-top: 20px;
 }
 
 .btn-padded {
-    margin-left: 5px;
-    margin-right: 5px;
+ margin-left: 5px;
+ margin-right: 5px;
 }
 
 #sponsors{
-    text-align: center;
+ text-align: center;
 }
 
 .sponsor {
-    margin-right: 10px;
-    margin-left: 10px;
+ margin-right: 10px;
+ margin-left: 10px;
 }
 
 .corpus-select-box {
-    margin-top: 20px;
-    margin-bottom: 20px;
+ margin-top: 20px;
+ margin-bottom: 20px;
 }
 
 .corpus-select-input {
-    text-align: center;
-    width: 100%;
+ text-align: center;
+ width: 100%;
 }
 
 #input_count {
-    max-width: 100%;
+ max-width: 100%;
 }
 
 /* Facets stuff */

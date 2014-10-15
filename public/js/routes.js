@@ -17,6 +17,10 @@ module.exports = function applyRoutes(app) {
                 controller: 'CreateCorpusController',
                 templateUrl: '/templates/createCorpus.html'
             });
+            $routeProvider.when('/resa', {
+                controller: 'ResaController',
+                templateUrl: '/templates/resa.html'
+            });
 
             $locationProvider.html5Mode(true);
         }

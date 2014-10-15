@@ -2,7 +2,7 @@
 var CorpusModule = require('./modules/corpus');
 
 // init app
-var app = angular.module('context-app', ['ngRoute', 'ngAnimate', 'mgcrea.ngStrap', 'CorpusModule']);
+var app = angular.module('context-app', ['ngRoute', 'ngAnimate', 'mgcrea.ngStrap', 'ngSanitize', 'CorpusModule']);
 
 // config app routes
 require('./routes')(app);

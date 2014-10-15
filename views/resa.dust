@@ -1,0 +1,15 @@
+{>"core/layout.dust"/}
+{<menu}
+{>"menu/mainmenu.dust"/}
+{/menu}
+{<title}
+  conTEXT: Real-time Semantic Analysis (ReSA)
+{/title}
+{<body}
+    <div class="container">
+      <div id="tweets" ng-view ng-init="csrf='{csrf}'">
+          Loading...
+      </div>
+    </div>
+
+{/body}

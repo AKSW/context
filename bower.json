@@ -12,7 +12,11 @@
     "angular-motion": "~0.3.2",
     "lodash": "~2.4.1",
     "stringjs": "~1.8.0",
-    "d3": "~3.4.6"
+    "d3": "~3.4.6",
+    "angular-animate": "~1.2.20",
+    "angular-sanitize": "~1.2.20",
+    "jQuery": "~2.1.1",
+    "jqcloud2": "~2.0.1"
   },
   "devDependencies": {}
 }
