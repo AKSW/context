@@ -53,7 +53,8 @@ module.exports = function CorpusFacetsController($scope, $state, $sce) {
 
 
             // redraw
-            $state.reload();
+            //$state.reload();
+            $state.go('.');
 
 
         })
