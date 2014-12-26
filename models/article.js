@@ -92,9 +92,10 @@ articleSchema.plugin(mongolastic.plugin,{modelname: 'articles'});
 Article = mongoose.model('articles', articleSchema);
 
 //sync mongodb entries with elasticsearch index,
-Article.sync(function(err,numSynced){
+//TODO: set a parameter in config.js for auto-sync. currently, sync is deactivated
+/*Article.sync(function(err,numSynced){
     console.log('elasticsearch: ' + numSynced + ' article(s) synced');
-})
+})*/
 
 // export
 module.exports = Article;
