@@ -29,6 +29,7 @@
     "postinstall": "./node_modules/.bin/gulp init"
   },
   "dependencies": {
+    "apicache":"^0.0.12",
     "async": "^0.9.0",
     "asyncawait": "^0.7.2",
     "bluebird": "^2.3.2",

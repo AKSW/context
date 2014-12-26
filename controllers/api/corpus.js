@@ -15,7 +15,8 @@ var Corpus = require('../../modules/corpus');
 var CorpusDB = require('../../models').Corpus;
 var Article = require('../../models').Article;
 
-
+//apicache for caching API calls
+var apicache = require('apicache').options({ debug: true }).middleware;
 // functions
 var getCorpusArticles = function(req, res, next) {
     var corpus = req.params.id;
@@ -194,7 +195,8 @@ module.exports = function(app) {
     });
 
     // export get corpus
-    app.get('/api/corpus/:id/facets', getCorpusArticles);
+    // extend the function for caching API call
+    app.get('/api/corpus/:id/facets', apicache('5 minutes'),getCorpusArticles);
 
     // relations
     app.get('/api/corpus/:id/relations', getCorpusArticles);
