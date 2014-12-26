@@ -2,7 +2,7 @@
 var CorpusModule = require('./modules/corpus');
 
 // init app
-var app = angular.module('context-app', ['ngRoute', 'ngAnimate', 'mgcrea.ngStrap', 'CorpusModule','vs-repeat','pasvaz.bindonce','infinite-scroll']);
+var app = angular.module('context-app', ['ngRoute', 'mgcrea.ngStrap', 'CorpusModule','vs-repeat','pasvaz.bindonce','infinite-scroll']);
 
 app.filter('pagination', function() //TODO: move on filter.js
 {
