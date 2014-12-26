@@ -11,9 +11,11 @@ app.filter('pagination', function() //TODO: move on filter.js
     {
         if (input) return input.slice(start);
     };
-});
+})
 
-/*.directive('postRepeatDirective',['$timeout',
+
+
+.directive('postRepeatDirective',['$timeout',
  function($timeout) {
  return function(scope){
  if (scope.$first)
@@ -24,7 +26,7 @@ app.filter('pagination', function() //TODO: move on filter.js
  });
  };
 
- }]);*/ //TODO: directive for benchmarking usage , can be deleted
+ }]); //TODO: directive for benchmarking usage , can be deleted
 
 
 // config app routes
