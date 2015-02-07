@@ -14,10 +14,12 @@
     "angular-vs-repeat": "~1.0.0",
     "d3": "~3.4.6",
     "lodash": "~2.4.1",
-    "nanoscroller":"~0.8.4",
+    "nanoscroller": "~0.8.4",
     "ngInfiniteScroll": "~1.1.2",
     "oboe": "~1.15.1",
-    "stringjs": "~1.8.0"
-},
+    "stringjs": "~1.8.0",
+    "angular-data": "~1.5.3",
+    "angular-cache": "~3.2.4"
+  },
   "devDependencies": {}
 }

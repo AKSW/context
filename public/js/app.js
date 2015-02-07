@@ -2,9 +2,22 @@
 var CorpusModule = require('./modules/corpus');
 
 // init app
-var app = angular.module('context-app', ['ngRoute', 'mgcrea.ngStrap', 'CorpusModule','vs-repeat','pasvaz.bindonce','infinite-scroll']);
+var app = angular.module('context-app', ['ngRoute', 'mgcrea.ngStrap', 'CorpusModule','vs-repeat','pasvaz.bindonce','infinite-scroll','angular-data.DS','angular-data.DSCacheFactory'])
 
-app.filter('pagination', function() //TODO: move on filter.js
+.config(function(DSProvider,DSCacheFactoryProvider){
+        DSProvider.defaults.baseUrl= '/api';
+       //DSProvider.defaults.defaultAdapter = 'DSLocalStorageAdapter';
+        DSCacheFactoryProvider.setCacheDefaults({
+            maxAge: 3600000,
+            deleteOnExpire: 'aggressive',
+            storageMode: 'localStorage'
+        });
+    })
+
+
+
+
+.filter('pagination', function() //TODO: move on filter.js
 {
 
     return function(input, start)

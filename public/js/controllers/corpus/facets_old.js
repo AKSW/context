@@ -5,8 +5,8 @@ var entities;
 var articles;
 var totalDisplayed=15; //total displayed articles at initial load //TODO: define a constant on config.js
 
-module.exports = function CorpusFacetsController($scope, $state, $sce,corpusModel,$q) {
-    /*dataService.getData($scope.currentCorpus._id)
+module.exports = function CorpusFacetsController($scope, $state, $sce,dataService,$q) {
+    dataService.getData($scope.currentCorpus._id)
         .then(function(res){
 
             //test(res.entities)
@@ -19,116 +19,9 @@ module.exports = function CorpusFacetsController($scope, $state, $sce,corpusMode
         console.log(JSON.stringify(tempData));
     }*/
 
-    /*dataService.getDataById('5495af94b7c550481406eaf7').then(function(data){
-        console.log(data);
-
-    });*/
-
-   /*dataService.findAll(params).then(function(data){
-
-       console.log(data);
-   })*/
-
-    /*dataService.getFacetByType($scope.currentCorpus._id,'article').then(function(data){
-        console.log(data);
-    });*/
-
-
-    /*var CorpusModel= new corpusModel($scope.currentCorpus._id);
-    CorpusModel.getCorpusInfo().then(function(){
-        //console.log(CorpusModel.corpusInfo);
-
-    });
-
-    CorpusModel.getFacetByType().then(function(){
-
-    });*/
-
-    articles = [];
-    entities = [];
-    types = [];
-    $scope.articles = [];
-    $scope.entities = [];
-    $scope.types = [];
-    oboe({url:'/api/corpus/' + $scope.currentCorpus._id + '/facetStream'})
-        .node('a.*',function(article){
-            article.source='';
-            //articles.push(article);
-            $scope.articles.push(article);
-            //console.log($scope.articles.length);
-            //$scope.apply();
-            $state.go('.');
-
-            // $scope.digest();
-
-            //console.log(article);
-            return oboe.drop;
-        })
-        .node('e.*',function(entity){
-            //check if already entity in scope exist
-            var itemIndex = _.findIndex($scope.entities,function(item){return item.name === entity.name});
-            if (itemIndex !== -1){
-                //merge articles and types arrays
-                //$scope.entities[itemIndex].articles.push(entity.articles); //TODO: articles won't be updated
-                $scope.entities[itemIndex].articles = _.union($scope.entities[itemIndex].articles,entity.articles);
-                if ($scope.entities[itemIndex].types.indexOf(entity.types)!== -1)//{$scope.entities[itemIndex].types.push(entity.types);}
-                {
-                    $scope.entities[itemIndex].types = _.union(entity.types,$scope.entities[itemIndex].types)
-                }
-
-                //update counts
-                $scope.entities[itemIndex].count = $scope.entities[itemIndex].articles.length + $scope.entities[itemIndex].types.length;
-                //$state.go('.');
-
-
-                //console.log(entities[itemIndex].name+' Articles:'+entities[itemIndex].articles + ' l:'+entities[itemIndex].articles.length + ' types:'+entities[itemIndex].types + 'l:'+entities[itemIndex].types.length +" count:"+entities[itemIndex].count);
-                //console.log($scope.entities[itemIndex].name+' Articles:'+$scope.entities[itemIndex].articles + ' l:'+$scope.entities[itemIndex].articles.length + ' types:'+$scope.entities[itemIndex].types + 'l:'+$scope.entities[itemIndex].types.length +" count:"+$scope.entities[itemIndex].count);
-            }
-            else {
-                $scope.entities.push(entity);
-                //$state.go('.');
-            }
-            $scope.apply();
-
-            //console.log(entity.name+','+entity.id + ', Articles'+entity.articles );
-            //console.log(entities.length);
-            return oboe.drop;
-        })
-        .node('t.*',function(type){
-            var itemIndex = _.findIndex($scope.types,function(item){return item.id === type.id});
-            if (itemIndex !== -1){
-                //merge articles and entities arrays
-                //$scope.entities[itemIndex].articles.push(entity.articles);
-                $scope.types[itemIndex].articles = _.union($scope.types[itemIndex].articles,type.articles);
-                $scope.types[itemIndex].entities = _.union(type.entities, $scope.types[itemIndex].entities);
-                //$scope.types[itemIndex].entities = _.uniq($scope.types[itemIndex].entities);
-
-                //update counts
-                $scope.types[itemIndex].count = $scope.types[itemIndex].articles.length + $scope.types[itemIndex].entities.length;
-                //$state.go('.');
-
-                //console.log($scope.types[itemIndex].name+' Articles:'+$scope.types[itemIndex].articles + ' l:'+$scope.types[itemIndex].articles.length + ' entities:'+$scope.types[itemIndex].entities + 'l:'+$scope.types[itemIndex].entities.length +" count:"+$scope.types[itemIndex].count);
-            }
-            else {
-                $scope.types.push(type);
-                //console.log($scope.types.length)
-                //$state.go('.');
-
-            }
-            //console.log(entity.name+','+entity.id + ', Articles'+entity.articles );
-            //console.log(entities.length);
-            console.log($scope.types.length);
-           // $scope.apply();
-
-            return oboe.drop;
-        })//.done(console.log(articles.length));
-
-    /*corpusObj.getCorpusInfo().then()(function(data){
-        console.log('CorpusInfo:'+data);
-    });*/
 
     //get data  //TODO: use nodeJS stream
-    /*oboe({url:'/api/corpus/' + $scope.currentCorpus._id + '/facets',cached:true})
+    oboe({url:'/api/corpus/' + $scope.currentCorpus._id + '/facets',cached:true})
         .done(function(data){
 
             types = data.types;
@@ -174,7 +67,7 @@ module.exports = function CorpusFacetsController($scope, $state, $sce,corpusMode
 
 
         })
-*/
+
 
     //infinite scrolling for articles
     $scope.totalDisplayed=totalDisplayed;

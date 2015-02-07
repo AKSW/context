@@ -1,3 +1,6 @@
+var WebSocketServer = require('ws').Server;
+var config = require('../../config');
+
 // includes
 // multiparty
 var multiparty = require('multiparty');
@@ -9,6 +12,7 @@ var logger = require('../../logger');
 var mongolastic = require('mongolastic');
 //FacetProcesser //TODO: move file on server-side
 var FacetProcesser=require('../../public/js/modules/FacetsProcesser');
+var FacetProcesser2=require('../../public/js/modules/FacetsProcesser2');
 // db
 
 var Corpus = require('../../modules/corpus');
@@ -34,26 +38,44 @@ var getCorpusArticles = function(req, res, next) {
             }
         }
     };
+
     //execute query
     Article.search(query,function(err,result){
+
         if(err) {
             return next(err);
         }
         //get articles
         result.hits.hits.forEach(function (hit){
             articles.push(hit._source);
+
         });
         // append counts to corpus
         //corpus = corpus.toObject();
         corpus={};
-        corpus.articles = articles;
+        corpus.articles = articles//.splice(0,2);
 
         //TODO:measure the time for processing data using facetProcesser
+        //console.time("fProcesser");
+
+
+
+
         var data = FacetProcesser.processData(corpus);
+
+
+
+
+
+
+        /*for (var i=0;i<=data.articles.length-1;i++){
+            delete data.articles[i].source;
+        }*/
 
         corpus.articles = data.articles;
         corpus.entities = data.entities;
         corpus.types = data.types;
+       // corpus = data.entities;
 
         //TODO:slice data server-side for lazy loading
         // send response
@@ -198,9 +220,58 @@ module.exports = function(app) {
     // extend the function for caching API call
     app.get('/api/corpus/:id/facets', apicache('5 minutes'),getCorpusArticles);
 
+
     // relations
     app.get('/api/corpus/:id/relations', getCorpusArticles);
 
     // co-occurence
     app.get('/api/corpus/:id/cooc', getCorpusArticles);
-};
+
+    app.get('/api/corpus/:id/facetStream', function (req, res) {
+        var corpus = req.params.id;
+        var articles = [];
+        //define query
+        var query = {
+            'size': 5000, //TODO: define a constant in config.js | max numbers of articles to get
+            '_sourceInclude': ['_id', 'title', 'article', 'entities', 'source'],
+            'body': {
+                'query': {
+                    //'term': {'corpuses._id':corpus}
+                    'filtered': {
+                        'filter': {'term': {'corpuses._id': corpus}}
+                    }
+                }
+            }
+        };
+
+        //execute query
+        Article.search(query, function (err, result) {
+
+            if (err) {
+                return next(err);
+            }
+            //get articles
+            result.hits.hits.forEach(function (hit) {
+                articles.push(hit._source);
+
+            });
+            // append counts to corpus
+            //corpus = corpus.toObject();
+            corpus = {};
+            corpus.articles = articles;
+            articles.forEach(function(article){
+                var data = FacetProcesser2.processData(article);
+                res.jsonStream(data);
+            })
+            //var data = FacetProcesser.processData(corpus);
+
+            //res.jsonStream(data);
+
+            res.end();
+
+            //var data = FacetProcesser.processData(corpus);
+
+
+        });
+    })
+}

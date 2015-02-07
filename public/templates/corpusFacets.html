@@ -1,94 +1,62 @@
-<div  class="row">
-
-    <div ng-if="!data">Loading...</div>
-
-    <!-- left col -->
-    <div class="row" >
+<div class="row" >
 
 
-        <div class=" col-md-4  panel facetPanel "  bindonce ng-repeat="panel in data">
-            <div class="text-center row panel-heading" ><span class="h4 text-info" >{{panel.name}}</span>
+    <div class=" col-md-4  panel facetPanel ">
+        <div class="text-center row panel-heading" ><span class="h4 text-info" >Articles</span></div>
+        <div   class="panel-body facetBody"  >
+                <input ng-model="query1"  class="box-shadow form-control :focus " placeholder="Search for articles...">
 
-            </div>
-            <div   class="  facetBody "  >
-                <div  class="row-fluid">
-                    <input ng-model="query1"  class="box-shadow form-control :focus" ng-show="data"   placeholder="Search for {{panel.name}}...">
-                </div>
-                <div  class="nano">
-                    <div  class="row nano-content list-group facetList"  vs-repeat>
+                <div  class="row list-group facetList"  vs-repeat>
 
-                        <a href="#" class="list-group-item col-xs-12 facet" ng-class="{active: itemActive(it)}" bindonce ng-repeat="it in panel.values  | filter:query1|filter:facetFilter"
-                           ng-click="setFilter(it)">
-                            <span bo-text="it.name"></span>
-                            <span class="badge" ng-if="it.count > 0"><span bo-text="it.count"></span></span>
-                        </a>
+                    <a href="#" class="list-group-item col-xs-12 facet" ng-class="{active: itemActive(it)}" ng-repeat="it in articles|limitTo:25|filter:query1|filter:facetFilter"
+                       ng-click="setFilter(it)">{{it.name}}
 
-                    </div>
+                        <span class="badge" ng-if="it.count > 0"><span bo-text="it.count"></span></span>
+                    </a>
+
                 </div>
 
+
+        </div>
+    </div>
+
+    <div class=" col-md-4  panel facetPanel ">
+        <div class="text-center row panel-heading" ><span class="h4 text-info" >Types</span></div>
+        <div   class="panel-body facetBody"  >
+            <input ng-model="queryTypes"  class="box-shadow form-control :focus " placeholder="Search for types...">
+
+            <div  class="row list-group facetList"  vs-repeat>
+
+                <a href="#" class="list-group-item col-xs-12 facet" ng-class="{active: itemActive(it)}"  ng-repeat="it in types|limitTo:25|orderBy:'-count'|filter:queryTypes|filter:facetFilter"
+                   ng-click="setFilter(it)">{{it.name}}
+
+                    <span class="badge" ng-if="it.count > 0">{{it.count}}</span>
+                </a>
+
             </div>
-        </div>
 
-
-    </div>
-
-
-
-    <div class="row well "    ng-if="aF||tF||eF"  >Filter:
-        <button ng-click="setFilter(aF)" ng-if="aF" class="btn-info">{{"(X) Article:"+aF.name}}</button>
-        <button ng-click="setFilter(tF)" ng-if="tF" class="btn-info">{{"(X) Type:"+tF.name}}</button>
-        <button ng-click="setFilter(eF)" ng-if="eF" class="btn-info">{{"(X) Entity:"+eF.name}}</button>
-    </div>
-
-
-    <div class="row">
-        <input  ng-model="query"  ng-show="data" class="form-control" data-offset-top="0" placeholder="Search for articles,entities,types...">
-        <br/>
-
-
-    </div>
-
-
-
-
-
-
-    <!-- right col -->
-
-
-    <div    class="row" infinite-scroll="loadMore()" infinite-scroll-distance="2">
-
-        <div     class="row well  col-xs-12 col-xs-offset-0 facetArticle"  ng-repeat="item in filtered=(data[0].values|filter:query|filter:facetFilter)|pagination: curPage * pageSize | limitTo: totalDisplayed" ng-bind-html="item.sourceSafe">
 
         </div>
+    </div>
 
+    <div class=" col-md-4  panel facetPanel ">
+        <div class="text-center row panel-heading" ><span class="h4 text-info" >Entities</span></div>
+        <div   class="panel-body facetBody"  >
+            <input ng-model="queryEntities"  class="box-shadow form-control :focus " placeholder="Search for entities...">
 
-        <div  align="center" ng-show="filtered.length>pageSize">
+            <div  class="row list-group facetList"  vs-repeat>
 
-            <button class="btn btn-default"   ng-disabled="curPage===0" type="button"
-                    ng-click="curPage=curPage-1">PREV</button>
+                <a href="#" class="list-group-item col-xs-12 facet" ng-class="{active: itemActive(it)}"  ng-repeat="it in entities|limitTo:25|orderBy:'-count'|filter:queryEntities|filter:facetFilter"
+                   ng-click="setFilter(it)">{{it.name}}
 
+                    <span class="badge" ng-if="it.count > 0">{{it.count}}</span>
+                </a>
 
-            <span>Page {{curPage + 1}} of {{ numberOfPages(filtered.length) }}</span>
+            </div>
 
-
-            <button  class="btn btn-default"  ng-disabled="curPage===(numberOfPages(filtered.length)-1)" type="button"
-
-                     ng-click="curPage = curPage+1">NEXT </button>
 
         </div>
-
-
-
-
-
-
-
-
     </div>
 
 
 </div>
-<br/>
-<br/>
-<br/>

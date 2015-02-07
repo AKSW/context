@@ -6,7 +6,7 @@ var escapeRegExp = function(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 };
 
-var processData = function(data) {
+var processData = function(item) {
     // articles
     var articles = [];
     // types
@@ -17,7 +17,7 @@ var processData = function(data) {
     var entityNames = [];
 
     // extract data
-    data.articles.forEach(function(item) {
+    //data.forEach(function(item) {
         // get article data
         var title = '';
         try {
@@ -306,7 +306,7 @@ var processData = function(data) {
 
         // push to array
         articles.push(article);
-    });
+    //});
 
 
     // sort arrays by count
@@ -317,9 +317,9 @@ var processData = function(data) {
     types = types.sort(sortFunction);
 
     return {
-        articles: articles,
-        types: types,
-        entities: entities
+        a: articles,
+        t: types,
+        e: entities
     };
 };
 
